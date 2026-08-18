@@ -1,0 +1,15 @@
+{
+  "name": "flowops",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @flowops/admin dev",
+    "build": "pnpm --filter @flowops/admin build",
+    "start": "pnpm --filter @flowops/admin start",
+    "lint": "pnpm --filter @flowops/admin lint"
+  }
+}
