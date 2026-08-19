@@ -2,6 +2,7 @@ import { BarChart3, Bell, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Typography } from "@/components/ui/typography"
+import { LogoutButton } from "@/features/auth"
 
 export function MobileHeader() {
   return (
@@ -19,6 +20,7 @@ export function MobileHeader() {
         <Button variant="ghost" size="icon" aria-label="알림">
           <Bell aria-hidden="true" />
         </Button>
+        <LogoutButton />
       </div>
     </header>
   )

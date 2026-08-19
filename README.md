@@ -82,6 +82,11 @@ packages/ui/                   # 실제로 두 앱에서 공유하는 UI와 디�
 apps/admin/
 ├── app/                       # Next.js App Router
 ├── features/
+│   ├── auth/
+│   │   ├── api/               # 로그인 서버 액션
+│   │   ├── components/        # 로그인 페이지와 폼
+│   │   ├── model/             # 로그인 검증 스키마와 타입
+│   │   └── index.ts           # 기능 공개 진입점
 │   └── dashboard/
 │       ├── api/               # 서버 데이터 조회 규약
 │       ├── components/        # 대시보드 전용 UI
@@ -96,6 +101,8 @@ apps/admin/
 ```
 
 특정 기능에서만 사용하는 컴포넌트와 타입은 해당 `features` 폴더에 둡니다. 두 기능 이상에서 실제로 재사용될 때만 앱의 `components`나 `lib`로 올립니다.
+`app`의 페이지 파일은 기능 컴포넌트를 조립하는 역할만 맡고, 서버 액션과 화면 구현은 해당 `features` 폴더에서 관리합니다.
+로그인 폼처럼 기능의 상태와 업무 흐름을 다루는 훅은 해당 기능의 `model`에 둡니다. `useDebounce`, `useMediaQuery`처럼 도메인과 무관하고 여러 기능에서 재사용되는 훅만 앱 루트의 `hooks`로 올립니다.
 
 ## shadcn/ui 컴포넌트 추가
 

@@ -4,13 +4,13 @@ import {
   ChartNoAxesCombined,
   Headphones,
   LayoutDashboard,
-  MoreHorizontal,
   Settings,
   ShoppingBag,
   Users,
 } from "lucide-react"
 
 import { Typography } from "@/components/ui/typography"
+import { LogoutButton } from "@/features/auth"
 
 const navigation = [
   { label: "대시보드", icon: LayoutDashboard, active: true },
@@ -89,7 +89,7 @@ export function AppSidebar() {
               운영 관리자
             </Typography>
           </div>
-          <MoreHorizontal className="size-4 text-sidebar-foreground/40" aria-hidden="true" />
+          <LogoutButton />
         </div>
       </div>
     </aside>
