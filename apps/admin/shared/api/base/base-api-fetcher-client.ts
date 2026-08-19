@@ -2,8 +2,8 @@
 
 import { createClient } from "@/shared/lib/supabase/client"
 
-import type { ApiQuery, BaseApiFetcherOptions } from "./types"
-import { createApiUrl, parseApiResponse } from "./utils"
+import type { BaseApiFetcherOptions } from "./types"
+import { parseApiResponse } from "./utils"
 
 const endPoint = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const apiKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
@@ -12,7 +12,6 @@ const createBaseApiFetcherClient = async <TResponse, TBody = unknown>({
   baseUrl = endPoint,
   url,
   method = "GET",
-  query,
   body,
   options,
 }: BaseApiFetcherOptions<TBody>): Promise<TResponse> => {
@@ -21,7 +20,7 @@ const createBaseApiFetcherClient = async <TResponse, TBody = unknown>({
     data: { session },
   } = await supabase.auth.getSession()
 
-  const response = await fetch(createApiUrl(baseUrl, url, query), {
+  const response = await fetch(new URL(url, baseUrl), {
     ...options,
     method,
     headers: {
@@ -47,13 +46,12 @@ const createBaseApiFetcherClient = async <TResponse, TBody = unknown>({
 
 const getBaseApiFetcherClient = <TResponse>(
   url: string,
-  query?: ApiQuery,
   options?: RequestInit
-) => createBaseApiFetcherClient<TResponse>({ url, query, options })
+) => createBaseApiFetcherClient<TResponse>({ url, options })
 
-const postBaseApiFetcherClient = <TResponse, TBody>(
+const postBaseApiFetcherClient = <TResponse, TBody = unknown>(
   url: string,
-  body: TBody,
+  body?: TBody,
   options?: RequestInit
 ) => createBaseApiFetcherClient<TResponse, TBody>({
   url,
@@ -62,7 +60,7 @@ const postBaseApiFetcherClient = <TResponse, TBody>(
   options,
 })
 
-const putBaseApiFetcherClient = <TResponse, TBody>(
+const putBaseApiFetcherClient = <TResponse, TBody = unknown>(
   url: string,
   body: TBody,
   options?: RequestInit
@@ -73,27 +71,23 @@ const putBaseApiFetcherClient = <TResponse, TBody>(
   options,
 })
 
-const patchBaseApiFetcherClient = <TResponse, TBody>(
+const patchBaseApiFetcherClient = <TResponse, TBody = unknown>(
   url: string,
   body: TBody,
-  query?: ApiQuery,
   options?: RequestInit
 ) => createBaseApiFetcherClient<TResponse, TBody>({
   url,
   method: "PATCH",
-  query,
   body,
   options,
 })
 
 const deleteBaseApiFetcherClient = <TResponse>(
   url: string,
-  query?: ApiQuery,
   options?: RequestInit
 ) => createBaseApiFetcherClient<TResponse>({
   url,
   method: "DELETE",
-  query,
   options,
 })
 
