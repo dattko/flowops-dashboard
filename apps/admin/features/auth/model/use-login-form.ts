@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, type SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
 
 import { login } from "../api/actions"
 import { loginSchema, type LoginValues } from "./login-schema"
@@ -12,13 +12,14 @@ const useLoginForm = () => {
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: false,
     },
   })
 
-  const onSubmit: SubmitHandler<LoginValues> = async (values) => {
+  const handleSubmitForm = form.handleSubmit(async (data) => {
     form.clearErrors("root")
 
-    const result = await login(values)
+    const result = await login(data)
 
     if (result?.error) {
       form.setError("root", {
@@ -26,11 +27,11 @@ const useLoginForm = () => {
         message: result.error,
       })
     }
-  }
+  })
 
   return {
     form,
-    onSubmit,
+    handleSubmitForm,
   }
 }
 

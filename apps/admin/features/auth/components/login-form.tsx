@@ -1,17 +1,14 @@
 "use client"
 import { BarChart3, LoaderCircle, LockKeyhole } from "lucide-react"
+import { FormCheckbox, InputText } from "@/components/common/form"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Typography } from "@/components/ui/typography"
 import { useLoginForm } from "../model/use-login-form"
 
 export function LoginForm() {
-  const { form, onSubmit } = useLoginForm()
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = form
-
+  const { form, handleSubmitForm } = useLoginForm()
+  const { register, control, formState: { errors, isSubmitting } } = form
 
   return (
     <Card className="w-full gap-0 rounded-2xl py-0 shadow-[0_24px_80px_rgba(53,42,31,0.10)] ring-black/8">
@@ -44,44 +41,28 @@ export function LoginForm() {
       <CardContent className="px-6 pb-7 sm:px-8 sm:pb-8">
         <form
           className="space-y-5"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmitForm}
           noValidate
         >
-          <div className="space-y-2">
-            <Label htmlFor="email">
-              <Typography as="span" variant="label">
-                이메일
-              </Typography>
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              placeholder="admin@flowops.kr"
-              className="h-11 bg-white px-3"
-              aria-invalid={Boolean(errors.email)}
-              aria-describedby={errors.email ? "email-error" : undefined}
-              {...register("email")}
-            />
-            {errors.email && (
-              <Typography
-                id="email-error"
-                variant="caption"
-                tone="destructive"
-                role="alert"
-              >
-                {errors.email.message}
-              </Typography>
-            )}
-          </div>
+          <InputText
+            {...register("email")}
+            label="이메일"
+            type="email"
+            autoComplete="email"
+            placeholder="admin@flowops.kr"
+            size="lg"
+            error={errors.email?.message}
+          />
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between gap-4">
-              <Label htmlFor="password">
-                <Typography as="span" variant="label">
-                  비밀번호
-                </Typography>
-              </Label>
+          <InputText
+            {...register("password")}
+            label="비밀번호"
+            type="password"
+            autoComplete="current-password"
+            placeholder="비밀번호를 입력해 주세요"
+            size="lg"
+            error={errors.password?.message}
+            labelAction={
               <Button
                 type="button"
                 variant="link"
@@ -91,38 +72,14 @@ export function LoginForm() {
                   비밀번호를 잊으셨나요?
                 </Typography>
               </Button>
-            </div>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="비밀번호를 입력해 주세요"
-              className="h-11 bg-white px-3"
-              aria-invalid={Boolean(errors.password)}
-              aria-describedby={errors.password ? "password-error" : undefined}
-              {...register("password")}
-            />
-            {errors.password && (
-              <Typography
-                id="password-error"
-                variant="caption"
-                tone="destructive"
-                role="alert"
-              >
-                {errors.password.message}
-              </Typography>
-            )}
-          </div>
+            }
+          />
 
-          <Label
-            htmlFor="remember-me"
-            className="w-fit cursor-pointer font-normal text-muted-foreground"
-          >
-            <Checkbox id="remember-me" name="remember-me" />
-            <Typography as="span" variant="bodySmall" tone="muted">
-              로그인 상태 유지
-            </Typography>
-          </Label>
+          <FormCheckbox
+            control={control}
+            name="rememberMe"
+            label="로그인 상태 유지"
+          />
 
           {errors.root && (
             <Typography
