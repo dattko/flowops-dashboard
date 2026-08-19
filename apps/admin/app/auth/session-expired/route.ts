@@ -1,8 +1,8 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-import { SESSION_POLICY_COOKIE } from "@/lib/auth/session-policy"
-import { createClient } from "@/lib/supabase/server"
+import { SESSION_POLICY_COOKIE } from "@/shared/lib/auth/session-policy"
+import { createClient } from "@/shared/lib/supabase/server"
 
 export const GET = async (request: Request) => {
   const supabase = await createClient()

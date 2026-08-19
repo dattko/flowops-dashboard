@@ -8,8 +8,8 @@ import {
   POLICY_COOKIE_MAX_AGE_SECONDS,
   SESSION_POLICY_COOKIE,
   createShortSessionPolicy,
-} from "@/lib/auth/session-policy"
-import { createClient } from "@/lib/supabase/server"
+} from "@/shared/lib/auth/session-policy"
+import { createClient } from "@/shared/lib/supabase/server"
 
 import { loginSchema, type LoginValues } from "../model/login-schema"
 

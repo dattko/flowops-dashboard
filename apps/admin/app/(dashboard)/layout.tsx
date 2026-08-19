@@ -1,12 +1,12 @@
 import { cookies } from "next/headers"
 
-import { AppSidebar } from "@/components/layout/app-sidebar"
-import { MobileHeader } from "@/components/layout/mobile-header"
-import { SessionExpiryGuard } from "@/features/auth/components/session-expiry-guard"
+import { SessionExpiryGuard } from "@/features/auth/ui/session-expiry-guard"
 import {
   SESSION_POLICY_COOKIE,
   getShortSessionExpiresAt,
-} from "@/lib/auth/session-policy"
+} from "@/shared/lib/auth/session-policy"
+import { AppSidebar } from "@/widgets/layout/ui/app-sidebar"
+import { MobileHeader } from "@/widgets/layout/ui/mobile-header"
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies()

@@ -6,7 +6,7 @@ import {
   SESSION_POLICY_COOKIE,
   createShortSessionPolicy,
   getShortSessionExpiresAt,
-} from "@/lib/auth/session-policy"
+} from "@/shared/lib/auth/session-policy"
 
 export const POST = async () => {
   const cookieStore = await cookies()
