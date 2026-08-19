@@ -8,7 +8,7 @@ import {
   getShortSessionExpiresAt,
 } from "@/lib/auth/session-policy"
 
-export async function POST() {
+export const POST = async () => {
   const cookieStore = await cookies()
   const policy = cookieStore.get(SESSION_POLICY_COOKIE)?.value
   const expiresAt = getShortSessionExpiresAt(policy)

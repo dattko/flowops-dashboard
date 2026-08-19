@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Typography } from "@/components/ui/typography"
 import { useLoginForm } from "../model/use-login-form"
 
-export function LoginForm() {
+export const LoginForm = () => {
   const { form, handleSubmitForm } = useLoginForm()
   const { register, control, formState: { errors, isSubmitting } } = form
 

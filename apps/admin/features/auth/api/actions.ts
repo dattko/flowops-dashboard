@@ -13,7 +13,7 @@ import { createClient } from "@/lib/supabase/server"
 
 import { loginSchema, type LoginValues } from "../model/login-schema"
 
-export async function login(values: LoginValues) {
+export const login = async (values: LoginValues) => {
   const parsed = loginSchema.safeParse(values)
 
   if (!parsed.success) {
@@ -50,7 +50,7 @@ export async function login(values: LoginValues) {
   redirect("/")
 }
 
-export async function logout() {
+export const logout = async () => {
   const supabase = await createClient()
   const cookieStore = await cookies()
   const { error } = await supabase.auth.signOut()

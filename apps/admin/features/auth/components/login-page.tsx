@@ -25,7 +25,7 @@ const operationItems = [
   },
 ]
 
-export function LoginPage() {
+export const LoginPage = () => {
   return (
     <main className="grid min-h-svh bg-background lg:grid-cols-[minmax(0,1.05fr)_minmax(480px,0.95fr)]">
       <section className="relative hidden min-h-svh overflow-hidden bg-sidebar px-12 py-10 text-sidebar-foreground lg:flex lg:flex-col xl:px-16 xl:py-12">
@@ -149,4 +149,3 @@ export function LoginPage() {
     </main>
   )
 }
-

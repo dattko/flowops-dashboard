@@ -3,11 +3,11 @@ const SHORT_SESSION_DURATION_MS = 2 * 60 * 60 * 1000
 const POLICY_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 400
 const SHORT_SESSION_PREFIX = "short:"
 
-function createShortSessionPolicy(now = Date.now()) {
+const createShortSessionPolicy = (now = Date.now()) => {
   return `${SHORT_SESSION_PREFIX}${now + SHORT_SESSION_DURATION_MS}`
 }
 
-function getShortSessionExpiresAt(policy?: string) {
+const getShortSessionExpiresAt = (policy?: string) => {
   if (!policy?.startsWith(SHORT_SESSION_PREFIX)) {
     return null
   }

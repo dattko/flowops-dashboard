@@ -25,7 +25,7 @@ const checkboxVariants = cva(
 type CheckboxProps = CheckboxPrimitive.Root.Props &
   VariantProps<typeof checkboxVariants>
 
-function Checkbox({ className, size, ...props }: CheckboxProps) {
+const Checkbox = ({ className, size, ...props }: CheckboxProps) => {
   return (
     <CheckboxPrimitive.Root
       data-slot="checkbox"

@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { ORDER_STATUS_STYLES } from "@/features/dashboard/constants/order-status"
 import { recentOrders } from "@/features/dashboard/data/mock-data"
 
-export function RecentOrdersTable() {
+export const RecentOrdersTable = () => {
   return (
     <Card className="mt-4 gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0">
       <CardContent className="p-0">

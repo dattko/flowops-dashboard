@@ -18,7 +18,7 @@ const metricIcons = {
   stock: CircleAlert,
 }
 
-export function MetricCards() {
+export const MetricCards = () => {
   return (
     <section className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="오늘의 핵심 지표">
       {metrics.map((metric) => {

@@ -23,7 +23,7 @@ type FormCheckboxProps<TFieldValues extends FieldValues> = Omit<
   containerClassName?: string
 }
 
-function FormCheckbox<TFieldValues extends FieldValues>({
+const FormCheckbox = <TFieldValues extends FieldValues,>({
   control,
   name,
   label,
@@ -31,7 +31,7 @@ function FormCheckbox<TFieldValues extends FieldValues>({
   id = name,
   size = "md",
   ...props
-}: FormCheckboxProps<TFieldValues>) {
+}: FormCheckboxProps<TFieldValues>) => {
   const { field, fieldState } = useController({ control, name })
   const {
     name: fieldName,

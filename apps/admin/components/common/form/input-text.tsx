@@ -15,7 +15,7 @@ type InputTextProps = InputProps & {
   error?: string
 }
 
-function InputText({
+const InputText = ({
   label,
   labelAction,
   containerClassName,
@@ -25,7 +25,7 @@ function InputText({
   name,
   size = "md",
   ...props
-}: InputTextProps) {
+}: InputTextProps) => {
   const inputId = id ?? name
   const errorId = inputId ? `${inputId}-error` : undefined
   const descriptionId = inputId ? `${inputId}-description` : undefined

@@ -3,7 +3,7 @@ import type { ComponentProps } from "react"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-export function StatusBadge({ className, ...props }: ComponentProps<typeof Badge>) {
+export const StatusBadge = ({ className, ...props }: ComponentProps<typeof Badge>) => {
   return (
     <Badge
       variant="secondary"

@@ -1,5 +1,7 @@
 import { DashboardPage } from "@/features/dashboard"
 
-export default function Home() {
+const Home = () => {
   return <DashboardPage />
 }
+
+export default Home

@@ -8,7 +8,7 @@ import {
   getShortSessionExpiresAt,
 } from "@/lib/auth/session-policy"
 
-export async function updateSession(request: NextRequest) {
+export const updateSession = async (request: NextRequest) => {
   let response = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -16,10 +16,10 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
-        getAll() {
+        getAll: () => {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll: (cookiesToSet) => {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )

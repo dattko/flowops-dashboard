@@ -3,7 +3,7 @@ import { CalendarDays, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Typography } from "@/components/ui/typography"
 
-export function DashboardHeader() {
+export const DashboardHeader = () => {
   return (
     <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
       <div>

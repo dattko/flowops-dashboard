@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { Typography } from "@/components/ui/typography"
 
-export function OperationStatusCard() {
+export const OperationStatusCard = () => {
   return (
     <Card className="gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0">
       <CardContent className="p-5">
@@ -40,7 +40,7 @@ export function OperationStatusCard() {
   )
 }
 
-function StatusRow({ label, value, color }: { label: string; value: string; color: string }) {
+const StatusRow = ({ label, value, color }: { label: string; value: string; color: string }) => {
   return (
     <div className="type-label flex items-center justify-between gap-3">
       <dt className="flex items-center gap-2 text-muted-foreground">

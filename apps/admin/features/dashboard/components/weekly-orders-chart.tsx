@@ -19,7 +19,7 @@ type WeeklyOrdersChartProps = {
   orders: readonly WeeklyOrder[]
 }
 
-export function WeeklyOrdersChart({ orders }: WeeklyOrdersChartProps) {
+export const WeeklyOrdersChart = ({ orders }: WeeklyOrdersChartProps) => {
   const lastOrderIndex = orders.length - 1
 
   const data: ChartData<"bar", number[], string> = {

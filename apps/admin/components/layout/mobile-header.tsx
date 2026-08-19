@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Typography } from "@/components/ui/typography"
 import { LogoutButton } from "@/features/auth"
 
-export function MobileHeader() {
+export const MobileHeader = () => {
   return (
     <header className="flex h-16 items-center justify-between border-b border-[#e4e1d9] bg-[#fbfaf7]/90 px-4 backdrop-blur-sm sm:px-6 lg:hidden">
       <div className="flex items-center gap-2.5">

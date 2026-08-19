@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 import { SESSION_POLICY_COOKIE } from "@/lib/auth/session-policy"
 import { createClient } from "@/lib/supabase/server"
 
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   const supabase = await createClient()
   const cookieStore = await cookies()
 

@@ -20,7 +20,7 @@ const navigation = [
   { label: "리포트", icon: ChartNoAxesCombined },
 ]
 
-export function AppSidebar() {
+export const AppSidebar = () => {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden h-screen w-[248px] flex-col overflow-y-auto bg-sidebar px-4 py-6 text-sidebar-foreground lg:flex">
       <div className="flex items-center gap-3 px-3">

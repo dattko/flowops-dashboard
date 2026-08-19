@@ -9,13 +9,13 @@ type SectionHeadingProps = React.ComponentProps<"div"> & {
   titleId?: string
 }
 
-function SectionHeading({
+const SectionHeading = ({
   title,
   description,
   titleId,
   className,
   ...props
-}: SectionHeadingProps) {
+}: SectionHeadingProps) => {
   return (
     <div className={cn("min-w-0", className)} {...props}>
       <Typography as="h2" id={titleId} variant="cardTitle">

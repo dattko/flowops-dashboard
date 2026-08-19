@@ -17,11 +17,11 @@ export const metadata: Metadata = {
   description: "주문, 매출, 재고 현황을 한눈에 확인하는 운영 대시보드",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html
       lang="ko"
@@ -31,3 +31,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+export default RootLayout;

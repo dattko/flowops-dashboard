@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 
 import { logout } from "../api/actions"
 
-export function LogoutButton() {
+export const LogoutButton = () => {
   return (
     <form action={logout}>
       <Button

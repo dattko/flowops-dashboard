@@ -1,5 +1,7 @@
 import { LoginPage } from "@/features/auth"
 
-export default function LoginRoute() {
+const LoginRoute = () => {
   return <LoginPage />
 }
+
+export default LoginRoute

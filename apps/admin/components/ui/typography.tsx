@@ -40,13 +40,13 @@ type TypographyProps = React.HTMLAttributes<HTMLElement> &
     as?: TypographyElement
   }
 
-function Typography({
+const Typography = ({
   as: Component = "p",
   variant,
   tone,
   className,
   ...props
-}: TypographyProps) {
+}: TypographyProps) => {
   return React.createElement(Component, {
     "data-slot": "typography",
     className: cn(typographyVariants({ variant, tone }), className),

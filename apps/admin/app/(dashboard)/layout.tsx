@@ -8,7 +8,7 @@ import {
   getShortSessionExpiresAt,
 } from "@/lib/auth/session-policy"
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies()
   const expiresAt = getShortSessionExpiresAt(
     cookieStore.get(SESSION_POLICY_COOKIE)?.value
@@ -25,3 +25,5 @@ export default async function DashboardLayout({ children }: { children: React.Re
     </div>
   )
 }
+
+export default DashboardLayout

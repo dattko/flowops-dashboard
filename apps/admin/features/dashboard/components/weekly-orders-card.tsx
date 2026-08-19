@@ -6,7 +6,7 @@ import { getTotalOrders } from "@/features/dashboard/model/mapper"
 
 import { WeeklyOrdersChart } from "./weekly-orders-chart"
 
-export function WeeklyOrdersCard() {
+export const WeeklyOrdersCard = () => {
   const totalOrders = getTotalOrders(weeklyOrders)
 
   return (

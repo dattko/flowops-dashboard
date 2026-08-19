@@ -11,7 +11,7 @@ type SessionExpiryGuardProps = {
 const HEARTBEAT_INTERVAL_MS = 60 * 1000
 const ACTIVITY_EVENTS = ["pointerdown", "keydown", "scroll", "touchstart"] as const
 
-function SessionExpiryGuard({ expiresAt }: SessionExpiryGuardProps) {
+const SessionExpiryGuard = ({ expiresAt }: SessionExpiryGuardProps) => {
   useEffect(() => {
     if (expiresAt === null) {
       return
