@@ -37,16 +37,16 @@ export const updateSession = async (request: NextRequest) => {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isPublicPath =
-    request.nextUrl.pathname.startsWith("/login") ||
-    request.nextUrl.pathname.startsWith("/auth")
+  const isLoginPath = request.nextUrl.pathname.startsWith("/login")
+  const isAuthPath = request.nextUrl.pathname.startsWith("/auth")
+  const isPublicPath = isLoginPath || isAuthPath
   const sessionExpiresAt = getShortSessionExpiresAt(
     request.cookies.get(SESSION_POLICY_COOKIE)?.value
   )
 
   if (
     user &&
-    !isPublicPath &&
+    !isAuthPath &&
     sessionExpiresAt !== null &&
     sessionExpiresAt <= Date.now()
   ) {
@@ -64,6 +64,14 @@ export const updateSession = async (request: NextRequest) => {
       path: "/",
       maxAge: POLICY_COOKIE_MAX_AGE_SECONDS,
     })
+  }
+
+  // 로그인한 사용자가 로그인 화면에 접근하면 대시보드로 이동
+  if (user && isLoginPath) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/"
+    url.search = ""
+    return NextResponse.redirect(url)
   }
 
   // 로그인 안 된 상태로 보호된 페이지 접근 시 리다이렉트

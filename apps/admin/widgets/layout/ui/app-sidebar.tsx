@@ -1,3 +1,5 @@
+"use client"
+
 import {
   BarChart3,
   Boxes,
@@ -9,6 +11,7 @@ import {
   Users,
 } from "lucide-react"
 
+import { useProfile } from "@/entities/profile/client"
 import { Typography } from "@/shared/ui/typography"
 import { LogoutButton } from "@/features/auth"
 
@@ -21,6 +24,9 @@ const navigation = [
 ]
 
 export const AppSidebar = () => {
+  const { profile } = useProfile()
+  const displayName = profile.displayName ?? "사용자"
+
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden h-screen w-[248px] flex-col overflow-y-auto bg-sidebar px-4 py-6 text-sidebar-foreground lg:flex">
       <div className="flex items-center gap-3 px-3">
@@ -79,14 +85,14 @@ export const AppSidebar = () => {
 
         <div className="mt-4 flex items-center gap-3 border-t border-sidebar-border px-3 pt-5">
           <div className="type-body grid size-9 place-items-center rounded-full bg-sidebar-accent font-semibold text-sidebar-primary">
-            황
+            {displayName.slice(0, 1)}
           </div>
           <div className="min-w-0 flex-1">
             <Typography variant="body" tone="inherit" className="truncate font-medium">
-              황민
+              {displayName}
             </Typography>
             <Typography variant="label" tone="inherit" className="truncate text-sidebar-foreground/50">
-              운영 관리자
+              {profile.role === "admin" ? "운영 관리자" : "일반 사용자"}
             </Typography>
           </div>
           <LogoutButton />

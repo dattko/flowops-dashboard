@@ -1,17 +1,24 @@
+"use client"
+
 import { CalendarDays, Download } from "lucide-react"
 
+import { useProfile } from "@/entities/profile/client"
+import { dayjs } from "@/shared/lib/dayjs"
 import { Button } from "@/shared/ui/button"
 import { Typography } from "@/shared/ui/typography"
 
 export const DashboardHeader = () => {
+  const { profile } = useProfile()
+  const displayName = profile.displayName
+
   return (
     <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
       <div>
         <Typography variant="label" tone="muted" className="mb-1">
-          2026년 7월 27일 월요일
+          {dayjs().format("YYYY년 MM월 DD일 dddd")}
         </Typography>
         <Typography as="h1" variant="pageTitle">
-          좋은 오후예요, 황민님
+          좋은 오후예요, {displayName ?? "사용자"}님
         </Typography>
         <Typography variant="body" tone="muted" className="mt-2">
           오늘 운영 현황에서 우선 확인할 내용을 정리했어요.
