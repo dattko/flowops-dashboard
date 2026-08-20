@@ -8,19 +8,11 @@ import { WeeklyOrdersChart } from "./weekly-orders-chart"
 type WeeklyOrdersCardProps = {
   weeklySales: DashboardData["weeklyRows"]
   weeklyOrderSummary: DashboardData["weeklySummary"]
-  salesChannelShares: DashboardData["channelRows"]
-}
-
-const CHANNEL_COLORS: Record<string, string> = {
-  smartstore: "bg-[#c96d3a]",
-  own_mall: "bg-[#3c8674]",
-  coupang: "bg-[#d6b76d]",
 }
 
 export const WeeklyOrdersCard = ({
   weeklySales,
   weeklyOrderSummary,
-  salesChannelShares,
 }: WeeklyOrdersCardProps) => {
   const { totalOrders, changeRate } = weeklyOrderSummary
 
@@ -44,31 +36,6 @@ export const WeeklyOrdersCard = ({
       </div>
 
       <WeeklyOrdersChart weeklySales={weeklySales} />
-
-      <div className="mt-6 border-t border-[#eeece6] pt-5">
-        <div className="mb-3 flex items-center justify-between">
-          <Typography variant="label" tone="muted">판매 채널 비중</Typography>
-          <Typography variant="label" tone="muted">총 {totalOrders}건</Typography>
-        </div>
-        <div className="flex h-2 overflow-hidden rounded-full bg-[#f0eee8]">
-          {salesChannelShares.map((channel) => (
-            <span
-              key={channel.code}
-              className={CHANNEL_COLORS[channel.code] ?? "bg-muted-foreground"}
-              style={{ width: `${channel.share_percent}%` }}
-            />
-          ))}
-        </div>
-        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-          {salesChannelShares.map((channel) => (
-            <div key={channel.code} className="type-label flex items-center gap-2 text-muted-foreground">
-              <span className={`size-2 rounded-full ${CHANNEL_COLORS[channel.code] ?? "bg-muted-foreground"}`} />
-              {channel.name}
-              <strong className="font-semibold text-foreground">{channel.share_percent}%</strong>
-            </div>
-          ))}
-        </div>
-      </div>
       </CardContent>
     </Card>
   )

@@ -4,12 +4,6 @@ export type DailySales = {
   gross_revenue: number
 }
 
-export type SalesChannelShare = {
-  code: string
-  name: string
-  share_percent: number
-}
-
 export type LowStockProduct = {
   available: number
   reorder_point: number
@@ -22,7 +16,6 @@ export type RecentOrder = {
   status: string
   total_amount: number
   ordered_at: string
-  channel_name: string
   order_items: { product_name: string }[]
 }
 
@@ -32,7 +25,6 @@ export type DashboardData = {
     totalOrders: number
     changeRate: number | null
   }
-  channelRows: SalesChannelShare[]
   riskInventoryRows: LowStockProduct[]
   inventorySummary: {
     riskCount: number

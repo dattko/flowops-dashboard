@@ -4,5 +4,4 @@ export type {
   DashboardData,
   LowStockProduct,
   RecentOrder,
-  SalesChannelShare,
 } from "./model/types"

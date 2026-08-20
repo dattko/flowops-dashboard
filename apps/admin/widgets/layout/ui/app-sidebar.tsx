@@ -4,29 +4,49 @@ import {
   BarChart3,
   Boxes,
   ChartNoAxesCombined,
-  Headphones,
   LayoutDashboard,
   Settings,
   ShoppingBag,
   Users,
 } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
+import type {
+  NavigationIcon,
+  NavigationItem,
+} from "@/entities/navigation"
 import { useProfile } from "@/entities/profile/client"
 import { Typography } from "@/shared/ui/typography"
 import { LogoutButton } from "@/features/auth"
 
-const navigation = [
-  { label: "대시보드", icon: LayoutDashboard, active: true },
-  { label: "주문 관리", icon: ShoppingBag },
-  { label: "재고 관리", icon: Boxes },
-  { label: "고객 관리", icon: Users },
-  { label: "리포트", icon: ChartNoAxesCombined },
-]
+const navigationIcons: Record<NavigationIcon, typeof LayoutDashboard> = {
+  dashboard: LayoutDashboard,
+  orders: ShoppingBag,
+  inventory: Boxes,
+  customers: Users,
+  reports: ChartNoAxesCombined,
+  settings: Settings,
+}
 
-export const AppSidebar = () => {
+type AppSidebarProps = {
+  navigationItems: readonly NavigationItem[]
+}
+
+export const AppSidebar = ({ navigationItems }: AppSidebarProps) => {
+  const pathname = usePathname()
   const { profile } = useProfile()
   const displayName = profile.displayName ?? "사용자"
+  const mainNavigation = navigationItems.filter((item) => item.section === "main")
+  const footerNavigation = navigationItems.filter(
+    (item) => item.section === "footer"
+  )
 
+  const isActiveMenu = (href: string) => {
+    return href === "/" ? pathname === href : pathname.startsWith(href)
+  }
+  
+  console.log('menu', navigationItems )
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden h-screen w-[248px] flex-col overflow-y-auto bg-sidebar px-4 py-6 text-sidebar-foreground lg:flex">
       <div className="flex items-center gap-3 px-3">
@@ -42,46 +62,49 @@ export const AppSidebar = () => {
       </div>
 
       <nav className="mt-10 space-y-1" aria-label="주요 메뉴">
-        {navigation.map((item) => {
-          const Icon = item.icon
+        {mainNavigation.map((item) => {
+          const Icon = navigationIcons[item.icon]
+          const isActive = isActiveMenu(item.href)
 
           return (
-            <a
-              key={item.label}
-              href="#"
-              aria-current={item.active ? "page" : undefined}
+            <Link
+              key={item.code}
+              href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={`type-body flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-colors ${
-                item.active
+                isActive
                   ? "bg-sidebar-accent text-sidebar-accent-foreground"
                   : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               }`}
             >
               <Icon
-                className={`size-[18px] ${item.active ? "text-sidebar-primary" : ""}`}
+                className={`size-[18px] ${isActive ? "text-sidebar-primary" : ""}`}
                 aria-hidden="true"
               />
               {item.label}
-              {item.active && <span className="ml-auto size-1.5 rounded-full bg-sidebar-primary" />}
-            </a>
+              {isActive && <span className="ml-auto size-1.5 rounded-full bg-sidebar-primary" />}
+            </Link>
           )
         })}
       </nav>
 
       <div className="mt-auto space-y-1">
-        <a
-          href="#"
-          className="type-body flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-        >
-          <Settings className="size-[18px]" aria-hidden="true" />
-          설정
-        </a>
-        <a
-          href="#"
-          className="type-body flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-        >
-          <Headphones className="size-[18px]" aria-hidden="true" />
-          도움말
-        </a>
+        {footerNavigation.map((item) => {
+          const Icon = navigationIcons[item.icon]
+          const isActive = isActiveMenu(item.href)
+
+          return (
+            <Link
+              key={item.code}
+              href={item.href}
+              aria-current={isActive ? "page" : undefined}
+              className="type-body flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            >
+              <Icon className="size-[18px]" aria-hidden="true" />
+              {item.label}
+            </Link>
+          )
+        })}
 
         <div className="mt-4 flex items-center gap-3 border-t border-sidebar-border px-3 pt-5">
           <div className="type-body grid size-9 place-items-center rounded-full bg-sidebar-accent font-semibold text-sidebar-primary">

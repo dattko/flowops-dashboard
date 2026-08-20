@@ -12,6 +12,8 @@ import {
 import { Bar } from "react-chartjs-2"
 
 import type { DailySales } from "@/entities/dashboard"
+import { formatWon } from "@/shared/lib/currency"
+import { dayjs } from "@/shared/lib/dayjs"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip)
 
@@ -19,17 +21,13 @@ type WeeklyOrdersChartProps = {
   weeklySales: readonly DailySales[]
 }
 
-const DAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"]
-
-const getDayLabel = (date: string) => {
-  return DAY_LABELS[new Date(`${date}T00:00:00`).getDay()] ?? "-"
-}
-
 export const WeeklyOrdersChart = ({ weeklySales }: WeeklyOrdersChartProps) => {
   const lastOrderIndex = weeklySales.length - 1
 
   const data: ChartData<"bar", number[], string> = {
-    labels: weeklySales.map((dailySales) => getDayLabel(dailySales.stat_date)),
+    labels: weeklySales.map((dailySales) =>
+      dayjs(dailySales.stat_date).format("dd")
+    ),
     datasets: [
       {
         label: "주문 수",
@@ -77,7 +75,9 @@ export const WeeklyOrdersChart = ({ weeklySales }: WeeklyOrdersChartProps) => {
         callbacks: {
           title: (items) => {
             const dailySales = weeklySales[items[0]?.dataIndex]
-            return dailySales ? `${getDayLabel(dailySales.stat_date)}요일` : ""
+            return dailySales
+              ? dayjs(dailySales.stat_date).format("dddd")
+              : ""
           },
           label: (context) => {
             const dailySales = weeklySales[context.dataIndex]
@@ -88,7 +88,7 @@ export const WeeklyOrdersChart = ({ weeklySales }: WeeklyOrdersChartProps) => {
 
             return [
               `주문 ${dailySales.order_count.toLocaleString()}건`,
-              `매출 ${Number((dailySales.gross_revenue / 1_000_000).toFixed(1))}백만원`,
+              `매출 ${formatWon(dailySales.gross_revenue)}`,
             ]
           },
         },

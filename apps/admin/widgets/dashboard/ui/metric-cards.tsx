@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 
 import type { DashboardData } from "@/entities/dashboard"
+import { formatWon } from "@/shared/lib/currency"
 import { Card, CardContent } from "@/shared/ui/card"
 import { Typography } from "@/shared/ui/typography"
 
@@ -22,12 +23,6 @@ type MetricCardsProps = {
   todayOrderSummary: DashboardData["todaySummary"]
   inventoryRiskSummary: DashboardData["inventorySummary"]
 }
-
-const wonFormatter = new Intl.NumberFormat("ko-KR", {
-  style: "currency",
-  currency: "KRW",
-  maximumFractionDigits: 0,
-})
 
 const formatChangeRate = (rate: number | null) => {
   return rate === null ? "비교 데이터 없음" : `${rate > 0 ? "+" : ""}${rate}%`
@@ -66,7 +61,7 @@ export const MetricCards = ({
     },
     {
       label: "오늘 매출",
-      value: wonFormatter.format(todayOrderSummary.todayRevenue),
+      value: formatWon(todayOrderSummary.todayRevenue),
       change: formatChangeRate(todayOrderSummary.revenueChangeRate),
       detail: "어제 대비",
       trend:

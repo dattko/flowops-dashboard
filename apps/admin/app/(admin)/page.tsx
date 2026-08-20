@@ -15,7 +15,6 @@ const Home = async () => {
     inventorySummary: inventoryRiskSummary,
     weeklyRows: weeklySales,
     weeklySummary: weeklyOrderSummary,
-    channelRows: salesChannelShares,
     riskInventoryRows: lowStockProducts,
     recentOrderRows: recentOrders,
   } = dashboardData
@@ -32,7 +31,6 @@ const Home = async () => {
         <WeeklyOrdersCard
           weeklySales={weeklySales}
           weeklyOrderSummary={weeklyOrderSummary}
-          salesChannelShares={salesChannelShares}
         />
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
           <OperationStatusCard todayOrderSummary={todayOrderSummary} />

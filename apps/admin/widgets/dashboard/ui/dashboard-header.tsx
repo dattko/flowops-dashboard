@@ -1,10 +1,7 @@
 "use client"
 
-import { CalendarDays, Download } from "lucide-react"
-
 import { useProfile } from "@/entities/profile/client"
 import { dayjs } from "@/shared/lib/dayjs"
-import { Button } from "@/shared/ui/button"
 import { Typography } from "@/shared/ui/typography"
 
 export const DashboardHeader = () => {
@@ -24,7 +21,7 @@ export const DashboardHeader = () => {
           오늘 운영 현황에서 우선 확인할 내용을 정리했어요.
         </Typography>
       </div>
-      <div className="flex items-center gap-2">
+      {/* <div className="flex items-center gap-2">
         <Button
           variant="outline"
           className="border-[#dedbd2] bg-white text-foreground shadow-none"
@@ -36,7 +33,7 @@ export const DashboardHeader = () => {
           <Download aria-hidden="true" />
           리포트 내보내기
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }

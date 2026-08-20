@@ -2,6 +2,8 @@ import { ChevronRight, SlidersHorizontal } from "lucide-react"
 
 import type { RecentOrder } from "@/entities/dashboard"
 import { ORDER_STATUS } from "@/widgets/dashboard/config/order-status"
+import { formatWon } from "@/shared/lib/currency"
+import { dayjs } from "@/shared/lib/dayjs"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent } from "@/shared/ui/card"
 import { SectionHeading } from "@/shared/ui/section-heading"
@@ -10,12 +12,6 @@ import { StatusBadge } from "@/shared/ui/status-badge"
 type RecentOrdersTableProps = {
   recentOrders: readonly RecentOrder[]
 }
-
-const wonFormatter = new Intl.NumberFormat("ko-KR", {
-  style: "currency",
-  currency: "KRW",
-  maximumFractionDigits: 0,
-})
 
 const getProductSummary = (items: RecentOrder["order_items"]) => {
   const firstItem = items[0]
@@ -27,7 +23,10 @@ const getProductSummary = (items: RecentOrder["order_items"]) => {
     : firstItem.product_name
 }
 
+
+
 export const RecentOrdersTable = ({ recentOrders }: RecentOrdersTableProps) => {
+  console.log(recentOrders)
   return (
     <Card className="mt-4 gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0">
       <CardContent className="p-0">
@@ -55,7 +54,6 @@ export const RecentOrdersTable = ({ recentOrders }: RecentOrdersTableProps) => {
               <th className="px-6 py-3 font-medium">주문번호</th>
               <th className="px-4 py-3 font-medium">고객</th>
               <th className="px-4 py-3 font-medium">상품</th>
-              <th className="px-4 py-3 font-medium">채널</th>
               <th className="px-4 py-3 font-medium">결제금액</th>
               <th className="px-4 py-3 font-medium">상태</th>
               <th className="px-6 py-3 text-right font-medium">주문시간</th>
@@ -67,20 +65,14 @@ export const RecentOrdersTable = ({ recentOrders }: RecentOrdersTableProps) => {
                 <td className="px-6 py-3.5 font-medium text-muted-foreground">{order.order_number}</td>
                 <td className="px-4 py-3.5 font-semibold text-foreground">{order.customer_name}</td>
                 <td className="max-w-[260px] truncate px-4 py-3.5 text-muted-foreground">{getProductSummary(order.order_items)}</td>
-                <td className="px-4 py-3.5 text-muted-foreground">{order.channel_name}</td>
-                <td className="px-4 py-3.5 font-semibold text-foreground">{wonFormatter.format(order.total_amount)}</td>
+                <td className="px-4 py-3.5 font-semibold text-foreground">{formatWon(order.total_amount)}</td>
                 <td className="px-4 py-3.5">
                   <StatusBadge className={ORDER_STATUS[order.status]?.className}>
                     {ORDER_STATUS[order.status]?.label ?? order.status}
                   </StatusBadge>
                 </td>
                 <td className="px-6 py-3.5 text-right text-muted-foreground">
-                  {new Intl.DateTimeFormat("ko-KR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                    timeZone: "Asia/Seoul",
-                  }).format(new Date(order.ordered_at))}
+                  {dayjs(order.ordered_at).format("HH:mm")}
                 </td>
               </tr>
             ))}
