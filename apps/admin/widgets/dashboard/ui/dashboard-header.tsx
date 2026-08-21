@@ -1,6 +1,6 @@
 "use client"
 
-import { useProfile } from "@/entities/profile/client"
+import { useProfile } from "@/entities/profile"
 import { dayjs } from "@/shared/lib/dayjs"
 import { Typography } from "@/shared/ui/typography"
 

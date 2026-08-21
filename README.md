@@ -1,15 +1,18 @@
 # FlowOps
 
-주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 현재는 관리자용 Next.js 애플리케이션을 먼저 개발하고 있으며, 고객용 웹은 백오피스와 데이터 기반이 안정된 뒤 `apps/web`에 추가합니다.
+주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 현재는 관리자용 Next.js 애플리케이션을 먼저 개발하고 있으며, 고객용 웹은 추후 `apps/web`에 추가할 예정입니다.
 
-## 현재 구성
+## 기술 스택
 
-- `@flowops/admin`: 운영자를 위한 백오피스
-- Next.js 16 App Router, React 19, TypeScript
-- Tailwind CSS와 shadcn/ui 기반 UI
-- TanStack Query와 Zustand 기반 상태 관리
-- Chart.js 기반 대시보드 차트
 - pnpm workspace 기반 모노레포
+- Next.js 16 App Router, React 19, TypeScript
+- Tailwind CSS 4, shadcn/ui
+- Supabase Auth, PostgreSQL, PostgREST RPC
+- TanStack Query
+- React Hook Form, Zod
+- Chart.js, react-chartjs-2
+- Day.js
+- React Context 기반 프로필 상태 공유
 
 ## 요구 사항
 
@@ -29,8 +32,6 @@ pnpm dev
 
 ## 주요 명령어
 
-루트 명령어는 현재 관리자 앱에 연결되어 있습니다.
-
 | 명령어 | 설명 |
 | --- | --- |
 | `pnpm dev` | 관리자 앱 개발 서버 실행 |
@@ -43,66 +44,173 @@ pnpm dev
 ```bash
 pnpm --filter @flowops/admin dev
 pnpm --filter @flowops/admin build
+pnpm --filter @flowops/admin exec tsc --noEmit
 ```
 
 ## 모노레포 구조
 
 ```text
-flowops/
+flowops-dashboard/
 ├── apps/
-│   └── admin/                 # 현재 개발 중인 관리자용 Next.js 앱
-│       ├── app/               # 라우트, 레이아웃, 페이지 조립
-│       ├── components/        # 공통 UI와 앱 레이아웃
-│       ├── features/          # 업무 기능별 UI와 로직
-│       ├── lib/               # 앱 전반의 기반 코드
-│       ├── public/            # 정적 파일
-│       └── package.json
+│   └── admin/                 # 관리자용 Next.js 앱
 ├── docs/                      # 프로젝트 문서
-├── package.json               # 워크스페이스 공통 명령어
+├── supabase/
+│   └── migrations/            # DB 스키마, RPC, 데모 데이터 이력
+├── package.json               # 루트 공통 명령어
 ├── pnpm-lock.yaml             # 저장소 전체 단일 lockfile
-└── pnpm-workspace.yaml        # apps/*와 packages/* 등록
+└── pnpm-workspace.yaml        # apps/*, packages/* workspace 등록
 ```
 
-다음 디렉터리는 실제 구현을 시작할 때 생성합니다.
+필요해질 때 다음 workspace를 추가합니다.
 
 ```text
 apps/web/                      # 고객용 메인 사이트
-packages/types/                # 두 앱이 공유하는 도메인 타입
-packages/api/                  # 공통 API 클라이언트와 쿼리 규약
-packages/ui/                   # 실제로 두 앱에서 공유하는 UI와 디자인 토큰
+packages/types/                # 여러 앱이 실제로 공유하는 타입
+packages/api/                  # 여러 앱이 실제로 공유하는 API 규약
+packages/ui/                   # 여러 앱이 실제로 공유하는 UI와 디자인 토큰
 ```
 
-관리자와 고객 화면은 목적과 디자인이 다르므로 UI를 처음부터 모두 공통화하지 않습니다. 두 앱에서 실제로 반복되는 타입, API 코드, 디자인 토큰이 확인됐을 때만 `packages`로 이동합니다.
+관리자와 고객 화면은 목적과 디자인이 다르므로 처음부터 모든 코드를 공통화하지 않습니다. 두 앱에서 실제 중복이 확인된 코드만 `packages`로 이동합니다.
 
 ## 관리자 앱 구조
 
-관리자 앱은 기능별 코드를 모으는 feature-first 구조를 사용합니다.
+관리자 앱은 Next.js App Router와 Light FSD 구조를 함께 사용합니다.
 
 ```text
 apps/admin/
-├── app/                       # Next.js App Router
-├── features/
-│   ├── auth/
-│   │   ├── api/               # 로그인 서버 액션
-│   │   ├── components/        # 로그인 페이지와 폼
-│   │   ├── model/             # 로그인 검증 스키마와 타입
-│   │   └── index.ts           # 기능 공개 진입점
-│   └── dashboard/
-│       ├── api/               # 서버 데이터 조회 규약
-│       ├── components/        # 대시보드 전용 UI
-│       ├── constants/         # 쿼리 키와 상태 상수
-│       ├── data/              # 현재 목 데이터
-│       └── model/             # 타입, 매퍼, 화면 상태 로직
-├── components/
-│   ├── common/                # 여러 기능에서 쓰는 공통 컴포넌트
-│   ├── layout/                # Sidebar와 Header
-│   └── ui/                    # shadcn/ui 기반 범용 UI
-└── lib/                       # 앱 전반에서 사용하는 유틸리티와 기반 코드
+├── app/                       # 라우트, 레이아웃, 위젯 조합
+│   ├── (admin)/               # 인증이 필요한 관리자 화면
+│   ├── (auth)/                # 로그인 화면
+│   ├── auth/                  # 세션 관련 Route Handler
+│   └── providers.tsx          # TanStack Query Provider
+├── entities/                  # 비즈니스 대상의 공통 모델과 표현
+│   ├── order/                 # 주문 상태, 라벨, 공통 스타일
+│   └── profile/               # 프로필 조회, 타입, Context
+├── features/                  # 사용자의 행동과 업무 기능
+│   └── auth/                  # 로그인, 로그아웃, 세션 만료 처리
+├── widgets/                   # 독립적인 화면 블록과 데이터 조합
+│   ├── dashboard/             # 대시보드 조회 및 전체 화면 조합
+│   ├── order-list/            # 주문 목록 조회와 테이블
+│   ├── sidebar/               # 메뉴 조회와 사이드바
+│   └── mobile-header/         # 모바일 헤더
+└── shared/                    # 도메인에 의존하지 않는 공통 코드
+    ├── api/base/              # 클라이언트·서버 공통 API Fetcher
+    ├── lib/                   # Supabase, 날짜, 통화, 세션 유틸
+    └── ui/                    # shadcn/ui 기반 범용 UI
 ```
 
-특정 기능에서만 사용하는 컴포넌트와 타입은 해당 `features` 폴더에 둡니다. 두 기능 이상에서 실제로 재사용될 때만 앱의 `components`나 `lib`로 올립니다.
-`app`의 페이지 파일은 기능 컴포넌트를 조립하는 역할만 맡고, 서버 액션과 화면 구현은 해당 `features` 폴더에서 관리합니다.
-로그인 폼처럼 기능의 상태와 업무 흐름을 다루는 훅은 해당 기능의 `model`에 둡니다. `useDebounce`, `useMediaQuery`처럼 도메인과 무관하고 여러 기능에서 재사용되는 훅만 앱 루트의 `hooks`로 올립니다.
+## FSD 의존 방향
+
+상위 레이어는 하위 레이어를 사용할 수 있지만 반대 방향으로 참조하지 않습니다.
+
+```text
+app → widgets → features → entities → shared
+```
+
+예시는 다음과 같습니다.
+
+- `shared/ui/button`: 주문이나 인증을 모르는 범용 버튼
+- `entities/order`: 여러 주문 화면에서 사용하는 주문 상태와 라벨
+- `features/auth`: 로그인과 로그아웃 같은 사용자 행동
+- `widgets/order-list`: 주문 목록 API, Query, 테이블 조합
+- `widgets/dashboard`: 대시보드 RPC 결과를 여러 카드로 조합
+- `app/(admin)/page.tsx`: `DashboardOverview` 위젯 배치
+
+## 슬라이스 구성 규칙
+
+각 슬라이스는 필요한 세그먼트만 만듭니다.
+
+```text
+slice-name/
+├── api/                       # 실제 API 요청과 서버 액션
+├── lib/                       # UI에서 사용하는 훅과 가공 로직
+├── model/                     # 타입, 스키마, Context, Query Key
+├── ui/                        # JSX와 렌더링 로직
+└── index.ts                   # 외부에 공개할 API
+```
+
+현재 프로젝트의 파일 이름 규칙은 다음과 같습니다.
+
+```text
+api/get-dashboard.ts
+api/get-orders-client.ts
+lib/use-dashboard-metrics.ts
+lib/use-orders-query.ts
+lib/use-active-menu.ts
+```
+
+- 실제 HTTP 요청 함수는 `api/get-*`에 둡니다.
+- 커스텀 훅, Query/Mutation 훅, UI가 사용하는 가공 로직은 `lib/use-*`에 둡니다.
+- `use-*` 함수는 React 컴포넌트 최상단에서 호출합니다.
+- 타입, 검증 스키마, Context, Query Key는 `model`에 둡니다.
+- `ui`에는 JSX와 화면 표현에 직접 필요한 로직만 남깁니다.
+- 아직 필요하지 않은 세그먼트는 미리 만들지 않습니다.
+
+## 공개 API와 import 규칙
+
+다른 슬라이스에서는 대상 슬라이스의 `index.ts`를 통해 가져옵니다.
+
+```ts
+import { ORDER_STATUS_LABELS } from "@/entities/order"
+import { LoginForm } from "@/features/auth"
+import { DashboardOverview } from "@/widgets/dashboard"
+```
+
+같은 슬라이스 내부에서는 순환 참조를 피하기 위해 상대 경로를 사용합니다.
+
+```ts
+import { useOrdersQuery } from "../lib/use-orders-query"
+import { OrderTable } from "./order-table"
+```
+
+외부 공개가 필요한 항목은 named export를 사용합니다.
+
+```ts
+export { useOrdersQuery } from "./lib/use-orders-query"
+export { OrderList } from "./ui/order-list"
+```
+
+## 데이터 조회 방식
+
+- 초기 대시보드 데이터는 Server Component에서 Supabase PostgREST RPC로 조회합니다.
+- 주문 목록은 Client Component에서 TanStack Query로 조회합니다.
+- SQL 집계와 업무 데이터 가공은 가능한 한 Supabase RPC에서 처리합니다.
+- 통화, 날짜, 상태 색상처럼 화면 표현에 가까운 가공은 프론트엔드에서 처리합니다.
+- 클라이언트와 서버 요청은 `shared/api/base`의 Fetcher를 사용합니다.
+
+## 인증과 세션
+
+- Supabase Auth 이메일 로그인을 사용합니다.
+- 로그인 상태 유지를 선택하면 Supabase 세션 정책을 따릅니다.
+- 로그인 상태 유지를 선택하지 않으면 사용자 활동 기준 2시간 세션 정책을 적용합니다.
+- 프로필은 관리자 레이아웃에서 SSR로 조회한 뒤 React Context로 하위 Client Component에 전달합니다.
+
+## 환경 변수
+
+관리자 앱의 로컬 환경 변수는 `apps/admin/.env.local`에서 관리합니다.
+
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+```
+
+`.env*` 파일은 저장소에 커밋하지 않습니다. Supabase CLI의 `.temp`는 프로젝트 연결 과정에서 생성되는 로컬 상태이며 마이그레이션 원본은 `supabase/migrations`에서 관리합니다.
+
+## Supabase 마이그레이션
+
+DB 스키마, RPC와 데모 데이터 변경은 `supabase/migrations`에 SQL 마이그레이션으로 기록합니다. 마이그레이션 파일은 애플리케이션 코드와 함께 Git으로 관리합니다.
+
+연결된 원격 Supabase 프로젝트에 적용합니다.
+
+```bash
+pnpm dlx supabase db push
+```
+
+원격 마이그레이션보다 이전 시각의 로컬 파일까지 적용해야 한다는 안내가 나오면 내용을 확인한 후 다음 명령을 사용합니다.
+
+```bash
+pnpm dlx supabase db push --include-all
+```
 
 ## shadcn/ui 컴포넌트 추가
 
@@ -111,26 +219,6 @@ apps/admin/
 ```bash
 pnpm --dir apps/admin dlx shadcn@latest add dialog input
 ```
-
-## 환경 변수
-
-앱별 환경 변수는 각 앱 디렉터리에서 관리합니다.
-
-```text
-apps/admin/.env.local
-apps/web/.env.local
-```
-
-Supabase를 연결할 때 관리자 앱의 `.env.local`부터 추가합니다. `.env*` 파일은 저장소에 커밋되지 않습니다.
-
-## 다음 개발 순서
-
-1. Supabase 프로젝트와 인증 환경 설정
-2. 상품, 주문, 주문 항목, 재고 테이블 정의
-3. 관리자와 고객 역할 및 RLS 정책 설정
-4. 대시보드 목 데이터를 실제 조회로 교체
-5. `apps/web` 고객용 사이트 추가
-6. 실제 공유가 확인된 코드만 `packages`로 분리
 
 ## 검증
 

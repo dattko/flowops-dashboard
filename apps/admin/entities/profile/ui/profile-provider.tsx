@@ -1,15 +1,9 @@
 "use client"
 
-import { createContext, useContext, useState } from "react"
+import { useState } from "react"
 
+import { ProfileContext } from "../model/profile-context"
 import type { Profile } from "../model/types"
-
-type ProfileContextValue = {
-  profile: Profile
-  setProfile: React.Dispatch<React.SetStateAction<Profile>>
-}
-
-const ProfileContext = createContext<ProfileContextValue | null>(null)
 
 type ProfileProviderProps = {
   initialProfile: Profile
@@ -29,14 +23,4 @@ const ProfileProvider = ({
   )
 }
 
-const useProfile = () => {
-  const context = useContext(ProfileContext)
-
-  if (!context) {
-    throw new Error("useProfile은 ProfileProvider 안에서 사용해야 합니다.")
-  }
-
-  return context
-}
-
-export { ProfileProvider, useProfile }
+export { ProfileProvider }

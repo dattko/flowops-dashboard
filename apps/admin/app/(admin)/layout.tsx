@@ -1,15 +1,13 @@
 import { cookies } from "next/headers"
 
-import { getNavigation } from "@/entities/navigation"
-import { getProfile } from "@/entities/profile"
-import { ProfileProvider } from "@/entities/profile/client"
-import { SessionExpiryGuard } from "@/features/auth/ui/session-expiry-guard"
+import { getProfile, ProfileProvider } from "@/entities/profile"
+import { SessionExpiryGuard } from "@/features/auth"
 import {
   SESSION_POLICY_COOKIE,
   getShortSessionExpiresAt,
 } from "@/shared/lib/auth/session-policy"
-import { AppSidebar } from "@/widgets/layout/ui/app-sidebar"
-import { MobileHeader } from "@/widgets/layout/ui/mobile-header"
+import { MobileHeader } from "@/widgets/mobile-header"
+import { AppSidebar, getNavigation } from "@/widgets/sidebar"
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const [profile, navigationItems, cookieStore] = await Promise.all([
@@ -27,8 +25,10 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
         <SessionExpiryGuard expiresAt={expiresAt} />
         <AppSidebar navigationItems={navigationItems} />
         <div className="min-w-0 lg:pl-[248px]">
-          <MobileHeader />
-          {children}
+        <MobileHeader />
+          <main className="mx-auto w-full max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
+            {children}
+          </main>
         </div>
       </div>
     </ProfileProvider>

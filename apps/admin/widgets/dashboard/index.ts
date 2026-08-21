@@ -1,6 +1,1 @@
-export { DashboardHeader } from "./ui/dashboard-header"
-export { MetricCards } from "./ui/metric-cards"
-export { OperationAlertsCard } from "./ui/operation-alerts-card"
-export { OperationStatusCard } from "./ui/operation-status-card"
-export { RecentOrdersTable } from "./ui/recent-orders-table"
-export { WeeklyOrdersCard } from "./ui/weekly-orders-card"
+export { DashboardOverview } from "./ui/dashboard-overview"

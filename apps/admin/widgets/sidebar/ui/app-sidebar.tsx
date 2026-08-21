@@ -10,15 +10,14 @@ import {
   Users,
 } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 
-import type {
-  NavigationIcon,
-  NavigationItem,
-} from "@/entities/navigation"
-import { useProfile } from "@/entities/profile/client"
-import { Typography } from "@/shared/ui/typography"
+import { useProfile } from "@/entities/profile"
 import { LogoutButton } from "@/features/auth"
+import { Typography } from "@/shared/ui/typography"
+
+import { useNavigationSections } from "../lib/use-navigation-sections"
+import { useActiveMenu } from "../lib/use-active-menu"
+import type { NavigationIcon, NavigationItem } from "../model/types"
 
 const navigationIcons: Record<NavigationIcon, typeof LayoutDashboard> = {
   dashboard: LayoutDashboard,
@@ -34,19 +33,12 @@ type AppSidebarProps = {
 }
 
 export const AppSidebar = ({ navigationItems }: AppSidebarProps) => {
-  const pathname = usePathname()
+  const isActiveMenu = useActiveMenu()
   const { profile } = useProfile()
   const displayName = profile.displayName ?? "사용자"
-  const mainNavigation = navigationItems.filter((item) => item.section === "main")
-  const footerNavigation = navigationItems.filter(
-    (item) => item.section === "footer"
-  )
+  const { mainNavigation, footerNavigation } =
+    useNavigationSections(navigationItems)
 
-  const isActiveMenu = (href: string) => {
-    return href === "/" ? pathname === href : pathname.startsWith(href)
-  }
-  
-  console.log('menu', navigationItems )
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden h-screen w-[248px] flex-col overflow-y-auto bg-sidebar px-4 py-6 text-sidebar-foreground lg:flex">
       <div className="flex items-center gap-3 px-3">

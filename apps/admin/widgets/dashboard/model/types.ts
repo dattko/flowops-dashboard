@@ -1,3 +1,5 @@
+import type { OrderStatus } from "@/entities/order"
+
 export type DailySales = {
   stat_date: string
   order_count: number
@@ -13,7 +15,7 @@ export type LowStockProduct = {
 export type RecentOrder = {
   order_number: string
   customer_name: string
-  status: string
+  status: OrderStatus
   total_amount: number
   ordered_at: string
   order_items: { product_name: string }[]

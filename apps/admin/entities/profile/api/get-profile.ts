@@ -1,4 +1,4 @@
-import "server-only"
+"use server"
 
 import { baseApiFetcherServer } from "@/shared/api/base/base-api-fetcher-server"
 

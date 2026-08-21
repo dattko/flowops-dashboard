@@ -1,6 +1,6 @@
 import { CircleAlert } from "lucide-react"
 
-import type { LowStockProduct } from "@/entities/dashboard"
+import type { LowStockProduct } from "../model/types"
 import { Badge } from "@/shared/ui/badge"
 import { Card, CardContent } from "@/shared/ui/card"
 import { SectionHeading } from "@/shared/ui/section-heading"

@@ -1,9 +1,7 @@
-import React from 'react'
+import { OrderList } from "@/widgets/order-list"
 
 const OrderPage = () => {
-  return (
-    <div>OrderPage</div>
-  )
+  return <OrderList />
 }
 
 export default OrderPage

@@ -4,7 +4,7 @@ import { Button } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader } from "@/shared/ui/card"
 import { FormCheckbox, InputText } from "@/shared/ui/form"
 import { Typography } from "@/shared/ui/typography"
-import { useLoginForm } from "../model/use-login-form"
+import { useLoginForm } from "../lib/use-login-form"
 
 export const LoginForm = () => {
   const { form, handleSubmitForm } = useLoginForm()

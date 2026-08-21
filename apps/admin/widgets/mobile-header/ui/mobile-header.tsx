@@ -1,5 +1,4 @@
 import { BarChart3, Bell, Search } from "lucide-react"
-
 import { Button } from "@/shared/ui/button"
 import { Typography } from "@/shared/ui/typography"
 import { LogoutButton } from "@/features/auth"

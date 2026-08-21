@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react"
 
-import type { DashboardData } from "@/entities/dashboard"
+import type { DashboardData } from "../model/types"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent } from "@/shared/ui/card"
 import { SectionHeading } from "@/shared/ui/section-heading"
