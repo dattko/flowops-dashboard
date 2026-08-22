@@ -11,3 +11,11 @@ export type OrderListItem = {
   itemCount: number
   totalQuantity: number
 }
+
+export type OrderListResponse = {
+  items: OrderListItem[]
+  totalCount: number
+  page: number
+  pageSize: number
+  totalPages: number
+}

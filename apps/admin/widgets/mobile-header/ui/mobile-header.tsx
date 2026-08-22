@@ -10,7 +10,9 @@ export const MobileHeader = () => {
         <div className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
           <BarChart3 className="size-4" aria-hidden="true" />
         </div>
-        <Typography as="span" variant="cardTitle">flowops</Typography>
+        <Typography as="span" variant="cardTitle">
+          flowops
+        </Typography>
       </div>
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="icon" aria-label="검색">

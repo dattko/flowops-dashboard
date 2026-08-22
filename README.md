@@ -8,7 +8,7 @@
 - Next.js 16 App Router, React 19, TypeScript
 - Tailwind CSS 4, shadcn/ui
 - Supabase Auth, PostgreSQL, PostgREST RPC
-- TanStack Query
+- TanStack Query, TanStack Table
 - React Hook Form, Zod
 - Chart.js, react-chartjs-2
 - Day.js
@@ -87,7 +87,8 @@ apps/admin/
 │   ├── order/                 # 주문 상태, 라벨, 공통 스타일
 │   └── profile/               # 프로필 조회, 타입, Context
 ├── features/                  # 사용자의 행동과 업무 기능
-│   └── auth/                  # 로그인, 로그아웃, 세션 만료 처리
+│   ├── auth/                  # 로그인, 로그아웃, 세션 만료 처리
+│   └── filter-orders/         # RHF 기반 주문 검색 및 상태 필터 UI
 ├── widgets/                   # 독립적인 화면 블록과 데이터 조합
 │   ├── dashboard/             # 대시보드 조회 및 전체 화면 조합
 │   ├── order-list/            # 주문 목록 조회와 테이블
@@ -95,8 +96,9 @@ apps/admin/
 │   └── mobile-header/         # 모바일 헤더
 └── shared/                    # 도메인에 의존하지 않는 공통 코드
     ├── api/base/              # 클라이언트·서버 공통 API Fetcher
-    ├── lib/                   # Supabase, 날짜, 통화, 세션 유틸
-    └── ui/                    # shadcn/ui 기반 범용 UI
+    ├── lib/                   # Supabase, 날짜, 통화, 세션, 페이지 계산 유틸
+    ├── model/                 # 공통 페이지네이션 타입과 기본값
+    └── ui/                    # shadcn/ui 기반 범용 UI와 페이지네이션
 ```
 
 ## FSD 의존 방향
@@ -112,6 +114,7 @@ app → widgets → features → entities → shared
 - `shared/ui/button`: 주문이나 인증을 모르는 범용 버튼
 - `entities/order`: 여러 주문 화면에서 사용하는 주문 상태와 라벨
 - `features/auth`: 로그인과 로그아웃 같은 사용자 행동
+- `features/filter-orders`: 주문 검색 및 상태 필터 입력 기능
 - `widgets/order-list`: 주문 목록 API, Query, 테이블 조합
 - `widgets/dashboard`: 대시보드 RPC 결과를 여러 카드로 조합
 - `app/(admin)/page.tsx`: `DashboardOverview` 위젯 배치
@@ -124,7 +127,7 @@ app → widgets → features → entities → shared
 slice-name/
 ├── api/                       # 실제 API 요청과 서버 액션
 ├── lib/                       # UI에서 사용하는 훅과 가공 로직
-├── model/                     # 타입, 스키마, Context, Query Key
+├── model/                     # 타입, 스키마, Context
 ├── ui/                        # JSX와 렌더링 로직
 └── index.ts                   # 외부에 공개할 API
 ```
@@ -135,14 +138,15 @@ slice-name/
 api/get-dashboard.ts
 api/get-orders-client.ts
 lib/use-dashboard-metrics.ts
-lib/use-orders-query.ts
+lib/use-order-list.ts
 lib/use-active-menu.ts
 ```
 
 - 실제 HTTP 요청 함수는 `api/get-*`에 둡니다.
 - 커스텀 훅, Query/Mutation 훅, UI가 사용하는 가공 로직은 `lib/use-*`에 둡니다.
 - `use-*` 함수는 React 컴포넌트 최상단에서 호출합니다.
-- 타입, 검증 스키마, Context, Query Key는 `model`에 둡니다.
+- 타입, 검증 스키마와 Context는 `model`에 둡니다.
+- TanStack Query의 `queryKey`는 별도 팩토리 파일 없이 해당 Query 훅에 직접 작성합니다.
 - `ui`에는 JSX와 화면 표현에 직접 필요한 로직만 남깁니다.
 - 아직 필요하지 않은 세그먼트는 미리 만들지 않습니다.
 
@@ -159,21 +163,27 @@ import { DashboardOverview } from "@/widgets/dashboard"
 같은 슬라이스 내부에서는 순환 참조를 피하기 위해 상대 경로를 사용합니다.
 
 ```ts
-import { useOrdersQuery } from "../lib/use-orders-query"
-import { OrderTable } from "./order-table"
+import { useOrderList } from "../lib/use-order-list"
+import { OrderListTable } from "./order-list-table"
 ```
 
 외부 공개가 필요한 항목은 named export를 사용합니다.
 
 ```ts
-export { useOrdersQuery } from "./lib/use-orders-query"
 export { OrderList } from "./ui/order-list"
 ```
 
 ## 데이터 조회 방식
 
 - 초기 대시보드 데이터는 Server Component에서 Supabase PostgREST RPC로 조회합니다.
-- 주문 목록은 Client Component에서 TanStack Query로 조회합니다.
+- 주문 검색 폼은 React Hook Form으로 관리하고 확정된 필터와 페이지는 URL Search Params로 관리합니다.
+- `page`, `pageSize`와 페이지 크기 선택지는 `shared/model/pagination.ts`에서 목록 공통 모델로 관리합니다.
+- `shared/lib/use-list-search-params.ts`는 목록의 `page`, `pageSize`를 읽고 필터 변경 시 1페이지로 초기화합니다.
+- 주문 목록의 route 필터 해석, 페이지 변경과 TanStack Query 조회는 `widgets/order-list/lib/use-order-list.ts` 한 곳에 모읍니다.
+- 주문 테이블에서만 사용하는 컬럼 정의는 `widgets/order-list/ui/order-list-table.tsx`에 함께 둡니다.
+- URL이 필터 상태이므로 새로고침, 뒤로 가기와 검색 결과 URL 공유에도 같은 조건이 유지됩니다.
+- 범용 테이블은 `shared/ui/data-table.tsx`의 TanStack Table 컴포넌트를 사용합니다.
+- 주문 검색, 상태 필터, 페이지네이션과 전체 개수 계산은 Supabase `get_orders` RPC에서 처리합니다.
 - SQL 집계와 업무 데이터 가공은 가능한 한 Supabase RPC에서 처리합니다.
 - 통화, 날짜, 상태 색상처럼 화면 표현에 가까운 가공은 프론트엔드에서 처리합니다.
 - 클라이언트와 서버 요청은 `shared/api/base`의 Fetcher를 사용합니다.

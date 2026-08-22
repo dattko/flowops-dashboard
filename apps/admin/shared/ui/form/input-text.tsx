@@ -10,6 +10,7 @@ import { Typography } from "@/shared/ui/typography"
 type InputTextProps = InputProps & {
   label: React.ReactNode
   labelAction?: React.ReactNode
+  labelHidden?: boolean
   containerClassName?: string
   description?: string
   error?: string
@@ -18,6 +19,7 @@ type InputTextProps = InputProps & {
 const InputText = ({
   label,
   labelAction,
+  labelHidden = false,
   containerClassName,
   description,
   error,
@@ -37,7 +39,12 @@ const InputText = ({
 
   return (
     <div className={cn("space-y-2", containerClassName)}>
-      <div className="flex items-center justify-between gap-4">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-4",
+          labelHidden && "sr-only"
+        )}
+      >
         <Label htmlFor={inputId}>
           <Typography as="span" variant="label">
             {label}
