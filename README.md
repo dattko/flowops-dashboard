@@ -149,6 +149,7 @@ lib/use-active-menu.ts
 - TanStack Query의 `queryKey`는 별도 팩토리 파일 없이 해당 Query 훅에 직접 작성합니다.
 - `ui`에는 JSX와 화면 표현에 직접 필요한 로직만 남깁니다.
 - 아직 필요하지 않은 세그먼트는 미리 만들지 않습니다.
+- 목록 필터의 검색·초기화 버튼은 `shared/ui/form/filter-form.tsx`의 공통 `FilterForm`으로 구성합니다.
 
 ## 공개 API와 import 규칙
 

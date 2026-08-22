@@ -85,7 +85,7 @@ export const Select = <TValue extends string = string>({
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
           className={cn(
-            "w-full appearance-none rounded-lg border border-input bg-background outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
+            "w-full appearance-none rounded-lg border border-input bg-white outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
             selectSizeClassNames[size],
             className
           )}

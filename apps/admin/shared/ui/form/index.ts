@@ -1,5 +1,7 @@
 export { FormCheckbox } from "./form-checkbox"
 export type { FormCheckboxProps } from "./form-checkbox"
+export { FilterForm } from "./filter-form"
+export type { FilterFormProps } from "./filter-form"
 export { InputText } from "./input-text"
 export type { InputTextProps } from "./input-text"
 export { Select } from "./select"

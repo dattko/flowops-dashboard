@@ -2,8 +2,7 @@
 
 import { RotateCcw, Search } from "lucide-react"
 
-import { Button } from "@/shared/ui/button"
-import { InputText, Select } from "@/shared/ui/form"
+import { FilterForm, InputText, Select } from "@/shared/ui/form"
 
 import { useOrderListFilterForm } from "../lib/use-order-list-filter-form"
 import { ORDER_STATUS_FILTER_OPTIONS } from "../model/constants"
@@ -28,9 +27,10 @@ export const OrderListFilter = ({
   const { register } = form
 
   return (
-    <form
+    <FilterForm
       onSubmit={onSubmit}
       className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
+      onReset={onReset}
     >
       <InputText
         {...register("keyword")}
@@ -48,16 +48,6 @@ export const OrderListFilter = ({
         containerClassName="sm:w-36"
       />
 
-      <div className="flex gap-2">
-        <Button type="submit">
-          <Search aria-hidden="true" />
-          검색
-        </Button>
-        <Button type="button" variant="outline" onClick={onReset}>
-          <RotateCcw aria-hidden="true" />
-          초기화
-        </Button>
-      </div>
-    </form>
+    </FilterForm>
   )
 }
