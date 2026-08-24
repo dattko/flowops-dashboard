@@ -1,0 +1,30 @@
+meta {
+  name: Get Dashboard Summary
+  type: http
+  seq: 3
+  tags: [
+    read
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/get_dashboard_summary
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {}
+}
+
+tests {
+  test("대시보드 조회 성공", function () {
+    expect(res.status).to.equal(200);
+  });
+}

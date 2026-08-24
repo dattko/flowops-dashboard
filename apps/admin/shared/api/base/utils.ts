@@ -18,6 +18,10 @@ const parseApiResponse = async <T>(response: Response): Promise<T> => {
 }
 
 const getApiErrorMessage = (error: unknown) => {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+
   if (
     typeof error === "object" &&
     error !== null &&

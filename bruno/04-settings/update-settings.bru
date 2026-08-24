@@ -1,0 +1,45 @@
+meta {
+  name: [변경] Update Admin Settings
+  type: http
+  seq: 2
+  tags: [
+    write
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/update_admin_settings
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_payload": {
+      "storeName": "FlowOps Store",
+      "supportEmail": "support@flowops.co.kr",
+      "supportPhone": "02-1234-5678",
+      "businessNumber": "123-45-67890",
+      "defaultShippingFee": 3000,
+      "freeShippingThreshold": 50000,
+      "defaultCarrier": "CJ대한통운",
+      "returnShippingFee": 6000,
+      "shippingAddress": "서울특별시 성동구 왕십리로 125",
+      "returnAddress": "경기도 성남시 분당구 판교역로 166",
+      "displayName": "운영 관리자",
+      "avatarUrl": null
+    }
+  }
+}
+
+tests {
+  test("설정 수정 성공", function () {
+    expect(res.status).to.equal(200);
+  });
+}

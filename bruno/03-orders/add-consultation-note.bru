@@ -1,0 +1,33 @@
+meta {
+  name: [변경] Add Consultation Note
+  type: http
+  seq: 4
+  tags: [
+    write
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/add_order_consultation_note
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_order_id": "{{order_id}}",
+    "p_content": "Bruno에서 등록한 상담 메모입니다."
+  }
+}
+
+tests {
+  test("상담 메모 등록 성공", function () {
+    expect(res.status).to.equal(200);
+  });
+}

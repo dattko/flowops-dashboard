@@ -1,0 +1,31 @@
+meta {
+  name: Get Admin Navigation
+  type: http
+  seq: 2
+  tags: [
+    read
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/get_admin_navigation
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {}
+}
+
+tests {
+  test("메뉴 조회 성공", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.be.an("array");
+  });
+}

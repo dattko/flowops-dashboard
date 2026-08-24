@@ -1,0 +1,39 @@
+meta {
+  name: [변경] Update Customer
+  type: http
+  seq: 3
+  tags: [
+    write
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/update_customer
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_customer_id": "{{customer_id}}",
+    "p_payload": {
+      "name": "홍길동",
+      "email": "customer@example.com",
+      "phone": "010-1234-5678",
+      "status": "active",
+      "memo": "Bruno에서 수정한 고객 메모입니다."
+    }
+  }
+}
+
+tests {
+  test("고객 수정 성공", function () {
+    expect(res.status).to.equal(200);
+  });
+}

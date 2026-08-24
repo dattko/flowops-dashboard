@@ -1,0 +1,33 @@
+meta {
+  name: Logout
+  type: http
+  seq: 2
+  tags: [
+    auth
+    write
+  ]
+}
+
+post {
+  url: {{supabase_url}}/auth/v1/logout
+  body: none
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+}
+
+script:post-response {
+  if (res.status === 200 || res.status === 204) {
+    bru.deleteVar("access_token");
+    bru.deleteVar("refresh_token");
+  }
+}
+
+tests {
+  test("로그아웃 성공", function () {
+    expect([200, 204]).to.include(res.status);
+  });
+}

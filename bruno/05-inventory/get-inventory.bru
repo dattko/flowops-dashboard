@@ -1,0 +1,36 @@
+meta {
+  name: Get Inventory
+  type: http
+  seq: 1
+  tags: [
+    read
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/get_inventory
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_page": 1,
+    "p_page_size": 10,
+    "p_keyword": null,
+    "p_stock_status": null
+  }
+}
+
+tests {
+  test("재고 목록 조회 성공", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.items).to.be.an("array");
+  });
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Get Sales Report
+  type: http
+  seq: 1
+  tags: [
+    read
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/get_sales_report
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_date_from": "2026-08-01",
+    "p_date_to": "2026-08-31"
+  }
+}
+
+tests {
+  test("매출 리포트 조회 성공", function () {
+    expect(res.status).to.equal(200);
+  });
+}

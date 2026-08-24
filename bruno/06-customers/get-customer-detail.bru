@@ -1,0 +1,32 @@
+meta {
+  name: Get Customer Detail
+  type: http
+  seq: 2
+  tags: [
+    read
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/get_customer_detail
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_customer_id": "{{customer_id}}"
+  }
+}
+
+tests {
+  test("고객 상세 조회 성공", function () {
+    expect(res.status).to.equal(200);
+  });
+}

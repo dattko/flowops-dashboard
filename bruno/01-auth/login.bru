@@ -1,0 +1,40 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+  tags: [
+    auth
+  ]
+}
+
+post {
+  url: {{supabase_url}}/auth/v1/token?grant_type=password
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{email}}",
+    "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("access_token", res.body.access_token);
+    bru.setVar("refresh_token", res.body.refresh_token);
+  }
+}
+
+tests {
+  test("로그인 성공", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.access_token).to.be.a("string");
+  });
+}

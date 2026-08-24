@@ -53,6 +53,7 @@ pnpm --filter @flowops/admin exec tsc --noEmit
 flowops-dashboard/
 ├── apps/
 │   └── admin/                 # 관리자용 Next.js 앱
+├── bruno/                     # Supabase Auth·RPC API 테스트 컬렉션
 ├── docs/                      # 프로젝트 문서
 ├── supabase/
 │   └── migrations/            # DB 스키마, RPC, 데모 데이터 이력
@@ -85,16 +86,19 @@ apps/admin/
 │   └── providers.tsx          # TanStack Query Provider
 ├── entities/                  # 비즈니스 대상의 공통 모델과 표현
 │   ├── order/                 # 주문 상세 타입, 상태·결제 라벨과 공통 스타일
-│   └── profile/               # 프로필 조회, 타입, Context
+│   ├── profile/               # 프로필 조회, 타입, Context
+│   └── settings/              # 상점·배송·계정 설정 타입
 ├── features/                  # 사용자의 행동과 업무 기능
 │   ├── auth/                  # 로그인, 로그아웃, 세션 만료 처리
 │   ├── filter-orders/         # RHF 기반 주문 검색 및 상태 필터 UI
 │   ├── update-order-detail/   # 주문자·배송지·상태 수정
-│   └── add-order-consultation-note/ # 상담 메모 등록
+│   ├── add-order-consultation-note/ # 상담 메모 등록
+│   └── update-settings/       # 상점·배송·계정 설정 수정
 ├── widgets/                   # 독립적인 화면 블록과 데이터 조합
 │   ├── dashboard/             # 대시보드 조회 및 전체 화면 조합
 │   ├── order-detail/          # 주문 상세 SSR 조회와 화면 조합
 │   ├── order-list/            # 주문 목록 조회와 테이블
+│   ├── settings/              # 설정 SSR 조회와 화면 조합
 │   ├── sidebar/               # 메뉴 조회와 사이드바
 │   └── mobile-header/         # 모바일 헤더
 └── shared/                    # 도메인에 의존하지 않는 공통 코드
@@ -196,6 +200,9 @@ export { OrderList } from "./ui/order-list"
 - 주문 상세는 `get_order_detail` RPC에서 고객, 상품, 결제, 배송과 상태 이력을 한 번에 조회합니다.
 - 주문 상세 수정은 상태별 허용 필드만 변경하며 상태 변경 이력을 자동으로 기록합니다.
 - 상담 메모는 수정하지 않는 누적 이력으로 저장하고 `add_order_consultation_note` RPC로 추가합니다.
+- 설정 화면은 `get_admin_settings` RPC로 상점·배송·계정 정보를 SSR 조회합니다.
+- 상점·배송·프로필 설정은 `update_admin_settings` RPC로 저장합니다.
+- 재고·고객 관리와 매출 리포트 RPC 계약은 [`docs/management-apis.md`](docs/management-apis.md)에 정리합니다.
 - SQL 집계와 업무 데이터 가공은 가능한 한 Supabase RPC에서 처리합니다.
 - 통화, 날짜, 상태 색상처럼 화면 표현에 가까운 가공은 프론트엔드에서 처리합니다.
 - 클라이언트와 서버 요청은 `shared/api/base`의 Fetcher를 사용합니다.
@@ -233,6 +240,18 @@ pnpm dlx supabase db push
 ```bash
 pnpm dlx supabase db push --include-all
 ```
+
+## Bruno API 테스트
+
+Supabase Auth와 PostgREST RPC는 저장소의 Bruno 컬렉션으로 직접 테스트할 수 있습니다.
+
+```bash
+cp bruno/environments/local.example.bru bruno/environments/local.bru
+```
+
+복사한 `local.bru`에 Supabase publishable key와 테스트 계정을 입력한 뒤 Bruno에서 `bruno` 폴더를 열고 `Auth > Login`을 먼저 실행합니다. 로그인 성공 시 저장된 런타임 토큰을 프로필, 대시보드, 주문, 설정, 재고, 고객, 리포트 요청이 공통으로 사용합니다.
+
+실제 사용 순서와 데이터 변경 요청의 주의사항은 [`bruno/README.md`](bruno/README.md)를 확인합니다. `local.bru`는 Git에서 제외되므로 실제 키와 계정 정보는 예제 파일에 기록하지 않습니다.
 
 ## shadcn/ui 컴포넌트 추가
 
