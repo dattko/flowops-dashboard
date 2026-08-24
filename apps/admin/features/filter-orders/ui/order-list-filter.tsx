@@ -1,7 +1,5 @@
 "use client"
 
-import { RotateCcw, Search } from "lucide-react"
-
 import { FilterForm, InputText, Select } from "@/shared/ui/form"
 
 import { useOrderListFilterForm } from "../lib/use-order-list-filter-form"
@@ -47,7 +45,6 @@ export const OrderListFilter = ({
         options={ORDER_STATUS_FILTER_OPTIONS}
         containerClassName="sm:w-36"
       />
-
     </FilterForm>
   )
 }

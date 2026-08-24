@@ -12,7 +12,7 @@ import type {
 } from "@/features/filter-orders"
 import { useListSearchParams } from "@/shared/lib/use-list-search-params"
 
-import { getOrdersClient } from "../api/get-orders-client"
+import { getOrders } from "../api/order-list-client.api"
 
 const getStatus = (value: string | null): OrderStatusFilter => {
   return ORDER_STATUS_FILTER_VALUES.some((status) => status === value)
@@ -32,7 +32,7 @@ export const useOrderList = () => {
 
   const ordersQuery = useQuery({
     queryKey: ["orders", "list", filters] as const,
-    queryFn: () => getOrdersClient(filters),
+    queryFn: () => getOrders(filters),
     placeholderData: keepPreviousData,
   })
 

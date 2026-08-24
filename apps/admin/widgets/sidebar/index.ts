@@ -1,4 +1,4 @@
-export { getNavigation } from "./api/get-navigation"
+export { getNavigation } from "./api/sidebar-server.api"
 export { useActiveMenu } from "./lib/use-active-menu"
 export { useNavigationSections } from "./lib/use-navigation-sections"
 export type { NavigationIcon, NavigationItem } from "./model/types"

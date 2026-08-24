@@ -5,11 +5,11 @@ import { createClient } from "@/shared/lib/supabase/client"
 import type { BaseApiFetcherOptions } from "./types"
 import { parseApiResponse } from "./utils"
 
-const endPoint = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const endpoint = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const apiKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
 
 const createBaseApiFetcherClient = async <TResponse, TBody = unknown>({
-  baseUrl = endPoint,
+  baseUrl = endpoint,
   url,
   method = "GET",
   body,

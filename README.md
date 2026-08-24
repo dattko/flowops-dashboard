@@ -84,13 +84,16 @@ apps/admin/
 │   ├── auth/                  # 세션 관련 Route Handler
 │   └── providers.tsx          # TanStack Query Provider
 ├── entities/                  # 비즈니스 대상의 공통 모델과 표현
-│   ├── order/                 # 주문 상태, 라벨, 공통 스타일
+│   ├── order/                 # 주문 상세 타입, 상태·결제 라벨과 공통 스타일
 │   └── profile/               # 프로필 조회, 타입, Context
 ├── features/                  # 사용자의 행동과 업무 기능
 │   ├── auth/                  # 로그인, 로그아웃, 세션 만료 처리
-│   └── filter-orders/         # RHF 기반 주문 검색 및 상태 필터 UI
+│   ├── filter-orders/         # RHF 기반 주문 검색 및 상태 필터 UI
+│   ├── update-order-detail/   # 주문자·배송지·상태 수정
+│   └── add-order-consultation-note/ # 상담 메모 등록
 ├── widgets/                   # 독립적인 화면 블록과 데이터 조합
 │   ├── dashboard/             # 대시보드 조회 및 전체 화면 조합
+│   ├── order-detail/          # 주문 상세 SSR 조회와 화면 조합
 │   ├── order-list/            # 주문 목록 조회와 테이블
 │   ├── sidebar/               # 메뉴 조회와 사이드바
 │   └── mobile-header/         # 모바일 헤더
@@ -112,9 +115,12 @@ app → widgets → features → entities → shared
 예시는 다음과 같습니다.
 
 - `shared/ui/button`: 주문이나 인증을 모르는 범용 버튼
-- `entities/order`: 여러 주문 화면에서 사용하는 주문 상태와 라벨
+- `entities/order`: 여러 주문 화면에서 사용하는 상세 타입, 상태와 결제 표현
 - `features/auth`: 로그인과 로그아웃 같은 사용자 행동
 - `features/filter-orders`: 주문 검색 및 상태 필터 입력 기능
+- `features/update-order-detail`: 주문 정보와 처리 상태 수정 기능
+- `features/add-order-consultation-note`: 상담 메모 등록과 이력 UI
+- `widgets/order-detail`: 상세 조회 후 표시 카드와 수정 기능을 조합
 - `widgets/order-list`: 주문 목록 API, Query, 테이블 조합
 - `widgets/dashboard`: 대시보드 RPC 결과를 여러 카드로 조합
 - `app/(admin)/page.tsx`: `DashboardOverview` 위젯 배치
@@ -135,14 +141,16 @@ slice-name/
 현재 프로젝트의 파일 이름 규칙은 다음과 같습니다.
 
 ```text
-api/get-dashboard.ts
-api/get-orders-client.ts
+api/dashboard-server.api.ts
+api/order-list-client.api.ts
+api/auth-server.action.ts
 lib/use-dashboard-metrics.ts
 lib/use-order-list.ts
 lib/use-active-menu.ts
 ```
 
-- 실제 HTTP 요청 함수는 `api/get-*`에 둡니다.
+- 일반 HTTP 요청은 `{도메인}-{실행환경}.api.ts`로 작성합니다.
+- Next.js Server Action은 `{도메인}-server.action.ts`로 작성합니다.
 - 커스텀 훅, Query/Mutation 훅, UI가 사용하는 가공 로직은 `lib/use-*`에 둡니다.
 - `use-*` 함수는 React 컴포넌트 최상단에서 호출합니다.
 - 타입, 검증 스키마와 Context는 `model`에 둡니다.
@@ -185,6 +193,9 @@ export { OrderList } from "./ui/order-list"
 - URL이 필터 상태이므로 새로고침, 뒤로 가기와 검색 결과 URL 공유에도 같은 조건이 유지됩니다.
 - 범용 테이블은 `shared/ui/data-table.tsx`의 TanStack Table 컴포넌트를 사용합니다.
 - 주문 검색, 상태 필터, 페이지네이션과 전체 개수 계산은 Supabase `get_orders` RPC에서 처리합니다.
+- 주문 상세는 `get_order_detail` RPC에서 고객, 상품, 결제, 배송과 상태 이력을 한 번에 조회합니다.
+- 주문 상세 수정은 상태별 허용 필드만 변경하며 상태 변경 이력을 자동으로 기록합니다.
+- 상담 메모는 수정하지 않는 누적 이력으로 저장하고 `add_order_consultation_note` RPC로 추가합니다.
 - SQL 집계와 업무 데이터 가공은 가능한 한 Supabase RPC에서 처리합니다.
 - 통화, 날짜, 상태 색상처럼 화면 표현에 가까운 가공은 프론트엔드에서 처리합니다.
 - 클라이언트와 서버 요청은 `shared/api/base`의 Fetcher를 사용합니다.

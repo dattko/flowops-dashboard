@@ -98,6 +98,9 @@ export const OrderListTable = ({
       data={orders}
       getRowId={(order) => order.id}
       emptyMessage={emptyMessage}
+      onRowClick={(order) => {
+        window.location.href = `/order/${order.id}`
+      }}
     />
   )
 }

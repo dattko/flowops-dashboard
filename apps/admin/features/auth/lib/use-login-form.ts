@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { login } from "../api/actions"
+import { login } from "../api/auth-server.action"
 import { loginSchema, type LoginValues } from "../model/login-schema"
 
 export const useLoginForm = () => {

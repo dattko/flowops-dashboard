@@ -1,4 +1,4 @@
-import { getDashboard } from "../api/get-dashboard"
+import { getDashboard } from "../api/dashboard-server.api"
 import { DashboardHeader } from "./dashboard-header"
 import { MetricCards } from "./metric-cards"
 import { OperationAlertsCard } from "./operation-alerts-card"

@@ -1,6 +1,6 @@
 "use server"
 
-import { baseApiFetcherServer } from "@/shared/api/base/base-api-fetcher-server"
+import { baseApiFetcherServer } from "@/shared/api/base/base-fetcher-server"
 
 import type { Profile } from "../model/types"
 

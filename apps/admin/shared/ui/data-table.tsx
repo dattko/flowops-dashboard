@@ -20,6 +20,7 @@ type DataTableProps<TData, TValue> = {
   emptyMessage?: string
   getRowId?: (row: TData) => string
   className?: string
+  onRowClick?: (row: TData) => void
 }
 
 export const DataTable = <TData, TValue>({
@@ -28,6 +29,7 @@ export const DataTable = <TData, TValue>({
   emptyMessage = "조회된 데이터가 없습니다.",
   getRowId,
   className,
+  onRowClick,
 }: DataTableProps<TData, TValue>) => {
   // TanStack Table returns non-memoizable functions by design.
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -75,6 +77,7 @@ export const DataTable = <TData, TValue>({
               <tr
                 key={row.id}
                 className="type-label transition-colors hover:bg-[#faf9f6]"
+                onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map((cell) => {
                   const meta = cell.column.columnDef.meta as

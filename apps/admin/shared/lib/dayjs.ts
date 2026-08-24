@@ -8,4 +8,8 @@ dayjs.extend(timezone)
 dayjs.locale("ko")
 dayjs.tz.setDefault("Asia/Seoul")
 
-export { dayjs }
+const formatDateTime = (date: string | null) => {
+  return date ? dayjs(date).tz().format("YYYY.MM.DD HH:mm") : "-"
+}
+
+export { dayjs, formatDateTime }

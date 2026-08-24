@@ -1,6 +1,6 @@
 import "server-only"
 
-import { baseApiFetcherServer } from "@/shared/api/base/base-api-fetcher-server"
+import { baseApiFetcherServer } from "@/shared/api/base/base-fetcher-server"
 
 import type { NavigationItem } from "../model/types"
 

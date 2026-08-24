@@ -2,7 +2,7 @@ import { LogOut } from "lucide-react"
 
 import { Button } from "@/shared/ui/button"
 
-import { logout } from "../api/actions"
+import { logout } from "../api/auth-server.action"
 
 export const LogoutButton = () => {
   return (

@@ -1,12 +1,12 @@
 "use client"
 
-import { baseApiFetcherClient } from "@/shared/api/base/base-api-fetcher-client"
+import { baseApiFetcherClient } from "@/shared/api/base/base-fetcher-client"
 
 import type { OrderFilters } from "@/features/filter-orders"
 
 import type { OrderListResponse } from "../model/types"
 
-export const getOrdersClient = async (
+export const getOrders = async (
   filters: OrderFilters
 ): Promise<OrderListResponse> => {
   return baseApiFetcherClient.post<OrderListResponse>(
