@@ -35,6 +35,9 @@ yarn-error.log*
 .env*
 bruno/environments/local.bru
 
+# Supabase local configuration and migrations
+/supabase/
+
 # vercel
 .vercel
 

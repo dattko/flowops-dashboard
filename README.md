@@ -9,7 +9,7 @@
 - pnpm workspace 기반 모노레포
 - Next.js 16 App Router, React 19, TypeScript
 - Tailwind CSS 4, shadcn/ui
-- Supabase Auth, PostgreSQL, PostgREST RPC
+- Supabase Auth, REST API 연동
 - TanStack Query, TanStack Table
 - React Hook Form, Zod
 - Chart.js, react-chartjs-2
@@ -57,8 +57,6 @@ flowops-dashboard/
 │   └── admin/                 # 관리자용 Next.js 앱
 ├── bruno/                     # Supabase Auth·RPC API 테스트 컬렉션
 ├── docs/                      # 프로젝트 문서
-├── supabase/
-│   └── migrations/            # DB 스키마, RPC, 데모 데이터 이력
 ├── package.json               # 루트 공통 명령어
 ├── pnpm-lock.yaml             # 저장소 전체 단일 lockfile
 └── pnpm-workspace.yaml        # apps/*, packages/* workspace 등록
@@ -208,7 +206,7 @@ export { OrderList } from "./ui/order-list"
 
 ## 데이터 조회 방식
 
-- 초기 대시보드 데이터는 Server Component에서 Supabase PostgREST RPC로 조회합니다.
+- 초기 대시보드 데이터는 Server Component에서 REST API로 조회합니다.
 - 주문 검색 폼은 React Hook Form으로 관리하고 확정된 필터와 페이지는 URL Search Params로 관리합니다.
 - `page`, `pageSize`와 페이지 크기 선택지는 `shared/model/pagination.ts`에서 목록 공통 모델로 관리합니다.
 - `shared/lib/use-list-search-params.ts`는 목록의 `page`, `pageSize`를 읽고 필터 변경 시 1페이지로 초기화합니다.
@@ -216,19 +214,14 @@ export { OrderList } from "./ui/order-list"
 - 주문 테이블에서만 사용하는 컬럼 정의는 `widgets/order-list/ui/order-list-table.tsx`에 함께 둡니다.
 - URL이 필터 상태이므로 새로고침, 뒤로 가기와 검색 결과 URL 공유에도 같은 조건이 유지됩니다.
 - 범용 테이블은 `shared/ui/data-table.tsx`의 TanStack Table 컴포넌트를 사용합니다.
-- 주문 검색, 상태 필터, 페이지네이션과 전체 개수 계산은 Supabase `get_orders` RPC에서 처리합니다.
-- 재고 검색, 상태 필터와 페이지네이션은 `get_inventory` RPC에서 처리합니다.
-- 상품과 최초 재고는 `create_inventory_product` RPC에서 하나의 트랜잭션으로 등록합니다.
-- 재고 상세는 `get_inventory_detail` RPC로 상품 정보, 현재 수량과 최근 변경 이력을 함께 조회합니다.
-- 상품 정보와 안전 재고는 `update_inventory_product`, 입고·출고·실사 수량은 `adjust_inventory_stock` RPC로 분리해 저장합니다.
+- 주문과 재고 목록의 검색, 상태 필터와 페이지네이션 조건은 REST API 요청으로 전달합니다.
+- 상품 등록, 재고 상세와 재고 변경은 목적별 API로 분리해 연동합니다.
 - 예약 재고와 판매 가능 재고는 직접 수정하지 않으며 재고 변경에는 처리 유형과 사유를 기록합니다.
-- 주문 상세는 `get_order_detail` RPC에서 고객, 상품, 결제, 배송과 상태 이력을 한 번에 조회합니다.
+- 주문 상세에서는 고객, 상품, 결제, 배송과 상태 이력을 한 번에 조회합니다.
 - 주문 상세 수정은 상태별 허용 필드만 변경하며 상태 변경 이력을 자동으로 기록합니다.
-- 상담 메모는 수정하지 않는 누적 이력으로 저장하고 `add_order_consultation_note` RPC로 추가합니다.
-- 설정 화면은 `get_admin_settings` RPC로 상점·배송·계정 정보를 SSR 조회합니다.
-- 상점·배송·프로필 설정은 `update_admin_settings` RPC로 저장합니다.
-- 재고·고객 관리와 매출 리포트 RPC 계약은 [`docs/management-apis.md`](docs/management-apis.md)에 정리합니다.
-- SQL 집계와 업무 데이터 가공은 가능한 한 Supabase RPC에서 처리합니다.
+- 상담 메모는 수정하지 않는 누적 이력으로 추가합니다.
+- 설정 화면은 상점·배송·계정 정보를 SSR로 조회하고 변경 사항은 수정 API로 저장합니다.
+- 재고·고객 관리와 매출 리포트 API 계약은 [`docs/management-apis.md`](docs/management-apis.md)에 정리합니다.
 - 통화, 날짜, 상태 색상처럼 화면 표현에 가까운 가공은 프론트엔드에서 처리합니다.
 - 클라이언트와 서버 요청은 `shared/api/base`의 Fetcher를 사용합니다.
 
@@ -248,23 +241,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
 
-`.env*` 파일은 저장소에 커밋하지 않습니다. Supabase CLI의 `.temp`는 프로젝트 연결 과정에서 생성되는 로컬 상태이며 마이그레이션 원본은 `supabase/migrations`에서 관리합니다.
-
-## Supabase 마이그레이션
-
-DB 스키마, RPC와 데모 데이터 변경은 `supabase/migrations`에 SQL 마이그레이션으로 기록합니다. 마이그레이션 파일은 애플리케이션 코드와 함께 Git으로 관리합니다.
-
-연결된 원격 Supabase 프로젝트에 적용합니다.
-
-```bash
-pnpm dlx supabase db push
-```
-
-원격 마이그레이션보다 이전 시각의 로컬 파일까지 적용해야 한다는 안내가 나오면 내용을 확인한 후 다음 명령을 사용합니다.
-
-```bash
-pnpm dlx supabase db push --include-all
-```
+`.env*` 파일은 저장소에 커밋하지 않습니다.
 
 ## Bruno API 테스트
 
