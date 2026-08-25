@@ -1,0 +1,39 @@
+meta {
+  name: [변경] Update Inventory Product
+  type: http
+  seq: 4
+  tags: [
+    write
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/update_inventory_product
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_product_id": "{{product_id}}",
+    "p_payload": {
+      "name": "모로우 하우스 블렌드 200g",
+      "description": "초콜릿과 견과의 단맛이 어우러진 데일리 블렌드",
+      "price": 18000,
+      "productStatus": "active",
+      "reorderPoint": 12
+    }
+  }
+}
+
+tests {
+  test("재고 상품 정보 수정 성공", function () {
+    expect(res.status).to.equal(200);
+  });
+}

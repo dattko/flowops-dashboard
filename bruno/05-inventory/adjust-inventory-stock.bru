@@ -1,14 +1,14 @@
 meta {
-  name: [변경] Update Inventory
+  name: [변경] Adjust Inventory Stock
   type: http
-  seq: 2
+  seq: 5
   tags: [
     write
   ]
 }
 
 post {
-  url: {{supabase_url}}/rest/v1/rpc/update_inventory
+  url: {{supabase_url}}/rest/v1/rpc/adjust_inventory_stock
   body: json
   auth: none
 }
@@ -23,15 +23,16 @@ body:json {
   {
     "p_product_id": "{{product_id}}",
     "p_payload": {
-      "onHand": 100,
-      "reserved": 5,
-      "reorderPoint": 10
+      "movementType": "inbound",
+      "quantity": 10,
+      "reason": "API 테스트 입고"
     }
   }
 }
 
 tests {
-  test("재고 수정 성공", function () {
+  test("재고 변경 및 이력 등록 성공", function () {
     expect(res.status).to.equal(200);
+    expect(res.body.movements).to.be.an("array");
   });
 }

@@ -20,7 +20,10 @@ export const WeeklyOrdersCard = ({
     <Card appearance="panel">
       <CardContent className="p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <SectionHeading title="주간 주문 흐름" description="채널 통합 주문 및 매출 추이" />
+        <SectionHeading
+          title="주간 주문 흐름"
+          description="스페셜티 커피 자사몰 주문 및 매출 추이"
+        />
         <div className="text-right">
           <Typography variant="metric">{totalOrders}건</Typography>
           <Typography

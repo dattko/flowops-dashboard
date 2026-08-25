@@ -11,8 +11,8 @@ const operationItems = [
     iconClassName: "bg-[#3f4f47] text-[#a8d5bd]",
   },
   {
-    label: "재고 확인",
-    value: "6개 상품",
+    label: "원두 재고",
+    value: "6개 SKU",
     icon: Boxes,
     iconClassName: "bg-[#514332] text-[#e9bf86]",
   },
@@ -66,7 +66,7 @@ const LoginRoute = () => {
             tone="inherit"
             className="mb-5 text-sidebar-primary"
           >
-            Smart Operations
+            Roastery Operations
           </Typography>
           <Typography
             as="h2"
@@ -74,7 +74,7 @@ const LoginRoute = () => {
             tone="inherit"
             className="max-w-lg text-[clamp(2.5rem,5vw,4.75rem)] leading-[1.02] font-semibold tracking-[-0.055em] text-balance"
           >
-            운영의 흐름을
+            로스터리 운영을
             <br />
             한눈에 관리하세요.
           </Typography>
@@ -83,7 +83,7 @@ const LoginRoute = () => {
             tone="inherit"
             className="mt-6 max-w-md text-base leading-7 text-sidebar-foreground/60"
           >
-            주문과 재고, 매출 현황을 빠르게 파악하고 오늘 처리할 업무에 집중할 수 있습니다.
+            원두 주문과 재고, 매출 현황을 빠르게 파악하고 오늘 처리할 로스터리 업무에 집중할 수 있습니다.
           </Typography>
 
           <div className="mt-10 grid max-w-lg grid-cols-3 gap-3">

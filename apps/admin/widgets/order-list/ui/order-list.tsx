@@ -23,7 +23,7 @@ export const OrderList = () => {
       <PageHeader
         titleId="order-list-title"
         title="주문 관리"
-        description="자사몰에서 접수된 주문 내역입니다."
+        description="스페셜티 커피 자사몰에서 접수된 주문 내역입니다."
       />
 
       <OrderListFilter

@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FlowOps | 운영 대시보드",
-  description: "주문, 매출, 재고 현황을 한눈에 확인하는 운영 대시보드",
+  description:
+    "스페셜티 커피 자사몰의 주문, 매출, 재고 현황을 관리하는 운영 대시보드",
 };
 
 const RootLayout = ({

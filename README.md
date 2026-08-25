@@ -1,6 +1,8 @@
 # FlowOps
 
-주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 현재는 관리자용 Next.js 애플리케이션을 먼저 개발하고 있으며, 고객용 웹은 추후 `apps/web`에 추가할 예정입니다.
+스페셜티 커피 자사몰 `Morrow Coffee`의 주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 현재는 관리자용 Next.js 애플리케이션을 먼저 개발하고 있으며, 고객용 웹은 추후 `apps/web`에 추가할 예정입니다.
+
+`FlowOps`는 운영 백오피스 제품명이고 `Morrow Coffee`는 포트폴리오에서 관리하는 데모 스토어입니다. 데모 카탈로그는 원두, 드립백, 커피 캡슐, 콜드브루와 홈카페 용품 총 100개로 구성합니다.
 
 ## 기술 스택
 
@@ -86,18 +88,25 @@ apps/admin/
 │   └── providers.tsx          # TanStack Query Provider
 ├── entities/                  # 비즈니스 대상의 공통 모델과 표현
 │   ├── order/                 # 주문 상세 타입, 상태·결제 라벨과 공통 스타일
+│   ├── inventory/             # 재고·상품 상태 타입과 공통 상태 배지
 │   ├── profile/               # 프로필 조회, 타입, Context
 │   └── settings/              # 상점·배송·계정 설정 타입
 ├── features/                  # 사용자의 행동과 업무 기능
 │   ├── auth/                  # 로그인, 로그아웃, 세션 만료 처리
+│   ├── create-inventory-product/ # 상품과 최초 재고 등록
 │   ├── filter-orders/         # RHF 기반 주문 검색 및 상태 필터 UI
+│   ├── filter-inventory/      # RHF 기반 재고 검색 및 상태 필터 UI
+│   ├── adjust-inventory-stock/ # 입고·출고·실사 조정과 이력 등록
 │   ├── update-order-detail/   # 주문자·배송지·상태 수정
+│   ├── update-inventory-product/ # 상품 정보와 안전 재고 수정
 │   ├── add-order-consultation-note/ # 상담 메모 등록
 │   └── update-settings/       # 상점·배송·계정 설정 수정
 ├── widgets/                   # 독립적인 화면 블록과 데이터 조합
 │   ├── dashboard/             # 대시보드 조회 및 전체 화면 조합
 │   ├── order-detail/          # 주문 상세 SSR 조회와 화면 조합
 │   ├── order-list/            # 주문 목록 조회와 테이블
+│   ├── inventory-list/        # 재고 목록 조회와 테이블 조합
+│   ├── inventory-detail/      # 재고 상세 SSR 조회와 관리 기능 조합
 │   ├── settings/              # 설정 SSR 조회와 화면 조합
 │   ├── sidebar/               # 메뉴 조회와 사이드바
 │   └── mobile-header/         # 모바일 헤더
@@ -122,10 +131,16 @@ app → widgets → features → entities → shared
 - `entities/order`: 여러 주문 화면에서 사용하는 상세 타입, 상태·결제 표현과 `OrderStatusBadge`
 - `features/auth`: 로그인과 로그아웃 같은 사용자 행동
 - `features/filter-orders`: 주문 검색 및 상태 필터 입력 기능
+- `features/filter-inventory`: 상품명·SKU 검색 및 재고 상태 필터 입력 기능
+- `features/create-inventory-product`: 상품과 최초 재고를 함께 등록하는 기능
+- `features/update-inventory-product`: 상품 정보와 안전 재고 수정 기능
+- `features/adjust-inventory-stock`: 입고·출고·실사 조정과 이력 등록 기능
 - `features/update-order-detail`: 주문 정보와 처리 상태 수정 기능
 - `features/add-order-consultation-note`: 상담 메모 등록과 이력 UI
 - `widgets/order-detail`: 상세 조회 후 표시 카드와 수정 기능을 조합
 - `widgets/order-list`: 주문 목록 API, Query, 테이블 조합
+- `widgets/inventory-list`: 재고 목록 API, Query와 테이블 조합
+- `widgets/inventory-detail`: 상품 정보, 현재 재고, 조정 폼과 변경 이력 조합
 - `widgets/dashboard`: 대시보드 RPC 결과를 여러 카드로 조합
 - `app/(admin)/page.tsx`: `DashboardOverview` 위젯 배치
 
@@ -202,6 +217,11 @@ export { OrderList } from "./ui/order-list"
 - URL이 필터 상태이므로 새로고침, 뒤로 가기와 검색 결과 URL 공유에도 같은 조건이 유지됩니다.
 - 범용 테이블은 `shared/ui/data-table.tsx`의 TanStack Table 컴포넌트를 사용합니다.
 - 주문 검색, 상태 필터, 페이지네이션과 전체 개수 계산은 Supabase `get_orders` RPC에서 처리합니다.
+- 재고 검색, 상태 필터와 페이지네이션은 `get_inventory` RPC에서 처리합니다.
+- 상품과 최초 재고는 `create_inventory_product` RPC에서 하나의 트랜잭션으로 등록합니다.
+- 재고 상세는 `get_inventory_detail` RPC로 상품 정보, 현재 수량과 최근 변경 이력을 함께 조회합니다.
+- 상품 정보와 안전 재고는 `update_inventory_product`, 입고·출고·실사 수량은 `adjust_inventory_stock` RPC로 분리해 저장합니다.
+- 예약 재고와 판매 가능 재고는 직접 수정하지 않으며 재고 변경에는 처리 유형과 사유를 기록합니다.
 - 주문 상세는 `get_order_detail` RPC에서 고객, 상품, 결제, 배송과 상태 이력을 한 번에 조회합니다.
 - 주문 상세 수정은 상태별 허용 필드만 변경하며 상태 변경 이력을 자동으로 기록합니다.
 - 상담 메모는 수정하지 않는 누적 이력으로 저장하고 `add_order_consultation_note` RPC로 추가합니다.

@@ -1,0 +1,41 @@
+meta {
+  name: [변경] Create Inventory Product
+  type: http
+  seq: 3
+  tags: [
+    write
+  ]
+}
+
+post {
+  url: {{supabase_url}}/rest/v1/rpc/create_inventory_product
+  body: json
+  auth: none
+}
+
+headers {
+  apikey: {{publishable_key}}
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "p_payload": {
+      "sku": "MC-TEST-BEAN-200",
+      "name": "API 테스트 원두 200g",
+      "description": "등록 API 확인용 상품",
+      "price": 20000,
+      "productStatus": "inactive",
+      "onHand": 10,
+      "reorderPoint": 5
+    }
+  }
+}
+
+tests {
+  test("재고 상품 등록 성공", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.productId).to.be.a("string");
+  });
+}

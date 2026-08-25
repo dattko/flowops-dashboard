@@ -37,7 +37,7 @@ export const SettingsForm = ({
             <CardTitle>상점 정보</CardTitle>
           </div>
           <CardDescription>
-            고객에게 안내되는 자사몰의 기본 정보를 관리합니다.
+            고객에게 안내되는 스페셜티 커피 스토어의 기본 정보를 관리합니다.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">

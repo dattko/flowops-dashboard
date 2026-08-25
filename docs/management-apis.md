@@ -21,24 +21,81 @@ POST /rest/v1/rpc/get_inventory
 
 `p_stock_status`는 `normal`, `low_stock`, `sold_out` 또는 `null`을 사용합니다. 응답은 `items`, `page`, `pageSize`, `totalCount`, `totalPages`를 포함합니다.
 
-### 재고 수정
+### 재고 상세
 
 ```http
-POST /rest/v1/rpc/update_inventory
+POST /rest/v1/rpc/get_inventory_detail
+```
+
+```json
+{
+  "p_product_id": "상품 UUID"
+}
+```
+
+상품 정보, 현재 재고와 최근 재고 변경 이력 30건을 반환합니다.
+
+### 상품 등록
+
+```http
+POST /rest/v1/rpc/create_inventory_product
+```
+
+```json
+{
+  "p_payload": {
+    "sku": "MC-BEAN-EXAMPLE-200",
+    "name": "새로운 싱글 오리진 200g",
+    "description": "상품 설명",
+    "price": 22000,
+    "productStatus": "active",
+    "onHand": 20,
+    "reorderPoint": 10
+  }
+}
+```
+
+상품과 최초 재고를 하나의 트랜잭션으로 등록합니다. SKU는 대문자로 정규화하며 중복할 수 없습니다. 예약 재고는 0개로 시작합니다.
+
+### 상품 정보 수정
+
+```http
+POST /rest/v1/rpc/update_inventory_product
 ```
 
 ```json
 {
   "p_product_id": "상품 UUID",
   "p_payload": {
-    "onHand": 100,
-    "reserved": 5,
-    "reorderPoint": 10
+    "name": "수정한 상품명",
+    "description": "수정한 설명",
+    "price": 23000,
+    "productStatus": "active",
+    "reorderPoint": 12
   }
 }
 ```
 
-`p_payload`에는 변경할 필드만 전달할 수 있습니다. 예약 재고는 보유 재고를 초과할 수 없습니다.
+상품 정보와 안전 재고만 수정합니다. SKU, 보유 재고와 예약 재고는 이 API에서 변경하지 않습니다.
+
+### 재고 변경
+
+```http
+POST /rest/v1/rpc/adjust_inventory_stock
+```
+
+```json
+{
+  "p_product_id": "상품 UUID",
+  "p_payload": {
+    "movementType": "inbound",
+    "quantity": 20,
+    "reason": "8월 정기 입고"
+  }
+}
+```
+
+`movementType`은 `inbound`, `outbound`, `adjustment`를 사용합니다. 입출고의 `quantity`는 증감 수량이고 실사 조정에서는 변경 후 실제 보유 수량입니다. 모든 변경은 `inventory_movements`에 기록되며 예약 재고보다 보유 재고를 낮출 수 없습니다.
 
 ## 고객 관리
 
