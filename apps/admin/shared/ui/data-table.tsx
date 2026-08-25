@@ -8,6 +8,14 @@ import {
 } from "@tanstack/react-table"
 
 import { cn } from "@/shared/lib/utils"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/ui/table"
 
 export type DataTableColumnMeta = {
   headerClassName?: string
@@ -41,11 +49,10 @@ export const DataTable = <TData, TValue>({
   })
 
   return (
-    <div className="overflow-x-auto">
-      <table className={cn("w-full min-w-[860px] text-left", className)}>
-        <thead>
+    <Table className={cn("min-w-[860px]", className)}>
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr
+            <TableRow
               key={headerGroup.id}
               className="type-caption border-b border-[#eeece6] bg-[#faf9f6] font-medium text-muted-foreground"
             >
@@ -55,9 +62,9 @@ export const DataTable = <TData, TValue>({
                   | undefined
 
                 return (
-                  <th
+                  <TableHead
                     key={header.id}
-                    className={cn("px-4 py-3 font-medium", meta?.headerClassName)}
+                    className={meta?.headerClassName}
                   >
                     {header.isPlaceholder
                       ? null
@@ -65,16 +72,16 @@ export const DataTable = <TData, TValue>({
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                  </th>
+                  </TableHead>
                 )
               })}
-            </tr>
+            </TableRow>
           ))}
-        </thead>
-        <tbody className="divide-y divide-[#f0eee8]">
+        </TableHeader>
+        <TableBody className="divide-y divide-[#f0eee8]">
           {table.getRowModel().rows.length > 0 ? (
             table.getRowModel().rows.map((row) => (
-              <tr
+              <TableRow
                 key={row.id}
                 className="type-label transition-colors hover:bg-[#faf9f6]"
                 onClick={() => onRowClick?.(row.original)}
@@ -85,28 +92,27 @@ export const DataTable = <TData, TValue>({
                     | undefined
 
                   return (
-                    <td
+                    <TableCell
                       key={cell.id}
-                      className={cn("px-4 py-3.5", meta?.cellClassName)}
+                      className={meta?.cellClassName}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
+                    </TableCell>
                   )
                 })}
-              </tr>
+              </TableRow>
             ))
           ) : (
-            <tr>
-              <td
+            <TableRow>
+              <TableCell
                 colSpan={columns.length}
                 className="px-6 py-12 text-center text-muted-foreground"
               >
                 {emptyMessage}
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           )}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+    </Table>
   )
 }

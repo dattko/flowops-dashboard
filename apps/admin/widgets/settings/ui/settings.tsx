@@ -1,6 +1,6 @@
 import type { AdminSettings } from "@/entities/settings"
 import { SettingsForm } from "@/features/update-settings"
-import { Typography } from "@/shared/ui/typography"
+import { PageHeader } from "@/shared/ui/page-header"
 
 const SETTING_LINKS = [
   { href: "#store-settings", label: "상점 정보" },
@@ -11,12 +11,11 @@ const SETTING_LINKS = [
 export const Settings = ({ settings }: { settings: AdminSettings }) => {
   return (
     <section aria-labelledby="settings-title">
-      <Typography as="h1" id="settings-title" variant="pageTitle">
-        설정
-      </Typography>
-      <Typography variant="body" tone="muted" className="mt-2">
-        상점 운영과 관리자 계정에 필요한 기본 설정을 관리합니다.
-      </Typography>
+      <PageHeader
+        titleId="settings-title"
+        title="설정"
+        description="상점 운영과 관리자 계정에 필요한 기본 설정을 관리합니다."
+      />
 
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[190px_minmax(0,1fr)]">
         <nav

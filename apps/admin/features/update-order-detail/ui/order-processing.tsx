@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card"
-import { Select } from "@/shared/ui/form"
+import { FormMessage, Select } from "@/shared/ui/form"
 import { Typography } from "@/shared/ui/typography"
 
 import type { OrderDetailFormValues } from "../model/types"
@@ -60,25 +60,12 @@ export const OrderProcessing = ({
             처리 완료된 주문은 더 이상 수정할 수 없습니다.
           </Typography>
         ) : null}
-        {errorMessage ? (
-          <Typography
-            variant="caption"
-            tone="destructive"
-            className="mt-3"
-            role="alert"
-          >
-            {errorMessage}
-          </Typography>
-        ) : successMessage ? (
-          <Typography
-            variant="caption"
-            tone="success"
-            className="mt-3"
-            role="status"
-          >
-            {successMessage}
-          </Typography>
-        ) : null}
+        <FormMessage
+          errorMessage={errorMessage}
+          successMessage={successMessage}
+          variant="caption"
+          className="mt-3"
+        />
         <Button
           type="submit"
           form="order-detail-form"

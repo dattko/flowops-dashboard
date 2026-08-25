@@ -12,7 +12,7 @@ type OperationStatusCardProps = {
 
 export const OperationStatusCard = ({ todayOrderSummary }: OperationStatusCardProps) => {
   return (
-    <Card className="gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0">
+    <Card appearance="panel">
       <CardContent className="p-5">
       <div className="flex items-center justify-between">
         <SectionHeading

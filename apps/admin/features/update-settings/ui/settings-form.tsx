@@ -11,8 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card"
-import { InputText } from "@/shared/ui/form"
-import { Typography } from "@/shared/ui/typography"
+import { FormMessage, InputText } from "@/shared/ui/form"
 
 import { useSettingsForm } from "../lib/use-settings-form"
 
@@ -158,19 +157,11 @@ export const SettingsForm = ({
 
       <div className="flex flex-col items-start justify-between gap-3 rounded-xl border bg-card p-4 sm:flex-row sm:items-center">
         <div>
-          {errorMessage ? (
-            <Typography variant="bodySmall" tone="destructive" role="alert">
-              {errorMessage}
-            </Typography>
-          ) : successMessage ? (
-            <Typography variant="bodySmall" tone="success" role="status">
-              {successMessage}
-            </Typography>
-          ) : (
-            <Typography variant="bodySmall" tone="muted">
-              변경한 설정은 저장 즉시 관리자 화면에 반영됩니다.
-            </Typography>
-          )}
+          <FormMessage
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+            defaultMessage="변경한 설정은 저장 즉시 관리자 화면에 반영됩니다."
+          />
         </div>
         <Button type="submit" disabled={isSaving}>
           <Save aria-hidden="true" />

@@ -119,7 +119,7 @@ app → widgets → features → entities → shared
 예시는 다음과 같습니다.
 
 - `shared/ui/button`: 주문이나 인증을 모르는 범용 버튼
-- `entities/order`: 여러 주문 화면에서 사용하는 상세 타입, 상태와 결제 표현
+- `entities/order`: 여러 주문 화면에서 사용하는 상세 타입, 상태·결제 표현과 `OrderStatusBadge`
 - `features/auth`: 로그인과 로그아웃 같은 사용자 행동
 - `features/filter-orders`: 주문 검색 및 상태 필터 입력 기능
 - `features/update-order-detail`: 주문 정보와 처리 상태 수정 기능
@@ -162,6 +162,11 @@ lib/use-active-menu.ts
 - `ui`에는 JSX와 화면 표현에 직접 필요한 로직만 남깁니다.
 - 아직 필요하지 않은 세그먼트는 미리 만들지 않습니다.
 - 목록 필터의 검색·초기화 버튼은 `shared/ui/form/filter-form.tsx`의 공통 `FilterForm`으로 구성합니다.
+- 페이지 제목 영역은 `shared/ui/page-header.tsx`의 `PageHeader`로 구성합니다.
+- 대시보드와 목록의 평면 패널은 `Card`의 `appearance="panel"`을 사용합니다.
+- 여러 폼에서 사용하는 textarea와 저장 결과 메시지는 각각 `InputTextarea`, `FormMessage`를 사용합니다.
+- 단순 표는 `shared/ui/table.tsx`의 서버 호환 Table primitive를 사용하고, 정렬·필터 같은 상태 관리가 필요한 표는 이 primitive를 조합한 `DataTable`을 사용합니다.
+- 비즈니스 상태를 해석하는 UI는 `shared`가 아니라 해당 entity에 둡니다. 주문 상태 표시는 `entities/order`의 `OrderStatusBadge`를 사용합니다.
 
 ## 공개 API와 import 규칙
 

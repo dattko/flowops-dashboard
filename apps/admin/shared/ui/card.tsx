@@ -5,14 +5,21 @@ import { cn } from "@/shared/lib/utils"
 const Card = ({
   className,
   size = "default",
+  appearance = "default",
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) => {
+}: React.ComponentProps<"div"> & {
+  size?: "default" | "sm"
+  appearance?: "default" | "panel"
+}) => {
   return (
     <div
       data-slot="card"
       data-size={size}
+      data-appearance={appearance}
       className={cn(
         "type-body group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        appearance === "panel" &&
+          "gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0",
         className
       )}
       {...props}

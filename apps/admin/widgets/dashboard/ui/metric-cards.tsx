@@ -45,7 +45,7 @@ export const MetricCards = ({
         return (
           <Card
             key={metric.label}
-            className="gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0"
+            appearance="panel"
           >
             <CardContent className="p-5">
               <div className="flex items-start justify-between">

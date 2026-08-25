@@ -17,7 +17,7 @@ export const WeeklyOrdersCard = ({
   const { totalOrders, changeRate } = weeklyOrderSummary
 
   return (
-    <Card className="gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0">
+    <Card appearance="panel">
       <CardContent className="p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <SectionHeading title="주간 주문 흐름" description="채널 통합 주문 및 매출 추이" />

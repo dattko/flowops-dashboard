@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card"
-import { Label } from "@/shared/ui/label"
+import { FormMessage, InputTextarea } from "@/shared/ui/form"
 import { Typography } from "@/shared/ui/typography"
 
 import { useOrderConsultationNote } from "../lib/use-order-consultation-note"
@@ -49,34 +49,23 @@ export const OrderConsultationNote = ({
       </CardHeader>
       <CardContent>
         <form onSubmit={submit}>
-          <Label htmlFor="consultation-note">메모 내용</Label>
-          <textarea
+          <InputTextarea
+            {...form.register("content", {
+              required: "상담 내용을 입력해 주세요.",
+            })}
             id="consultation-note"
+            label="메모 내용"
             rows={4}
             maxLength={2000}
             placeholder="상담 내용을 입력해 주세요."
-            className="mt-2 w-full resize-y rounded-lg border border-input bg-white px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-            {...form.register("content", { required: true })}
+            error={form.formState.errors.content?.message}
           />
-          {errorMessage ? (
-            <Typography
-              variant="caption"
-              tone="destructive"
-              className="mt-2"
-              role="alert"
-            >
-              {errorMessage}
-            </Typography>
-          ) : successMessage ? (
-            <Typography
-              variant="caption"
-              tone="success"
-              className="mt-2"
-              role="status"
-            >
-              {successMessage}
-            </Typography>
-          ) : null}
+          <FormMessage
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+            variant="caption"
+            className="mt-2"
+          />
           <Button
             type="submit"
             variant="outline"

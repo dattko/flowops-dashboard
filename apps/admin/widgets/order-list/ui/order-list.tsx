@@ -1,8 +1,8 @@
 "use client"
 
 import { Card, CardContent } from "@/shared/ui/card"
+import { PageHeader } from "@/shared/ui/page-header"
 import { Pagination } from "@/shared/ui/pagination"
-import { Typography } from "@/shared/ui/typography"
 import { OrderListFilter } from "@/features/filter-orders"
 
 import { useOrderList } from "../lib/use-order-list"
@@ -20,14 +20,11 @@ export const OrderList = () => {
 
   return (
     <section aria-labelledby="order-list-title">
-      <div>
-        <Typography as="h1" id="order-list-title" variant="pageTitle">
-          주문 관리
-        </Typography>
-        <Typography variant="body" tone="muted" className="mt-2">
-          자사몰에서 접수된 주문 내역입니다.
-        </Typography>
-      </div>
+      <PageHeader
+        titleId="order-list-title"
+        title="주문 관리"
+        description="자사몰에서 접수된 주문 내역입니다."
+      />
 
       <OrderListFilter
         filters={filters}
@@ -35,7 +32,7 @@ export const OrderList = () => {
         onResetFilters={resetFilters}
       />
 
-      <Card className="mt-4 gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0">
+      <Card appearance="panel" className="mt-4">
         <CardContent className="p-0">
           <div className="relative">
             {isFetching && !isPending && (

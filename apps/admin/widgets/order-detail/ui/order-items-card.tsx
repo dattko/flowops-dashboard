@@ -9,6 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/ui/table"
 
 type OrderItemsCardProps = {
   items: OrderDetailItem[]
@@ -31,37 +39,37 @@ export const OrderItemsCard = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[620px] text-left text-sm">
-            <thead className="bg-muted/45 text-xs text-muted-foreground">
-              <tr>
-                <th scope="col" className="px-5 py-3 font-medium">상품</th>
-                <th scope="col" className="px-4 py-3 font-medium">단가</th>
-                <th scope="col" className="px-4 py-3 text-center font-medium">수량</th>
-                <th scope="col" className="px-5 py-3 text-right font-medium">합계</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/70">
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-5 py-4">
-                    <div className="font-semibold">{item.name}</div>
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      SKU {item.sku ?? "-"}
-                    </div>
-                  </td>
-                  <td className="px-4 py-4 text-muted-foreground">
-                    {formatWon(item.unitPrice)}
-                  </td>
-                  <td className="px-4 py-4 text-center">{item.quantity}</td>
-                  <td className="px-5 py-4 text-right font-semibold">
-                    {formatWon(item.totalAmount)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table className="min-w-[620px] text-sm">
+          <TableHeader className="bg-muted/45 text-xs text-muted-foreground">
+            <TableRow>
+              <TableHead className="px-5">상품</TableHead>
+              <TableHead>단가</TableHead>
+              <TableHead className="text-center">수량</TableHead>
+              <TableHead className="px-5 text-right">합계</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-border/70">
+            {items.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell className="px-5 py-4">
+                  <div className="font-semibold">{item.name}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    SKU {item.sku ?? "-"}
+                  </div>
+                </TableCell>
+                <TableCell className="py-4 text-muted-foreground">
+                  {formatWon(item.unitPrice)}
+                </TableCell>
+                <TableCell className="py-4 text-center">
+                  {item.quantity}
+                </TableCell>
+                <TableCell className="px-5 py-4 text-right font-semibold">
+                  {formatWon(item.totalAmount)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   )

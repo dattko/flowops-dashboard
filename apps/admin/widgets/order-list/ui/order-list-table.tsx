@@ -2,14 +2,10 @@
 
 import type { ColumnDef } from "@tanstack/react-table"
 
-import {
-  ORDER_STATUS_CLASS_NAMES,
-  ORDER_STATUS_LABELS,
-} from "@/entities/order"
+import { OrderStatusBadge } from "@/entities/order"
 import { formatWon } from "@/shared/lib/currency"
 import { dayjs } from "@/shared/lib/dayjs"
 import { DataTable } from "@/shared/ui/data-table"
-import { StatusBadge } from "@/shared/ui/status-badge"
 
 import type { OrderListItem } from "../model/types"
 
@@ -77,9 +73,7 @@ const ORDER_COLUMNS: ColumnDef<OrderListItem>[] = [
     accessorKey: "status",
     header: "상태",
     cell: ({ row }) => (
-      <StatusBadge className={ORDER_STATUS_CLASS_NAMES[row.original.status]}>
-        {ORDER_STATUS_LABELS[row.original.status]}
-      </StatusBadge>
+      <OrderStatusBadge status={row.original.status} />
     ),
     meta: {
       headerClassName: "pr-6",

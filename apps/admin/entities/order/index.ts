@@ -4,6 +4,8 @@ export {
 } from "./config/order-payment-label"
 export { ORDER_STATUS_CLASS_NAMES } from "./config/order-status-style"
 export { ORDER_STATUS_LABELS } from "./model/order-status"
+export { OrderStatusBadge } from "./ui/order-status-badge"
+export type { OrderStatusBadgeProps } from "./ui/order-status-badge"
 export type {
   OrderConsultationNote,
   OrderDetail,

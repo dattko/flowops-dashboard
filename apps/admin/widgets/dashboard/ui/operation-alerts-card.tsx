@@ -13,7 +13,7 @@ type OperationAlertsCardProps = {
 export const OperationAlertsCard = ({ lowStockProducts }: OperationAlertsCardProps) => {
   const visibleLowStockProducts = lowStockProducts.slice(0, 2)
   return (
-    <Card className="gap-0 rounded-none border border-[#e3e0d8] bg-white py-0 shadow-[0_1px_2px_rgba(42,39,31,0.03)] ring-0">
+    <Card appearance="panel">
       <CardContent className="p-5">
       <div className="flex items-center justify-between">
         <SectionHeading title="운영 알림" description="우선 확인이 필요한 항목" />

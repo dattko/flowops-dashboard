@@ -2,7 +2,7 @@
 import { BarChart3, LoaderCircle, LockKeyhole } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader } from "@/shared/ui/card"
-import { FormCheckbox, InputText } from "@/shared/ui/form"
+import { FormCheckbox, FormMessage, InputText } from "@/shared/ui/form"
 import { Typography } from "@/shared/ui/typography"
 import { useLoginForm } from "../lib/use-login-form"
 
@@ -81,16 +81,10 @@ export const LoginForm = () => {
             label="로그인 상태 유지"
           />
 
-          {errors.root && (
-            <Typography
-              variant="bodySmall"
-              tone="destructive"
-              className="rounded-lg bg-destructive/8 px-3 py-2.5 mb-4"
-              role="alert"
-            >
-              {errors.root.message}
-            </Typography>
-          )}
+          <FormMessage
+            errorMessage={errors.root?.message}
+            className="mb-4 rounded-lg bg-destructive/8 px-3 py-2.5"
+          />
 
           <Button
             type="submit"
