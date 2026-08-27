@@ -1,8 +1,6 @@
 "use client"
 
-import Link from "next/link"
 import type { ColumnDef } from "@tanstack/react-table"
-import { ArrowRight } from "lucide-react"
 
 import {
   CustomerStatusBadge,
@@ -10,7 +8,6 @@ import {
 } from "@/entities/customer"
 import { formatWon } from "@/shared/lib/currency"
 import { dayjs, formatDateTime } from "@/shared/lib/dayjs"
-import { buttonVariants } from "@/shared/ui/button"
 import { DataTable } from "@/shared/ui/data-table"
 
 const columns: ColumnDef<CustomerListItem>[] = [
@@ -77,23 +74,6 @@ const columns: ColumnDef<CustomerListItem>[] = [
       cellClassName: "text-muted-foreground",
     },
   },
-  {
-    id: "actions",
-    header: "관리",
-    cell: ({ row }) => (
-      <Link
-        href={`/customers/${row.original.id}`}
-        className={buttonVariants({ variant: "outline", size: "sm" })}
-      >
-        상세
-        <ArrowRight aria-hidden="true" />
-      </Link>
-    ),
-    meta: {
-      headerClassName: "pr-6",
-      cellClassName: "pr-6",
-    },
-  },
 ]
 
 type CustomerListTableProps = {
@@ -112,6 +92,7 @@ const CustomerListTable = ({
       getRowId={(customer) => customer.id}
       emptyMessage={emptyMessage}
       className="min-w-[1140px]"
+      onRowClick={(customers)=>{window.location.href=`/customers/${customers.id}`}}
     />
   )
 }
