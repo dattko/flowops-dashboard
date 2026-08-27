@@ -16,6 +16,8 @@
 - Chart.js, react-chartjs-2
 - Day.js
 - React Context 기반 프로필 상태 공유
+- Vitest, V8 Coverage
+- Storybook
 
 ## 요구 사항
 
@@ -39,6 +41,11 @@ pnpm dev
 | --- | --- |
 | `pnpm dev` | 관리자 앱 개발 서버 실행 |
 | `pnpm lint` | 관리자 앱 ESLint 검사 |
+| `pnpm test` | Vitest 단위 테스트 1회 실행 |
+| `pnpm test:watch` | Vitest 단위 테스트 감시 모드 |
+| `pnpm test:coverage` | V8 단위 테스트 커버리지 생성 |
+| `pnpm storybook` | 관리자 앱 Storybook 실행 |
+| `pnpm build-storybook` | Storybook 정적 빌드 검사 |
 | `pnpm build` | 관리자 앱 프로덕션 빌드 |
 | `pnpm start` | 빌드된 관리자 앱 실행 |
 
@@ -182,6 +189,7 @@ lib/use-active-menu.ts
 - 여러 폼에서 사용하는 textarea와 저장 결과 메시지는 각각 `InputTextarea`, `FormMessage`를 사용합니다.
 - 단순 표는 `shared/ui/table.tsx`의 서버 호환 Table primitive를 사용하고, 정렬·필터 같은 상태 관리가 필요한 표는 이 primitive를 조합한 `DataTable`을 사용합니다.
 - 비즈니스 상태를 해석하는 UI는 `shared`가 아니라 해당 entity에 둡니다. 주문 상태 표시는 `entities/order`의 `OrderStatusBadge`를 사용합니다.
+- 단위 테스트는 검증 대상 파일과 가까운 위치에 `{파일명}.test.ts` 형식으로 작성합니다.
 
 ## 공개 API와 import 규칙
 
@@ -234,6 +242,41 @@ export { OrderList } from "./ui/order-list"
 - 로그인 상태 유지를 선택하면 Supabase 세션 정책을 따릅니다.
 - 로그인 상태 유지를 선택하지 않으면 사용자 활동 기준 2시간 세션 정책을 적용합니다.
 - 프로필은 관리자 레이아웃에서 SSR로 조회한 뒤 React Context로 하위 Client Component에 전달합니다.
+
+## 테스트
+
+Vitest로 프로젝트가 직접 구현한 검증과 계산 로직을 테스트합니다.
+
+| 대상 | 검증 내용 |
+| --- | --- |
+| 로그인 스키마 | 정상 입력, 이메일 형식, 비밀번호 최소 길이 |
+| 세션 정책 | 2시간 만료값 생성, 만료 시각 해석, 잘못된 정책 처리 |
+| 페이지네이션 | 처음·중간·마지막 구간과 적은 페이지 처리 |
+
+```bash
+pnpm test
+pnpm test:coverage
+```
+
+현재 단위 테스트는 총 10개이며, 생성되는 `coverage/` 디렉터리는 Git에 포함하지 않습니다.
+
+## Storybook
+
+관리자 앱의 재사용 UI와 비즈니스 상태 표현을 API 없이 독립적으로 확인합니다. 스토리는 대상 컴포넌트와 같은 위치에 `*.stories.tsx` 형식으로 작성합니다.
+
+- 버튼의 variant, 크기, 아이콘과 비활성 상태
+- 타이포그래피 계층과 tone
+- 입력창, textarea, select, 날짜 선택기와 RHF 체크박스
+- 폼의 기본·설명·오류·성공 상태
+- 카드, 페이지 헤더, 페이지네이션과 데이터 테이블
+- 주문·재고·상품·고객 상태 배지
+
+```bash
+pnpm storybook
+pnpm build-storybook
+```
+
+대시보드나 상세 페이지처럼 API와 여러 위젯에 의존하는 전체 화면은 Storybook 대상에서 제외하고, 재사용하거나 상태 비교가 필요한 컴포넌트만 관리합니다.
 
 ## 환경 변수
 

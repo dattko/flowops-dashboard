@@ -10,6 +10,11 @@
     "dev": "pnpm --filter @flowops/admin dev",
     "build": "pnpm --filter @flowops/admin build",
     "start": "pnpm --filter @flowops/admin start",
-    "lint": "pnpm --filter @flowops/admin lint"
+    "lint": "pnpm --filter @flowops/admin lint",
+    "test": "pnpm --filter @flowops/admin test:run",
+    "test:watch": "pnpm --filter @flowops/admin test",
+    "test:coverage": "pnpm --filter @flowops/admin test:coverage",
+    "storybook": "pnpm --filter @flowops/admin storybook",
+    "build-storybook": "pnpm --filter @flowops/admin build-storybook"
   }
 }

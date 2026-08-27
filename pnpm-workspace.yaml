@@ -6,6 +6,7 @@ publicHoistPattern:
   - next
 
 allowBuilds:
+  esbuild: true
   sharp: true
   unrs-resolver: true
 ignoredBuiltDependencies:
