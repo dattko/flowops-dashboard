@@ -1,12 +1,30 @@
-import { BarChart3, Bell, Search } from "lucide-react"
+"use client"
+
+import { BarChart3, Bell, Menu, Search } from "lucide-react"
+
+import { LogoutButton } from "@/features/auth"
+import { useSidebarStore } from "@/shared/store/use-sidebar-store"
 import { Button } from "@/shared/ui/button"
 import { Typography } from "@/shared/ui/typography"
-import { LogoutButton } from "@/features/auth"
 
 export const MobileHeader = () => {
+  const openMobileSidebar = useSidebarStore(
+    (state) => state.openMobileSidebar
+  )
+
   return (
     <header className="flex h-16 items-center justify-between border-b border-[#e4e1d9] bg-[#fbfaf7]/90 px-4 backdrop-blur-sm sm:px-6 lg:hidden">
       <div className="flex items-center gap-2.5">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={openMobileSidebar}
+          aria-label="메뉴 열기"
+          aria-controls="mobile-sidebar"
+        >
+          <Menu aria-hidden="true" />
+        </Button>
         <div className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
           <BarChart3 className="size-4" aria-hidden="true" />
         </div>

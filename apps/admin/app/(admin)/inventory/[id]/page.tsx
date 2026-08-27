@@ -8,10 +8,10 @@ import {
 const InventoryDetailPage = async ({
   params,
 }: {
-  params: Promise<{ productId: string }>
+  params: Promise<{ id: string }>
 }) => {
-  const { productId } = await params
-  const inventory = await getInventoryDetail(productId)
+  const { id } = await params
+  const inventory = await getInventoryDetail(id)
 
   if (!inventory) {
     notFound()

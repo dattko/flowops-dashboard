@@ -11,6 +11,7 @@
 - Tailwind CSS 4, shadcn/ui
 - Supabase Auth, REST API 연동
 - TanStack Query, TanStack Table
+- Zustand
 - React Hook Form, Zod
 - Chart.js, react-chartjs-2
 - Day.js
@@ -112,6 +113,7 @@ apps/admin/
     ├── api/base/              # 클라이언트·서버 공통 API Fetcher
     ├── lib/                   # Supabase, 날짜, 통화, 세션, 페이지 계산 유틸
     ├── model/                 # 공통 페이지네이션 타입과 기본값
+    ├── store/                 # 여러 위젯이 공유하는 클라이언트 UI 상태
     └── ui/                    # shadcn/ui 기반 범용 UI와 페이지네이션
 ```
 
@@ -221,6 +223,7 @@ export { OrderList } from "./ui/order-list"
 - 주문 상세 수정은 상태별 허용 필드만 변경하며 상태 변경 이력을 자동으로 기록합니다.
 - 상담 메모는 수정하지 않는 누적 이력으로 추가합니다.
 - 설정 화면은 상점·배송·계정 정보를 SSR로 조회하고 변경 사항은 수정 API로 저장합니다.
+- 모바일 사이드바 열림 상태와 데스크톱 접힘 상태는 Zustand로 공유하며, 접힘 설정만 브라우저에 유지합니다.
 - 재고·고객 관리와 매출 리포트 API 계약은 [`docs/management-apis.md`](docs/management-apis.md)에 정리합니다.
 - 통화, 날짜, 상태 색상처럼 화면 표현에 가까운 가공은 프론트엔드에서 처리합니다.
 - 클라이언트와 서버 요청은 `shared/api/base`의 Fetcher를 사용합니다.
