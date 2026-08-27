@@ -8,7 +8,7 @@
 
 - pnpm workspace 기반 모노레포
 - Next.js 16 App Router, React 19, TypeScript
-- Tailwind CSS 4, shadcn/ui
+- Tailwind CSS 4, shadcn/ui, Pretendard Variable
 - Supabase Auth, REST API 연동
 - TanStack Query, TanStack Table
 - Zustand
