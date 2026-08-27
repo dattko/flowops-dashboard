@@ -74,7 +74,7 @@ export const WithIcon: Story = {
     <div className="flex items-center gap-3">
       <Button>
         <Download aria-hidden="true" />
-        리포트 내려받기
+        내려받기
       </Button>
       <Button variant="outline">
         주문 상세

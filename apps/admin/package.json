@@ -12,7 +12,8 @@
     "test:coverage": "vitest run --project unit --coverage",
     "test:storybook": "vitest run --project storybook",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_4779caf0e03cc54"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -40,26 +41,27 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "latest",
+    "@storybook/addon-a11y": "^10.5.10",
+    "@storybook/addon-docs": "^10.5.10",
+    "@storybook/addon-mcp": "latest",
+    "@storybook/addon-vitest": "^10.5.10",
+    "@storybook/nextjs-vite": "^10.5.10",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/browser-playwright": "4.1.11",
     "@vitest/coverage-v8": "^4.1.11",
+    "chromatic": "^18.6.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
+    "eslint-plugin-storybook": "^10.5.10",
+    "playwright": "latest",
+    "storybook": "^10.5.10",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.11",
-    "storybook": "^10.5.10",
-    "@storybook/nextjs-vite": "^10.5.10",
-    "@chromatic-com/storybook": "latest",
-    "@storybook/addon-vitest": "^10.5.10",
-    "@storybook/addon-a11y": "^10.5.10",
-    "@storybook/addon-docs": "^10.5.10",
-    "@storybook/addon-mcp": "latest",
     "vite": "latest",
-    "eslint-plugin-storybook": "^10.5.10",
-    "@vitest/browser-playwright": "4.1.11",
-    "playwright": "latest"
+    "vitest": "^4.1.11"
   }
 }
