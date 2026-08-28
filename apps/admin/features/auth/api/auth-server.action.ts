@@ -10,6 +10,7 @@ import {
   createShortSessionPolicy,
 } from "@/shared/lib/auth/session-policy"
 import { createClient } from "@/shared/lib/supabase/server"
+import { ROUTES } from "@/shared/config/routes"
 
 import { loginSchema, type LoginValues } from "../model/login-schema"
 
@@ -46,8 +47,8 @@ const login = async (values: LoginValues) => {
     })
   }
 
-  revalidatePath("/", "layout")
-  redirect("/")
+  revalidatePath(ROUTES.dashboard, "layout")
+  redirect(ROUTES.dashboard)
 }
 
 const logout = async () => {
@@ -61,8 +62,8 @@ const logout = async () => {
 
   cookieStore.delete(SESSION_POLICY_COOKIE)
 
-  revalidatePath("/", "layout")
-  redirect("/login")
+  revalidatePath(ROUTES.dashboard, "layout")
+  redirect(ROUTES.login)
 }
 
 export { login, logout }

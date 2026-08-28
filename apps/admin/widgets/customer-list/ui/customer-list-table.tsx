@@ -7,6 +7,7 @@ import {
   type CustomerListItem,
 } from "@/entities/customer"
 import { formatWon } from "@/shared/lib/currency"
+import { ROUTES } from "@/shared/config/routes"
 import { dayjs, formatDateTime } from "@/shared/lib/dayjs"
 import { DataTable } from "@/shared/ui/data-table"
 
@@ -92,7 +93,9 @@ const CustomerListTable = ({
       getRowId={(customer) => customer.id}
       emptyMessage={emptyMessage}
       className="min-w-[1140px]"
-      onRowClick={(customers)=>{window.location.href=`/customers/${customers.id}`}}
+      onRowClick={(customer) => {
+        window.location.href = ROUTES.customers.detail(customer.id)
+      }}
     />
   )
 }

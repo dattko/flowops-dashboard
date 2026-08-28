@@ -7,6 +7,7 @@ import {
   createShortSessionPolicy,
   getShortSessionExpiresAt,
 } from "@/shared/lib/auth/session-policy"
+import { ROUTES } from "@/shared/config/routes"
 
 export const updateSession = async (request: NextRequest) => {
   let response = NextResponse.next({ request })
@@ -37,8 +38,8 @@ export const updateSession = async (request: NextRequest) => {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isLoginPath = request.nextUrl.pathname.startsWith("/login")
-  const isAuthPath = request.nextUrl.pathname.startsWith("/auth")
+  const isLoginPath = request.nextUrl.pathname.startsWith(ROUTES.login)
+  const isAuthPath = request.nextUrl.pathname.startsWith(ROUTES.auth.root)
   const isPublicPath = isLoginPath || isAuthPath
   const sessionExpiresAt = getShortSessionExpiresAt(
     request.cookies.get(SESSION_POLICY_COOKIE)?.value
@@ -51,7 +52,7 @@ export const updateSession = async (request: NextRequest) => {
     sessionExpiresAt <= Date.now()
   ) {
     const url = request.nextUrl.clone()
-    url.pathname = "/auth/session-expired"
+    url.pathname = ROUTES.auth.sessionExpired
     url.search = ""
     return NextResponse.redirect(url)
   }
@@ -69,7 +70,7 @@ export const updateSession = async (request: NextRequest) => {
   // 로그인한 사용자가 로그인 화면에 접근하면 대시보드로 이동
   if (user && isLoginPath) {
     const url = request.nextUrl.clone()
-    url.pathname = "/"
+    url.pathname = ROUTES.dashboard
     url.search = ""
     return NextResponse.redirect(url)
   }
@@ -77,7 +78,7 @@ export const updateSession = async (request: NextRequest) => {
   // 로그인 안 된 상태로 보호된 페이지 접근 시 리다이렉트
   if (!user && !isPublicPath) {
     const url = request.nextUrl.clone()
-    url.pathname = "/login"
+    url.pathname = ROUTES.login
     return NextResponse.redirect(url)
   }
 

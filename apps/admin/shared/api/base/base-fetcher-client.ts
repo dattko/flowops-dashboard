@@ -1,6 +1,7 @@
 "use client"
 
 import { createClient } from "@/shared/lib/supabase/client"
+import { ROUTES } from "@/shared/config/routes"
 
 import type { BaseApiFetcherOptions } from "./types"
 import { parseApiResponse } from "./utils"
@@ -38,7 +39,7 @@ const createBaseApiFetcherClient = async <TResponse, TBody = unknown>({
 
   if (response.status === 401) {
     await supabase.auth.signOut({ scope: "local" })
-    window.location.replace("/login")
+    window.location.replace(ROUTES.login)
   }
 
   return parseApiResponse<TResponse>(response)

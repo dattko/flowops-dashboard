@@ -5,6 +5,7 @@ import { AlertTriangle, RotateCcw } from "lucide-react"
 
 import { Button, buttonVariants } from "@/shared/ui/button"
 import { Card, CardContent } from "@/shared/ui/card"
+import { ROUTES } from "@/shared/config/routes"
 import { Typography } from "@/shared/ui/typography"
 
 type AdminErrorProps = {
@@ -33,7 +34,10 @@ const AdminError = ({ reset }: AdminErrorProps) => {
               <RotateCcw aria-hidden="true" />
               다시 시도
             </Button>
-            <Link href="/" className={buttonVariants({ variant: "outline" })}>
+            <Link
+              href={ROUTES.dashboard}
+              className={buttonVariants({ variant: "outline" })}
+            >
               대시보드로 이동
             </Link>
           </div>

@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 
 import { SHORT_SESSION_DURATION_MS } from "@/shared/lib/auth/session-policy"
+import { ROUTES } from "@/shared/config/routes"
 
 const HEARTBEAT_INTERVAL_MS = 60 * 1000
 const ACTIVITY_EVENTS = ["pointerdown", "keydown", "scroll", "touchstart"] as const
@@ -14,14 +15,17 @@ export const useSessionExpiry = (expiresAt: number | null) => {
     let timeoutId: number
     let lastHeartbeatAt = Date.now()
 
-    const expireSession = () => window.location.replace("/auth/session-expired")
+    const expireSession = () =>
+      window.location.replace(ROUTES.auth.sessionExpired)
     const scheduleExpiration = (delay: number) => {
       window.clearTimeout(timeoutId)
       timeoutId = window.setTimeout(expireSession, delay)
     }
     const renewSession = async () => {
       try {
-        const response = await fetch("/auth/session-activity", { method: "POST" })
+        const response = await fetch(ROUTES.auth.sessionActivity, {
+          method: "POST",
+        })
         if (response.status === 401) expireSession()
       } catch {
         // 일시적인 네트워크 오류는 다음 사용자 활동에서 다시 갱신합니다.

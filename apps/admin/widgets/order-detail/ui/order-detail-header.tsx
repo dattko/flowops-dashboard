@@ -5,6 +5,7 @@ import {
   OrderStatusBadge,
   type OrderDetail,
 } from "@/entities/order"
+import { ROUTES } from "@/shared/config/routes"
 import { formatDateTime } from "@/shared/lib/dayjs"
 import { buttonVariants } from "@/shared/ui/button"
 import { PageHeader } from "@/shared/ui/page-header"
@@ -14,7 +15,7 @@ export const OrderDetailHeader = ({ order }: { order: OrderDetail }) => {
   return (
     <>
       <Link
-        href="/order"
+        href={ROUTES.orders.list}
         className={buttonVariants({
           variant: "ghost",
           size: "sm",

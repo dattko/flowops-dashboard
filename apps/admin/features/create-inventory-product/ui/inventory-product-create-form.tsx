@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowLeft, PackagePlus, Save } from "lucide-react"
 
 import { PRODUCT_STATUS_OPTIONS } from "@/entities/inventory"
+import { ROUTES } from "@/shared/config/routes"
 import { buttonVariants, Button } from "@/shared/ui/button"
 import {
   Card,
@@ -30,7 +31,7 @@ const InventoryProductCreateForm = () => {
   return (
     <section aria-labelledby="inventory-create-title">
       <Link
-        href="/inventory"
+        href={ROUTES.inventory.list}
         className={buttonVariants({
           variant: "ghost",
           size: "sm",
@@ -146,7 +147,7 @@ const InventoryProductCreateForm = () => {
           />
           <div className="flex gap-2 self-end sm:self-auto">
             <Link
-              href="/inventory"
+              href={ROUTES.inventory.list}
               className={buttonVariants({ variant: "outline" })}
             >
               취소

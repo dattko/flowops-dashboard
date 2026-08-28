@@ -5,6 +5,7 @@ import {
   CustomerStatusBadge,
   type CustomerProfile,
 } from "@/entities/customer"
+import { ROUTES } from "@/shared/config/routes"
 import { formatDateTime } from "@/shared/lib/dayjs"
 import { buttonVariants } from "@/shared/ui/button"
 import { PageHeader } from "@/shared/ui/page-header"
@@ -17,7 +18,7 @@ const CustomerDetailHeader = ({
   return (
     <>
       <Link
-        href="/customers"
+        href={ROUTES.customers.list}
         className={buttonVariants({
           variant: "ghost",
           size: "sm",

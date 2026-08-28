@@ -3,6 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 
 import { OrderStatusBadge } from "@/entities/order"
+import { ROUTES } from "@/shared/config/routes"
 import { formatWon } from "@/shared/lib/currency"
 import { dayjs } from "@/shared/lib/dayjs"
 import { DataTable } from "@/shared/ui/data-table"
@@ -93,7 +94,7 @@ export const OrderListTable = ({
       getRowId={(order) => order.id}
       emptyMessage={emptyMessage}
       onRowClick={(order) => {
-        window.location.href = `/order/${order.id}`
+        window.location.href = ROUTES.orders.detail(order.id)
       }}
     />
   )

@@ -7,6 +7,7 @@ import {
   type InventoryItem,
 } from "@/entities/inventory"
 import { dayjs } from "@/shared/lib/dayjs"
+import { ROUTES } from "@/shared/config/routes"
 import { DataTable } from "@/shared/ui/data-table"
 
 type InventoryListTableProps = {
@@ -103,7 +104,9 @@ const InventoryListTable = ({
       getRowId={(inventory) => inventory.productId}
       emptyMessage={emptyMessage}
       className="min-w-[1080px]"
-      onRowClick={(inventoryItems)=>{window.location.href=`/inventory/${inventoryItems.productId}`}}
+      onRowClick={(inventoryItem) => {
+        window.location.href = ROUTES.inventory.detail(inventoryItem.productId)
+      }}
     />
   )
 }

@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
 import { getApiErrorMessage } from "@/shared/api/base/utils"
+import { ROUTES } from "@/shared/config/routes"
 
 import { createInventoryProduct } from "../api/inventory-product-client.api"
 import type { InventoryProductCreateFormValues } from "../model/types"
@@ -31,7 +32,7 @@ const useInventoryProductCreateForm = () => {
     mutationFn: createInventoryProduct,
     onSuccess: (inventory) => {
       void queryClient.invalidateQueries({ queryKey: ["inventory", "list"] })
-      router.replace(`/inventory/${inventory.productId}`)
+      router.replace(ROUTES.inventory.detail(inventory.productId))
     },
     onError: (error) => {
       setErrorMessage(getApiErrorMessage(error))

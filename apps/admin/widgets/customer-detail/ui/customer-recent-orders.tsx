@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowRight, ShoppingBag } from "lucide-react"
 
 import { OrderStatusBadge } from "@/entities/order"
+import { ROUTES } from "@/shared/config/routes"
 import { formatWon } from "@/shared/lib/currency"
 import { formatDateTime } from "@/shared/lib/dayjs"
 import { buttonVariants } from "@/shared/ui/button"
@@ -66,7 +67,7 @@ const CustomerRecentOrders = ({
                   </TableCell>
                   <TableCell className="px-5 text-right">
                     <Link
-                      href={`/order/${order.id}`}
+                      href={ROUTES.orders.detail(order.id)}
                       className={buttonVariants({
                         variant: "outline",
                         size: "sm",

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Plus } from "lucide-react"
 
 import { InventoryListFilter } from "@/features/filter-inventory"
+import { ROUTES } from "@/shared/config/routes"
 import { buttonVariants } from "@/shared/ui/button"
 import { Card, CardContent } from "@/shared/ui/card"
 import { PageHeader } from "@/shared/ui/page-header"
@@ -29,7 +30,7 @@ const InventoryList = () => {
         title="재고 관리"
         description="원두와 홈카페 상품의 보유·예약·판매 가능 재고를 관리합니다."
         actions={
-          <Link href="/inventory/new" className={buttonVariants()}>
+          <Link href={ROUTES.inventory.create} className={buttonVariants()}>
             <Plus aria-hidden="true" />
             상품 등록
           </Link>

@@ -5,6 +5,7 @@ import {
   InventoryStockStatusBadge,
   type InventoryDetail,
 } from "@/entities/inventory"
+import { ROUTES } from "@/shared/config/routes"
 import { formatDateTime } from "@/shared/lib/dayjs"
 import { buttonVariants } from "@/shared/ui/button"
 import { PageHeader } from "@/shared/ui/page-header"
@@ -17,7 +18,7 @@ const InventoryDetailHeader = ({
   return (
     <>
       <Link
-        href="/inventory"
+        href={ROUTES.inventory.list}
         className={buttonVariants({
           variant: "ghost",
           size: "sm",
