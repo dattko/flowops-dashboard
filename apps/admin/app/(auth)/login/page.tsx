@@ -1,7 +1,13 @@
+import type { Metadata } from "next"
 import { BarChart3, Boxes, CircleCheck, ShoppingBag } from "lucide-react"
 
 import { LoginForm } from "@/features/auth"
 import { Typography } from "@/shared/ui/typography"
+
+export const metadata: Metadata = {
+  title: "로그인",
+  description: "FlowOps 운영 대시보드에 로그인합니다.",
+}
 
 const operationItems = [
   {

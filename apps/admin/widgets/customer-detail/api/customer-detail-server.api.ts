@@ -1,10 +1,12 @@
 import "server-only"
 
+import { cache } from "react"
+
 import { baseApiFetcherServer } from "@/shared/api/base/base-fetcher-server"
 
 import type { CustomerDetailData } from "../model/types"
 
-const getCustomerDetail = async (
+const getCustomerDetail = cache(async (
   customerId: string
 ): Promise<CustomerDetailData | null> => {
   return baseApiFetcherServer.post<CustomerDetailData | null>(
@@ -13,6 +15,6 @@ const getCustomerDetail = async (
       p_customer_id: customerId,
     }
   )
-}
+})
 
 export { getCustomerDetail }

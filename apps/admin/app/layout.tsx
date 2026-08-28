@@ -11,9 +11,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FlowOps | 운영 대시보드",
+  title: {
+    default: "운영 대시보드 | FlowOps",
+    template: "%s | FlowOps",
+  },
   description:
     "스페셜티 커피 자사몰의 주문, 매출, 재고 현황을 관리하는 운영 대시보드",
+  applicationName: "FlowOps",
 };
 
 const RootLayout = ({

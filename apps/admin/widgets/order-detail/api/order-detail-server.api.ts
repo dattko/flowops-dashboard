@@ -1,9 +1,11 @@
 import "server-only"
 
+import { cache } from "react"
+
 import type { OrderDetail } from "@/entities/order"
 import { baseApiFetcherServer } from "@/shared/api/base/base-fetcher-server"
 
-export const getOrderDetail = async (
+export const getOrderDetail = cache(async (
   orderId: string
 ): Promise<OrderDetail | null> => {
   return baseApiFetcherServer.post<OrderDetail | null>(
@@ -12,4 +14,4 @@ export const getOrderDetail = async (
       p_order_id: orderId,
     }
   )
-}
+})
