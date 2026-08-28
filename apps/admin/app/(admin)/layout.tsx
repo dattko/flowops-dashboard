@@ -26,7 +26,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
         <AppSidebar navigationItems={navigationItems} />
         <div className="min-w-0 transition-[padding] duration-200 lg:pl-[248px] lg:peer-data-[collapsed=true]:pl-[80px]">
           <MobileHeader />
-          <main className="mx-auto w-full max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
+          <main className="mx-auto w-full max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8 xl:px-10 relative min-h-dvh">
             {children}
           </main>
         </div>
