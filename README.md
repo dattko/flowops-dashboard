@@ -287,11 +287,13 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SECRET_KEY=
 SUPER_ADMIN_EMAILS=owner@flowops.kr
+DEMO_ACCOUNT_EMAIL=demo@flowops.test
 ```
 
 `.env*` 파일은 저장소에 커밋하지 않습니다.
 `SUPABASE_SECRET_KEY`는 관리자 초대와 권한 변경을 위해 서버에서만 사용하며 브라우저에 노출하면 안 됩니다.
 `SUPER_ADMIN_EMAILS`에는 관리자 계정을 관리할 메인 관리자 이메일을 쉼표로 구분해 입력합니다.
+`DEMO_ACCOUNT_EMAIL`에는 로그인 화면의 데모 버튼으로 연결할 전용 관리자 이메일을 입력합니다. 해당 사용자의 `app_metadata`에는 `demo: true`, `role: "admin"`, `admin_status: "active"`가 설정되어 있어야 합니다.
 
 ## Bruno API 테스트
 

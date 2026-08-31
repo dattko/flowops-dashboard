@@ -9,6 +9,10 @@ import {
   SESSION_POLICY_COOKIE,
   createShortSessionPolicy,
 } from "@/shared/lib/auth/session-policy"
+import {
+  createAdminClient,
+  findAuthUserByEmail,
+} from "@/shared/lib/supabase/admin"
 import { createClient } from "@/shared/lib/supabase/server"
 import { ROUTES } from "@/shared/config/routes"
 
@@ -51,6 +55,64 @@ const login = async (values: LoginValues) => {
       path: "/",
       maxAge: POLICY_COOKIE_MAX_AGE_SECONDS,
     })
+  }
+
+  revalidatePath(ROUTES.dashboard, "layout")
+  redirect(ROUTES.dashboard)
+}
+
+const demoLogin = async () => {
+  const demoEmail = process.env.DEMO_ACCOUNT_EMAIL?.trim().toLowerCase()
+
+  if (!demoEmail) {
+    return { error: "데모 계정이 아직 설정되지 않았습니다." }
+  }
+
+  try {
+    const adminClient = createAdminClient()
+    const demoUser = await findAuthUserByEmail(adminClient, demoEmail)
+
+    if (
+      !demoUser ||
+      demoUser.app_metadata.demo !== true ||
+      demoUser.app_metadata.role !== "admin" ||
+      demoUser.app_metadata.admin_status !== "active"
+    ) {
+      return { error: "사용 가능한 데모 계정을 확인할 수 없습니다." }
+    }
+
+    const { data, error: linkError } =
+      await adminClient.auth.admin.generateLink({
+        type: "magiclink",
+        email: demoEmail,
+      })
+
+    if (linkError || !data.properties?.hashed_token) {
+      throw linkError ?? new Error("데모 로그인 토큰을 생성하지 못했습니다.")
+    }
+
+    const supabase = await createClient()
+    const { data: sessionData, error: verifyError } =
+      await supabase.auth.verifyOtp({
+        token_hash: data.properties.hashed_token,
+        type: "magiclink",
+      })
+
+    if (verifyError || sessionData.user?.id !== demoUser.id) {
+      throw verifyError ?? new Error("데모 계정 세션을 확인하지 못했습니다.")
+    }
+
+    const cookieStore = await cookies()
+    cookieStore.set(SESSION_POLICY_COOKIE, createShortSessionPolicy(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: POLICY_COOKIE_MAX_AGE_SECONDS,
+    })
+  } catch (error) {
+    console.error("[demo-login] failed", error)
+    return { error: "데모 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요." }
   }
 
   revalidatePath(ROUTES.dashboard, "layout")
@@ -124,4 +186,4 @@ const updatePassword = async (values: ResetPasswordValues) => {
   redirect(`${ROUTES.login}?reset=success`)
 }
 
-export { login, logout, requestPasswordReset, updatePassword }
+export { demoLogin, login, logout, requestPasswordReset, updatePassword }

@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { BarChart3, LoaderCircle, LockKeyhole } from "lucide-react"
+import { BarChart3, LoaderCircle, LockKeyhole, MonitorPlay } from "lucide-react"
 import { Button, buttonVariants } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader } from "@/shared/ui/card"
 import { ROUTES } from "@/shared/config/routes"
@@ -20,8 +20,10 @@ export const LoginForm = ({
   invitationAccepted = false,
   unauthorized = false,
 }: LoginFormProps) => {
-  const { form, handleSubmitForm } = useLoginForm()
+  const { form, handleDemoLogin, handleSubmitForm, isDemoPending } =
+    useLoginForm()
   const { register, control, formState: { errors, isSubmitting } } = form
+  const isPending = isSubmitting || isDemoPending
 
   return (
     <Card className="w-full gap-0 rounded-2xl py-0 shadow-[0_24px_80px_rgba(53,42,31,0.10)] ring-black/8">
@@ -119,12 +121,36 @@ export const LoginForm = ({
             type="submit"
             size="lg"
             className="w-full"
-            disabled={isSubmitting}
+            disabled={isPending}
           >
             {isSubmitting && (
               <LoaderCircle className="animate-spin" aria-hidden="true" />
             )}
             {isSubmitting ? "로그인 중..." : "로그인"}
+          </Button>
+
+          <div className="relative flex items-center py-1" aria-hidden="true">
+            <div className="h-px flex-1 bg-border" />
+            <Typography as="span" variant="caption" tone="muted" className="px-3">
+              또는
+            </Typography>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            className="w-full"
+            onClick={handleDemoLogin}
+            disabled={isPending}
+          >
+            {isDemoPending ? (
+              <LoaderCircle className="animate-spin" aria-hidden="true" />
+            ) : (
+              <MonitorPlay aria-hidden="true" />
+            )}
+            {isDemoPending ? "데모 준비 중..." : "데모 계정으로 둘러보기"}
           </Button>
         </form>
 
@@ -133,9 +159,9 @@ export const LoginForm = ({
           tone="muted"
           className="mt-6 text-center"
         >
-          승인된 관리자만 접근할 수 있습니다.
+          데모 계정은 별도 정보 입력 없이 체험할 수 있습니다.
           <br />
-          계정 문의는 시스템 관리자에게 요청해 주세요.
+          실제 운영 계정은 승인된 관리자만 이용할 수 있습니다.
         </Typography>
       </CardContent>
     </Card>
