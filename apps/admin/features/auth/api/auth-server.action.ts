@@ -1,7 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
+import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
 
 import {
@@ -13,6 +13,12 @@ import { createClient } from "@/shared/lib/supabase/server"
 import { ROUTES } from "@/shared/config/routes"
 
 import { loginSchema, type LoginValues } from "../model/login-schema"
+import {
+  findPasswordSchema,
+  resetPasswordSchema,
+  type FindPasswordValues,
+  type ResetPasswordValues,
+} from "../model/password-schema"
 
 const login = async (values: LoginValues) => {
   const parsed = loginSchema.safeParse(values)
@@ -66,4 +72,56 @@ const logout = async () => {
   redirect(ROUTES.login)
 }
 
-export { login, logout }
+const requestPasswordReset = async (values: FindPasswordValues) => {
+  const parsed = findPasswordSchema.safeParse(values)
+
+  if (!parsed.success) {
+    return { error: "입력한 이메일을 다시 확인해 주세요." }
+  }
+
+  const requestHeaders = await headers()
+  const origin =
+    process.env.NEXT_PUBLIC_SITE_URL ?? requestHeaders.get("origin")
+
+  if (!origin) {
+    return { error: "서비스 주소를 확인할 수 없습니다. 잠시 후 다시 시도해 주세요." }
+  }
+
+  const callbackUrl = new URL(ROUTES.auth.callback, origin)
+  callbackUrl.searchParams.set("next", ROUTES.resetPassword)
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    parsed.data.email,
+    { redirectTo: callbackUrl.toString() }
+  )
+
+  if (error) {
+    return { error: "재설정 메일을 보내지 못했습니다. 잠시 후 다시 시도해 주세요." }
+  }
+
+  return { success: true as const }
+}
+
+const updatePassword = async (values: ResetPasswordValues) => {
+  const parsed = resetPasswordSchema.safeParse(values)
+
+  if (!parsed.success) {
+    return { error: "새 비밀번호를 다시 확인해 주세요." }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  })
+
+  if (error) {
+    return { error: "비밀번호를 변경하지 못했습니다. 재설정 링크를 다시 요청해 주세요." }
+  }
+
+  await supabase.auth.signOut()
+  revalidatePath(ROUTES.dashboard, "layout")
+  redirect(`${ROUTES.login}?reset=success`)
+}
+
+export { login, logout, requestPasswordReset, updatePassword }

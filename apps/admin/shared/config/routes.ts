@@ -1,8 +1,11 @@
 const ROUTES = {
   dashboard: "/",
   login: "/login",
+  findPassword: "/find-password",
+  resetPassword: "/reset-password",
   auth: {
     root: "/auth",
+    callback: "/auth/callback",
     sessionActivity: "/auth/session-activity",
     sessionExpired: "/auth/session-expired",
   },

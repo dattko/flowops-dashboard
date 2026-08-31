@@ -39,8 +39,10 @@ export const updateSession = async (request: NextRequest) => {
   } = await supabase.auth.getUser()
 
   const isLoginPath = request.nextUrl.pathname.startsWith(ROUTES.login)
+  const isFindPasswordPath =
+    request.nextUrl.pathname === ROUTES.findPassword
   const isAuthPath = request.nextUrl.pathname.startsWith(ROUTES.auth.root)
-  const isPublicPath = isLoginPath || isAuthPath
+  const isPublicPath = isLoginPath || isFindPasswordPath || isAuthPath
   const sessionExpiresAt = getShortSessionExpiresAt(
     request.cookies.get(SESSION_POLICY_COOKIE)?.value
   )

@@ -1,12 +1,19 @@
 "use client"
+import Link from "next/link"
 import { BarChart3, LoaderCircle, LockKeyhole } from "lucide-react"
-import { Button } from "@/shared/ui/button"
+import { Button, buttonVariants } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader } from "@/shared/ui/card"
+import { ROUTES } from "@/shared/config/routes"
 import { FormCheckbox, FormMessage, InputText } from "@/shared/ui/form"
 import { Typography } from "@/shared/ui/typography"
+import { cn } from "@/shared/lib/utils"
 import { useLoginForm } from "../lib/use-login-form"
 
-export const LoginForm = () => {
+type LoginFormProps = {
+  passwordResetComplete?: boolean
+}
+
+export const LoginForm = ({ passwordResetComplete = false }: LoginFormProps) => {
   const { form, handleSubmitForm } = useLoginForm()
   const { register, control, formState: { errors, isSubmitting } } = form
 
@@ -63,15 +70,14 @@ export const LoginForm = () => {
             size="lg"
             error={errors.password?.message}
             labelAction={
-              <Button
-                type="button"
-                variant="link"
-                className="h-auto p-0"
+              <Link
+                href={ROUTES.findPassword}
+                className={cn(buttonVariants({ variant: "link" }), "h-auto p-0")}
               >
                 <Typography as="span" variant="label" tone="primary">
                   비밀번호를 잊으셨나요?
                 </Typography>
-              </Button>
+              </Link>
             }
           />
 
@@ -83,7 +89,15 @@ export const LoginForm = () => {
 
           <FormMessage
             errorMessage={errors.root?.message}
-            className="mb-4 rounded-lg bg-destructive/8 px-3 py-2.5"
+            successMessage={
+              passwordResetComplete
+                ? "비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요."
+                : undefined
+            }
+            className={cn(
+              "mb-4 rounded-lg px-3 py-2.5",
+              errors.root?.message ? "bg-destructive/8" : "bg-success/8"
+            )}
           />
 
           <Button

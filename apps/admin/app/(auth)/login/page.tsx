@@ -30,7 +30,13 @@ const operationItems = [
   },
 ]
 
-const LoginRoute = () => {
+type LoginRouteProps = {
+  searchParams: Promise<{ reset?: string }>
+}
+
+const LoginRoute = async ({ searchParams }: LoginRouteProps) => {
+  const { reset } = await searchParams
+
   return (
     <main className="grid min-h-svh bg-background lg:grid-cols-[minmax(0,1.05fr)_minmax(480px,0.95fr)]">
       <section className="relative hidden min-h-svh overflow-hidden bg-sidebar px-12 py-10 text-sidebar-foreground lg:flex lg:flex-col xl:px-16 xl:py-12">
@@ -141,7 +147,7 @@ const LoginRoute = () => {
           aria-hidden="true"
         />
         <div className="relative w-full max-w-[440px]">
-          <LoginForm />
+          <LoginForm passwordResetComplete={reset === "success"} />
           <Typography
             variant="caption"
             tone="muted"
