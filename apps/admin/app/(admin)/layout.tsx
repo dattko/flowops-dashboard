@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
 import { getProfile, ProfileProvider } from "@/entities/profile"
 import { SessionExpiryGuard } from "@/features/auth"
@@ -6,12 +7,18 @@ import {
   SESSION_POLICY_COOKIE,
   getShortSessionExpiresAt,
 } from "@/shared/lib/auth/session-policy"
+import { ROUTES } from "@/shared/config/routes"
 import { MobileHeader } from "@/widgets/mobile-header"
 import { AppSidebar, getNavigation } from "@/widgets/sidebar"
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
-  const [profile, navigationItems, cookieStore] = await Promise.all([
-    getProfile(),
+  const profile = await getProfile()
+
+  if (!profile || profile.role !== "admin") {
+    redirect(ROUTES.auth.unauthorized)
+  }
+
+  const [navigationItems, cookieStore] = await Promise.all([
     getNavigation(),
     cookies(),
   ])

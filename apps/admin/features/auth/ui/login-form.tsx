@@ -11,9 +11,15 @@ import { useLoginForm } from "../lib/use-login-form"
 
 type LoginFormProps = {
   passwordResetComplete?: boolean
+  invitationAccepted?: boolean
+  unauthorized?: boolean
 }
 
-export const LoginForm = ({ passwordResetComplete = false }: LoginFormProps) => {
+export const LoginForm = ({
+  passwordResetComplete = false,
+  invitationAccepted = false,
+  unauthorized = false,
+}: LoginFormProps) => {
   const { form, handleSubmitForm } = useLoginForm()
   const { register, control, formState: { errors, isSubmitting } } = form
 
@@ -88,15 +94,24 @@ export const LoginForm = ({ passwordResetComplete = false }: LoginFormProps) => 
           />
 
           <FormMessage
-            errorMessage={errors.root?.message}
+            errorMessage={
+              errors.root?.message ??
+              (unauthorized
+                ? "관리자 권한이 있는 계정만 접근할 수 있습니다."
+                : undefined)
+            }
             successMessage={
               passwordResetComplete
                 ? "비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요."
+                : invitationAccepted
+                  ? "관리자 계정이 활성화되었습니다. 설정한 비밀번호로 로그인해 주세요."
                 : undefined
             }
             className={cn(
               "mb-4 rounded-lg px-3 py-2.5",
-              errors.root?.message ? "bg-destructive/8" : "bg-success/8"
+              errors.root?.message || unauthorized
+                ? "bg-destructive/8"
+                : "bg-success/8"
             )}
           />
 

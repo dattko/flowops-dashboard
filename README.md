@@ -285,9 +285,13 @@ pnpm build-storybook
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SECRET_KEY=
+SUPER_ADMIN_EMAILS=owner@flowops.kr
 ```
 
 `.env*` 파일은 저장소에 커밋하지 않습니다.
+`SUPABASE_SECRET_KEY`는 관리자 초대와 권한 변경을 위해 서버에서만 사용하며 브라우저에 노출하면 안 됩니다.
+`SUPER_ADMIN_EMAILS`에는 관리자 계정을 관리할 메인 관리자 이메일을 쉼표로 구분해 입력합니다.
 
 ## Bruno API 테스트
 

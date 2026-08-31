@@ -3,9 +3,11 @@ const ROUTES = {
   login: "/login",
   findPassword: "/find-password",
   resetPassword: "/reset-password",
+  acceptAdminInvitation: "/accept-admin-invitation",
   auth: {
     root: "/auth",
     callback: "/auth/callback",
+    unauthorized: "/auth/unauthorized",
     sessionActivity: "/auth/session-activity",
     sessionExpired: "/auth/session-expired",
   },

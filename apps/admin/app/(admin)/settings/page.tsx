@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 
+import { getAdminAccessOverview } from "@/features/manage-admins"
 import { getSettings, Settings } from "@/widgets/settings"
 
 export const metadata: Metadata = {
@@ -8,9 +9,12 @@ export const metadata: Metadata = {
 }
 
 const SettingsPage = async () => {
-  const settings = await getSettings()
+  const [settings, adminAccess] = await Promise.all([
+    getSettings(),
+    getAdminAccessOverview(),
+  ])
 
-  return <Settings settings={settings} />
+  return <Settings settings={settings} adminAccess={adminAccess} />
 }
 
 export default SettingsPage

@@ -31,11 +31,15 @@ const operationItems = [
 ]
 
 type LoginRouteProps = {
-  searchParams: Promise<{ reset?: string }>
+  searchParams: Promise<{
+    reset?: string
+    invitation?: string
+    reason?: string
+  }>
 }
 
 const LoginRoute = async ({ searchParams }: LoginRouteProps) => {
-  const { reset } = await searchParams
+  const { reset, invitation, reason } = await searchParams
 
   return (
     <main className="grid min-h-svh bg-background lg:grid-cols-[minmax(0,1.05fr)_minmax(480px,0.95fr)]">
@@ -147,7 +151,11 @@ const LoginRoute = async ({ searchParams }: LoginRouteProps) => {
           aria-hidden="true"
         />
         <div className="relative w-full max-w-[440px]">
-          <LoginForm passwordResetComplete={reset === "success"} />
+          <LoginForm
+            passwordResetComplete={reset === "success"}
+            invitationAccepted={invitation === "accepted"}
+            unauthorized={reason === "unauthorized"}
+          />
           <Typography
             variant="caption"
             tone="muted"

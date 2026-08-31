@@ -1,14 +1,31 @@
 import type { AdminSettings } from "@/entities/settings"
+import {
+  AdminManagement,
+  type AdminAccessOverview,
+} from "@/features/manage-admins"
 import { SettingsForm } from "@/features/update-settings"
 import { PageHeader } from "@/shared/ui/page-header"
 
-const SETTING_LINKS = [
+const BASE_SETTING_LINKS = [
   { href: "#store-settings", label: "상점 정보" },
   { href: "#shipping-settings", label: "배송 설정" },
   { href: "#account-settings", label: "내 계정" },
 ]
 
-export const Settings = ({ settings }: { settings: AdminSettings }) => {
+export const Settings = ({
+  settings,
+  adminAccess,
+}: {
+  settings: AdminSettings
+  adminAccess: AdminAccessOverview
+}) => {
+  const settingLinks = adminAccess.canManage
+    ? [
+        ...BASE_SETTING_LINKS,
+        { href: "#admin-settings", label: "관리자 계정" },
+      ]
+    : BASE_SETTING_LINKS
+
   return (
     <section aria-labelledby="settings-title">
       <PageHeader
@@ -22,7 +39,7 @@ export const Settings = ({ settings }: { settings: AdminSettings }) => {
           aria-label="설정 메뉴"
           className="flex gap-2 overflow-x-auto rounded-xl border bg-card p-2 lg:sticky lg:top-8 lg:flex-col"
         >
-          {SETTING_LINKS.map((link) => (
+          {settingLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -33,8 +50,9 @@ export const Settings = ({ settings }: { settings: AdminSettings }) => {
           ))}
         </nav>
 
-        <div className="min-w-0">
+        <div className="min-w-0 space-y-5">
           <SettingsForm initialSettings={settings} />
+          <AdminManagement overview={adminAccess} />
         </div>
       </div>
     </section>
