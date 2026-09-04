@@ -1,8 +1,8 @@
 # FlowOps
 
-스페셜티 커피 자사몰 `Morrow Coffee`의 주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 현재는 관리자용 Next.js 애플리케이션을 먼저 개발하고 있으며, 고객용 웹은 추후 `apps/web`에 추가할 예정입니다.
+스페셜티 커피 자사몰 `Morrow Coffee`의 주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 관리자용 Next.js 애플리케이션과 고객용 브랜드 웹의 기본 뼈대가 함께 구성되어 있습니다.
 
-`FlowOps`는 운영 백오피스 제품명이고 `Morrow Coffee`는 포트폴리오에서 관리하는 데모 스토어입니다. 데모 카탈로그는 원두, 드립백, 커피 캡슐, 콜드브루와 홈카페 용품 총 100개로 구성합니다.
+`FlowOps`는 운영 백오피스 제품명이고 `Morrow Coffee`는 포트폴리오에서 관리하는 데모 스토어입니다. 관리자 앱과 고객용 웹은 각각 `apps/admin`, `apps/web`에서 독립적으로 실행하며 하나의 저장소에서 함께 관리합니다. 데모 카탈로그는 원두, 드립백, 커피 캡슐, 콜드브루와 홈카페 용품 총 100개로 구성합니다.
 
 ## 기술 스택
 
@@ -40,6 +40,7 @@ pnpm dev
 | 명령어 | 설명 |
 | --- | --- |
 | `pnpm dev` | 관리자 앱 개발 서버 실행 |
+| `pnpm dev:web` | 고객용 웹 개발 서버 실행 (`http://localhost:3001`) |
 | `pnpm lint` | 관리자 앱 ESLint 검사 |
 | `pnpm test` | Vitest 단위 테스트 1회 실행 |
 | `pnpm test:watch` | Vitest 단위 테스트 감시 모드 |
@@ -47,6 +48,7 @@ pnpm dev
 | `pnpm storybook` | 관리자 앱 Storybook 실행 |
 | `pnpm build-storybook` | Storybook 정적 빌드 검사 |
 | `pnpm build` | 관리자 앱 프로덕션 빌드 |
+| `pnpm build:web` | 고객용 웹 프로덕션 빌드 |
 | `pnpm start` | 빌드된 관리자 앱 실행 |
 
 특정 앱을 직접 실행할 때는 workspace 필터를 사용할 수 있습니다.
@@ -62,7 +64,8 @@ pnpm --filter @flowops/admin exec tsc --noEmit
 ```text
 flowops-dashboard/
 ├── apps/
-│   └── admin/                 # 관리자용 Next.js 앱
+│   ├── admin/                 # 관리자용 Next.js 앱
+│   └── web/                   # 고객용 Morrow Coffee 웹
 ├── bruno/                     # Supabase Auth·RPC API 테스트 컬렉션
 ├── docs/                      # 프로젝트 문서
 ├── package.json               # 루트 공통 명령어
@@ -73,7 +76,6 @@ flowops-dashboard/
 필요해질 때 다음 workspace를 추가합니다.
 
 ```text
-apps/web/                      # 고객용 메인 사이트
 packages/types/                # 여러 앱이 실제로 공유하는 타입
 packages/api/                  # 여러 앱이 실제로 공유하는 API 규약
 packages/ui/                   # 여러 앱이 실제로 공유하는 UI와 디자인 토큰
