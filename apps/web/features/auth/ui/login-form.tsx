@@ -5,10 +5,11 @@ import { useMutation } from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/shared/ui/button";
 import { ROUTES } from "@/shared/config/routes";
+import { Button } from "@/shared/ui/button";
 
 import { login } from "../api/auth-server.action";
 import { loginSchema, type LoginValues } from "../model/auth-schema";
@@ -21,6 +22,7 @@ type LoginFormProps = {
 
 export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
   const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -39,8 +41,8 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
       }
 
       if (result?.redirectTo) {
+        setIsRedirecting(true);
         router.replace(result.redirectTo);
-        router.refresh();
       }
     },
     onError: () => {
@@ -53,14 +55,19 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
   const onSubmit = handleSubmit((values) => {
     loginMutation.mutate(values);
   });
-  const isPending = isSubmitting || loginMutation.isPending;
+  const isPending = isSubmitting || loginMutation.isPending || isRedirecting;
 
   const rootError =
     errors.root?.message ??
     (callbackError ? "인증 링크가 만료되었거나 올바르지 않습니다." : undefined);
 
   return (
-    <form className="space-y-5" onSubmit={onSubmit} noValidate>
+    <form
+      className="space-y-5"
+      onSubmit={onSubmit}
+      noValidate
+      aria-busy={isPending}
+    >
       <AuthField
         id="login-id"
         label="아이디"
@@ -80,12 +87,21 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
       />
 
       {rootError && (
-        <p role="alert" className="rounded-xl bg-coral/10 px-4 py-3 text-sm font-medium text-[#a13f28]">
+        <p
+          role="alert"
+          className="rounded-xl bg-coral/10 px-4 py-3 text-sm font-medium text-[#a13f28]"
+        >
           {rootError}
         </p>
       )}
 
-      <Button type="submit" variant="brand" size="lg" className="w-full" disabled={isPending}>
+      <Button
+        type="submit"
+        variant="brand"
+        size="lg"
+        className="w-full"
+        disabled={isPending}
+      >
         {isPending && <LoaderCircle className="animate-spin" aria-hidden="true" />}
         {isPending ? "로그인 중..." : "로그인"}
       </Button>
@@ -94,7 +110,10 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
 
       <p className="text-center text-sm text-ink/60">
         아직 계정이 없으신가요?{" "}
-        <Link href={ROUTES.signup} className="font-semibold text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink">
+        <Link
+          href={ROUTES.signup}
+          className="font-semibold text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink"
+        >
           회원가입
         </Link>
       </p>

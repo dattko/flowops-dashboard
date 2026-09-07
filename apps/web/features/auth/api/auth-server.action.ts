@@ -29,24 +29,18 @@ const normalizeKoreanPhone = (phone: string) => {
   return `+82${digits.slice(1)}`;
 };
 
-const getPostAuthRoute = async (
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  userId: string,
-) => {
-  const { data } = await supabase
-    .from("customers")
-    .select("onboarding_completed_at")
-    .eq("auth_user_id", userId)
-    .maybeSingle();
-
-  return data?.onboarding_completed_at ? ROUTES.home : ROUTES.onboarding;
-};
-
 const getAuthCallbackUrl = async () => {
   const requestHeaders = await headers();
+  const forwardedHost = requestHeaders.get("x-forwarded-host");
+  const forwardedProto = requestHeaders.get("x-forwarded-proto");
+  const vercelUrl = process.env.VERCEL_URL;
   const origin =
-    process.env.NEXT_PUBLIC_SITE_URL ??
     requestHeaders.get("origin") ??
+    (forwardedHost
+      ? `${forwardedProto ?? "https"}://${forwardedHost}`
+      : undefined) ??
+    (vercelUrl ? `https://${vercelUrl}` : undefined) ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
     "http://localhost:3001";
   const callbackUrl = new URL(ROUTES.authCallback, origin);
   callbackUrl.searchParams.set("next", ROUTES.home);
@@ -75,7 +69,7 @@ const login = async (values: LoginValues): Promise<AuthActionResult> => {
     return { error: "로그인 설정을 확인할 수 없습니다. 잠시 후 다시 시도해 주세요." };
   }
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email: getLoginEmail(parsed.data.loginId),
     password: parsed.data.password,
   });
@@ -84,10 +78,7 @@ const login = async (values: LoginValues): Promise<AuthActionResult> => {
     return { error: "아이디 또는 비밀번호가 올바르지 않습니다." };
   }
 
-  revalidatePath(ROUTES.home, "layout");
-  return {
-    redirectTo: await getPostAuthRoute(supabase, data.user.id),
-  };
+  return { redirectTo: ROUTES.home };
 };
 
 const signup = async (values: SignupValues): Promise<AuthActionResult> => {
