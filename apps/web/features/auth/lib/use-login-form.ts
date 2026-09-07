@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { login } from "../api/auth-server.action";
@@ -10,6 +11,7 @@ import { loginSchema, type LoginValues } from "../model/login-schema";
 
 const useLoginForm = ({ callbackError = false }: { callbackError?: boolean } = {}) => {
   const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { loginId: "", password: "" },
@@ -23,8 +25,8 @@ const useLoginForm = ({ callbackError = false }: { callbackError?: boolean } = {
       }
 
       if (result?.redirectTo) {
+        setIsRedirecting(true);
         router.replace(result.redirectTo);
-        router.refresh();
       }
     },
     onError: () => {
@@ -41,7 +43,8 @@ const useLoginForm = ({ callbackError = false }: { callbackError?: boolean } = {
   return {
     form,
     submit,
-    isPending: form.formState.isSubmitting || mutation.isPending,
+    isPending:
+      form.formState.isSubmitting || mutation.isPending || isRedirecting,
     errorMessage,
   };
 };

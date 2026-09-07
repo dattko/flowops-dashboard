@@ -3,9 +3,9 @@
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 
+import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/button";
 import { FormMessage, InputText } from "@/shared/ui/form";
-import { ROUTES } from "@/shared/config/routes";
 
 import { useLoginForm } from "../lib/use-login-form";
 import { KakaoAuthButton } from "./kakao-auth-button";
@@ -16,10 +16,19 @@ type LoginFormProps = {
 
 export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
   const { form, submit, isPending, errorMessage } = useLoginForm({ callbackError });
-  const { register, formState: { errors } } = form;
+  const {
+    register,
+    formState: { errors },
+  } = form;
 
   return (
-    <form className="space-y-5" onSubmit={submit} noValidate>
+    <form
+      className="space-y-5"
+      onSubmit={submit}
+      noValidate
+      aria-busy={isPending}
+    >
+
       <InputText
         id="login-id"
         label="아이디"
@@ -40,7 +49,13 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
 
       <FormMessage errorMessage={errorMessage} />
 
-      <Button type="submit" variant="brand" size="lg" className="w-full" disabled={isPending}>
+      <Button
+        type="submit"
+        variant="brand"
+        size="lg"
+        className="w-full"
+        disabled={isPending}
+      >
         {isPending && <LoaderCircle className="animate-spin" aria-hidden="true" />}
         {isPending ? "로그인 중..." : "로그인"}
       </Button>
@@ -49,7 +64,10 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
 
       <p className="text-center text-sm text-ink/60">
         아직 계정이 없으신가요?{" "}
-        <Link href={ROUTES.signup} className="font-semibold text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink">
+        <Link
+          href={ROUTES.signup}
+          className="font-semibold text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink"
+        >
           회원가입
         </Link>
       </p>
