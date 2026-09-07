@@ -2,8 +2,9 @@
 
 import { Check, LoaderCircle, MapPin, ShieldCheck } from "lucide-react";
 
-import { AuthField } from "@/features/auth/ui/auth-field";
+import { CustomerConsentFields, ShippingAddressFields } from "@/entities/customer";
 import { Button } from "@/shared/ui/button";
+import { FormMessage, InputText } from "@/shared/ui/form";
 
 import { useCustomerOnboardingForm } from "../lib/use-customer-onboarding-form";
 
@@ -71,7 +72,7 @@ const CustomerOnboardingForm = () => {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
-            <AuthField
+            <InputText
               id="onboarding-phone"
               label="휴대폰 번호"
               inputMode="tel"
@@ -95,7 +96,7 @@ const CustomerOnboardingForm = () => {
 
           {sentPhone && (
             <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
-              <AuthField
+              <InputText
                 id="onboarding-code"
                 label="인증번호"
                 inputMode="numeric"
@@ -130,65 +131,19 @@ const CustomerOnboardingForm = () => {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <AuthField
-              id="recipient-name"
-              label="받는 분"
-              autoComplete="name"
-              placeholder="받는 분 이름"
-              error={errors.recipientName?.message}
-              {...form.register("recipientName")}
-            />
-            <AuthField
-              id="postal-code"
-              label="우편번호"
-              inputMode="numeric"
-              autoComplete="postal-code"
-              maxLength={5}
-              placeholder="우편번호 5자리"
-              error={errors.postalCode?.message}
-              {...form.register("postalCode")}
-            />
-          </div>
-          <AuthField
-            id="address-line1"
-            label="기본 주소"
-            autoComplete="address-line1"
-            placeholder="도로명 주소를 입력해 주세요"
-            error={errors.addressLine1?.message}
-            {...form.register("addressLine1")}
-          />
-          <AuthField
-            id="address-line2"
-            label="상세 주소"
-            autoComplete="address-line2"
-            placeholder="동·호수 등 상세 주소"
-            error={errors.addressLine2?.message}
-            {...form.register("addressLine2")}
-          />
-          <AuthField
-            id="delivery-message"
-            label="배송 메모 (선택)"
-            placeholder="예: 문 앞에 놓아주세요"
-            error={errors.deliveryMessage?.message}
-            {...form.register("deliveryMessage")}
+          <ShippingAddressFields
+            recipientName={{ id: "recipient-name", error: errors.recipientName?.message, ...form.register("recipientName") }}
+            postalCode={{ id: "postal-code", error: errors.postalCode?.message, ...form.register("postalCode") }}
+            addressLine1={{ id: "address-line1", error: errors.addressLine1?.message, ...form.register("addressLine1") }}
+            addressLine2={{ id: "address-line2", error: errors.addressLine2?.message, ...form.register("addressLine2") }}
+            deliveryMessage={{ id: "delivery-message", error: errors.deliveryMessage?.message, ...form.register("deliveryMessage") }}
           />
 
-          <div className="space-y-2 rounded-2xl bg-cream/55 p-4 text-sm">
-            <label className="flex cursor-pointer items-start gap-3">
-              <input type="checkbox" className="mt-0.5 size-4 accent-coffee" {...form.register("termsAccepted")} />
-              <span>
-                <strong className="font-semibold">[필수]</strong> 이용약관 및 개인정보 수집·이용에 동의합니다.
-                {errors.termsAccepted?.message && (
-                  <span className="mt-1 block text-xs font-medium text-coral">{errors.termsAccepted.message}</span>
-                )}
-              </span>
-            </label>
-            <label className="flex cursor-pointer items-start gap-3">
-              <input type="checkbox" className="mt-0.5 size-4 accent-coffee" {...form.register("marketingOptIn")} />
-              <span><strong className="font-semibold">[선택]</strong> 신상품과 할인 소식을 받아봅니다.</span>
-            </label>
-          </div>
+          <CustomerConsentFields
+            control={form.control}
+            termsName="termsAccepted"
+            marketingName="marketingOptIn"
+          />
 
           <Button type="submit" variant="brand" size="lg" className="w-full" disabled={isSaving}>
             {isSaving && <LoaderCircle className="animate-spin" aria-hidden="true" />}
@@ -197,11 +152,7 @@ const CustomerOnboardingForm = () => {
         </section>
       )}
 
-      {errors.root?.message && (
-        <p role="alert" className="rounded-xl bg-coral/10 px-4 py-3 text-sm font-medium text-[#a13f28]">
-          {errors.root.message}
-        </p>
-      )}
+      <FormMessage errorMessage={errors.root?.message} />
     </form>
   );
 };

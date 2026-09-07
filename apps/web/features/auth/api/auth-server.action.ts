@@ -6,13 +6,10 @@ import { redirect } from "next/navigation";
 
 import { ROUTES } from "@/shared/config/routes";
 import { createClient } from "@/shared/lib/supabase/server";
+import { normalizeKoreanPhone } from "@/entities/customer";
 
-import {
-  loginSchema,
-  signupSchema,
-  type LoginValues,
-  type SignupValues,
-} from "../model/auth-schema";
+import { loginSchema, type LoginValues } from "../model/login-schema";
+import { signupSchema, type SignupValues } from "../model/signup-schema";
 
 type AuthActionResult = {
   error?: string;
@@ -23,11 +20,6 @@ const getLoginEmail = (loginId: string) =>
   loginId.includes("@")
     ? loginId.trim().toLowerCase()
     : `${loginId.trim().toLowerCase()}@members.morrowcoffee.com`;
-
-const normalizeKoreanPhone = (phone: string) => {
-  const digits = phone.replace(/[^0-9]/g, "");
-  return `+82${digits.slice(1)}`;
-};
 
 const getPostAuthRoute = async (
   supabase: Awaited<ReturnType<typeof createClient>>,

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/shared/config/routes";
+import { customerQueryKeys } from "@/entities/customer";
 
 import {
   completeOnboarding,
@@ -15,8 +16,6 @@ import {
   verifyPhone,
 } from "../api/customer-onboarding-client.api";
 import { onboardingSchema, type OnboardingValues } from "../model/onboarding-schema";
-
-const ONBOARDING_QUERY_KEY = ["customer", "onboarding"] as const;
 
 const useCustomerOnboardingForm = () => {
   const router = useRouter();
@@ -38,7 +37,7 @@ const useCustomerOnboardingForm = () => {
     },
   });
   const onboardingQuery = useQuery({
-    queryKey: ONBOARDING_QUERY_KEY,
+    queryKey: customerQueryKeys.onboarding,
     queryFn: getCustomerOnboarding,
   });
 
@@ -78,7 +77,7 @@ const useCustomerOnboardingForm = () => {
     onSuccess: async () => {
       setSelectedStep("address");
       form.clearErrors("root");
-      await queryClient.invalidateQueries({ queryKey: ONBOARDING_QUERY_KEY });
+      await queryClient.invalidateQueries({ queryKey: customerQueryKeys.onboarding });
     },
     onError: (error: Error) => {
       form.setError("root", { message: error.message });
@@ -87,7 +86,7 @@ const useCustomerOnboardingForm = () => {
   const completeMutation = useMutation({
     mutationFn: completeOnboarding,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ONBOARDING_QUERY_KEY });
+      await queryClient.invalidateQueries({ queryKey: customerQueryKeys.onboarding });
       router.replace(ROUTES.home);
       router.refresh();
     },

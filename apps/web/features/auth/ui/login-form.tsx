@@ -1,18 +1,13 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/ui/button";
+import { FormMessage, InputText } from "@/shared/ui/form";
 import { ROUTES } from "@/shared/config/routes";
 
-import { login } from "../api/auth-server.action";
-import { loginSchema, type LoginValues } from "../model/auth-schema";
-import { AuthField } from "./auth-field";
+import { useLoginForm } from "../lib/use-login-form";
 import { KakaoAuthButton } from "./kakao-auth-button";
 
 type LoginFormProps = {
@@ -20,48 +15,12 @@ type LoginFormProps = {
 };
 
 export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
-  const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { loginId: "", password: "" },
-  });
-  const loginMutation = useMutation({
-    mutationFn: login,
-    onSuccess: (result) => {
-      if (result?.error) {
-        setError("root", { message: result.error });
-        return;
-      }
-
-      if (result?.redirectTo) {
-        router.replace(result.redirectTo);
-        router.refresh();
-      }
-    },
-    onError: () => {
-      setError("root", {
-        message: "로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.",
-      });
-    },
-  });
-
-  const onSubmit = handleSubmit((values) => {
-    loginMutation.mutate(values);
-  });
-  const isPending = isSubmitting || loginMutation.isPending;
-
-  const rootError =
-    errors.root?.message ??
-    (callbackError ? "인증 링크가 만료되었거나 올바르지 않습니다." : undefined);
+  const { form, submit, isPending, errorMessage } = useLoginForm({ callbackError });
+  const { register, formState: { errors } } = form;
 
   return (
-    <form className="space-y-5" onSubmit={onSubmit} noValidate>
-      <AuthField
+    <form className="space-y-5" onSubmit={submit} noValidate>
+      <InputText
         id="login-id"
         label="아이디"
         autoComplete="username"
@@ -69,7 +28,7 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
         error={errors.loginId?.message}
         {...register("loginId")}
       />
-      <AuthField
+      <InputText
         id="login-password"
         label="비밀번호"
         type="password"
@@ -79,11 +38,7 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
         {...register("password")}
       />
 
-      {rootError && (
-        <p role="alert" className="rounded-xl bg-coral/10 px-4 py-3 text-sm font-medium text-[#a13f28]">
-          {rootError}
-        </p>
-      )}
+      <FormMessage errorMessage={errorMessage} />
 
       <Button type="submit" variant="brand" size="lg" className="w-full" disabled={isPending}>
         {isPending && <LoaderCircle className="animate-spin" aria-hidden="true" />}

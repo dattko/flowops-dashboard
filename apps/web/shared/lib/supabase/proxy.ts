@@ -38,7 +38,10 @@ export const updateSession = async (request: NextRequest) => {
   } = await supabase.auth.getUser();
   const pathname = request.nextUrl.pathname;
 
-  if (!user && pathname === ROUTES.onboarding) {
+  if (
+    !user &&
+    (pathname === ROUTES.onboarding || pathname.startsWith("/mypage"))
+  ) {
     return NextResponse.redirect(new URL(ROUTES.login, request.url));
   }
 

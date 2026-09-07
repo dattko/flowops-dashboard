@@ -69,18 +69,31 @@ export const SiteHeader = async () => {
               </span>
             </Button>
             {user ? (
-              <form action={logout}>
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  size="sm"
-                  className="ml-1 px-3"
-                  aria-label="로그아웃"
+              <>
+                <Link
+                  href={ROUTES.profile}
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "sm" }),
+                    "ml-1 px-3",
+                  )}
+                  aria-label="내 정보 수정"
                 >
-                  <LogOut className="size-[1.05rem]" strokeWidth={1.7} />
-                  <span className="hidden sm:inline">로그아웃</span>
-                </Button>
-              </form>
+                  <UserRound className="size-[1.05rem]" strokeWidth={1.7} />
+                  <span className="hidden sm:inline">내 정보</span>
+                </Link>
+                <form action={logout}>
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="sm"
+                    className="px-3"
+                    aria-label="로그아웃"
+                  >
+                    <LogOut className="size-[1.05rem]" strokeWidth={1.7} />
+                    <span className="hidden lg:inline">로그아웃</span>
+                  </Button>
+                </form>
+              </>
             ) : (
               <Link
                 href={ROUTES.login}

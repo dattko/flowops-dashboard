@@ -1,27 +1,14 @@
 "use client";
 
 import { LoaderCircle } from "lucide-react";
-import { useState, useTransition } from "react";
 
 import { Button } from "@/shared/ui/button";
+import { FormMessage } from "@/shared/ui/form";
 
-import { loginWithKakao } from "../api/auth-server.action";
+import { useKakaoAuth } from "../lib/use-kakao-auth";
 
 export const KakaoAuthButton = () => {
-  const [error, setError] = useState<string>();
-  const [isPending, startTransition] = useTransition();
-
-  const handleKakaoLogin = () => {
-    setError(undefined);
-
-    startTransition(async () => {
-      const result = await loginWithKakao();
-
-      if (result?.error) {
-        setError(result.error);
-      }
-    });
-  };
+  const { login, isPending, errorMessage } = useKakaoAuth();
 
   return (
     <div className="space-y-3">
@@ -35,7 +22,7 @@ export const KakaoAuthButton = () => {
         type="button"
         size="lg"
         className="w-full border-transparent bg-[#FEE500] text-[#191919] shadow-none hover:bg-[#f4dc00]"
-        onClick={handleKakaoLogin}
+        onClick={login}
         disabled={isPending}
       >
         {isPending ? (
@@ -48,11 +35,7 @@ export const KakaoAuthButton = () => {
         {isPending ? "카카오로 이동 중..." : "카카오로 로그인·가입"}
       </Button>
 
-      {error && (
-        <p role="alert" className="rounded-xl bg-coral/10 px-4 py-3 text-sm font-medium text-[#a13f28]">
-          {error}
-        </p>
-      )}
+      <FormMessage errorMessage={errorMessage} />
     </div>
   );
 };
