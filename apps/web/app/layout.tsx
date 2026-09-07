@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css"
 import { SiteHeader } from "@/widgets/site-header"
 import { SiteFooter } from "@/widgets/site-footer"
+import { Providers } from "./providers"
 import "./globals.css"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001"
@@ -41,11 +42,13 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
-    <html lang="ko">
+    <html lang="ko" data-scroll-behavior="smooth">
       <body>
-        <SiteHeader />
-        <main>{children}</main>
-        <SiteFooter />
+        <Providers>
+          <SiteHeader />
+          <main>{children}</main>
+          <SiteFooter />
+        </Providers>
       </body>
     </html>
   )

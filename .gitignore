@@ -33,6 +33,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!apps/web/.env.example
 bruno/environments/local.bru
 
 # Supabase local configuration and migrations
