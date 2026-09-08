@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { ROUTES } from "@/shared/config/routes";
 import { BrandMark } from "@/shared/ui/brand-mark";
 
 export const SiteFooter = () => {
@@ -11,9 +14,9 @@ export const SiteFooter = () => {
           </p>
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-paper/75">
-          <a href="#coffee" className="hover:text-white">커피</a>
-          <a href="#story" className="hover:text-white">브랜드 이야기</a>
-          <a href="#guide" className="hover:text-white">커피 가이드</a>
+          <Link href={ROUTES.products} className="hover:text-white">커피</Link>
+          <Link href={ROUTES.homeStory} className="hover:text-white">브랜드 이야기</Link>
+          <Link href={ROUTES.homeGuide} className="hover:text-white">커피 가이드</Link>
         </div>
       </div>
       <div className="mx-auto flex max-w-[90rem] flex-col gap-2 pt-6 text-xs text-paper/45 sm:flex-row sm:justify-between">

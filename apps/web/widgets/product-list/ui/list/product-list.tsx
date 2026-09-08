@@ -8,7 +8,6 @@ import {
 import { Pagination } from "@/shared/ui/pagination"
 
 import { ProductListContent } from "./product-list-content"
-import { ProductListHero } from "./product-list-hero"
 import { ProductListToolbar } from "./product-list-toolbar"
 
 type ProductListProps = {
@@ -34,40 +33,36 @@ export const ProductList = ({
   const products = data?.items ?? []
 
   return (
-    <>
-      <ProductListHero />
+    <section className="px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
+      <div className="mx-auto max-w-[90rem]">
+        <ProductListFilter
+          filters={filters}
+          hasActiveFilters={hasActiveFilters}
+          onSubmitFilters={applyFilters}
+          onResetFilters={resetFilters}
+        />
 
-      <section className="px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
-        <div className="mx-auto max-w-[90rem]">
-          <ProductListFilter
-            filters={filters}
-            hasActiveFilters={hasActiveFilters}
-            onSubmitFilters={applyFilters}
-            onResetFilters={resetFilters}
-          />
+        <ProductListToolbar
+          totalCount={data?.totalCount ?? 0}
+          isRefreshing={isFetching && !isPending}
+          sort={sort}
+          onSortChange={setSort}
+        />
 
-          <ProductListToolbar
-            totalCount={data?.totalCount ?? 0}
-            isRefreshing={isFetching && !isPending}
-            sort={sort}
-            onSortChange={setSort}
-          />
+        <ProductListContent
+          products={products}
+          isPending={isPending}
+          isError={isError}
+          onRetry={() => refetch()}
+          onReset={resetFilters}
+        />
 
-          <ProductListContent
-            products={products}
-            isPending={isPending}
-            isError={isError}
-            onRetry={() => refetch()}
-            onReset={resetFilters}
-          />
-
-          <Pagination
-            page={data?.page ?? page}
-            totalPages={data?.totalPages ?? 0}
-            onPageChange={setPage}
-          />
-        </div>
-      </section>
-    </>
+        <Pagination
+          page={data?.page ?? page}
+          totalPages={data?.totalPages ?? 0}
+          onPageChange={setPage}
+        />
+      </div>
+    </section>
   )
 }

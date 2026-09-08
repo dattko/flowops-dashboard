@@ -1,6 +1,6 @@
 # FlowOps
 
-스페셜티 커피 자사몰 `Morrow Coffee`의 주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 관리자용 Next.js 애플리케이션과 고객용 브랜드 웹의 기본 뼈대가 함께 구성되어 있습니다.
+스페셜티 커피 자사몰 `Morrow Coffee`의 주문, 매출, 재고 현황을 관리하는 백오피스와 고객용 웹을 함께 운영하기 위한 pnpm 모노레포입니다. 관리자용 Next.js 애플리케이션과 고객용 브랜드 웹을 하나의 저장소에서 함께 구성합니다.
 
 `FlowOps`는 운영 백오피스 제품명이고 `Morrow Coffee`는 포트폴리오에서 관리하는 데모 스토어입니다. 관리자 앱과 고객용 웹은 각각 `apps/admin`, `apps/web`에서 독립적으로 실행하며 하나의 저장소에서 함께 관리합니다. 데모 카탈로그는 원두, 드립백, 커피 캡슐, 콜드브루와 홈카페 용품 총 100개로 구성합니다.
 
@@ -125,6 +125,118 @@ apps/admin/
     ├── store/                 # 여러 위젯이 공유하는 클라이언트 UI 상태
     └── ui/                    # shadcn/ui 기반 범용 UI와 페이지네이션
 ```
+
+## 고객용 웹 구조
+
+고객용 `Morrow Coffee` 웹도 Next.js App Router와 Light FSD 구조를 사용합니다.
+
+```text
+apps/web/
+├── app/                       # 라우트, 메타데이터, 전역 Provider
+│   ├── (auth)/                # 로그인, 회원가입, 온보딩 라우트
+│   ├── (account)/             # 내 정보 등 로그인 사용자 라우트
+│   ├── products/              # 공개 상품 목록 라우트
+│   └── providers.tsx          # TanStack Query Provider
+├── entities/
+│   ├── customer/              # 고객 타입, 스키마, 주소·동의 필드
+│   └── product/               # 상품 타입, 카테고리, 카드와 API
+├── features/
+│   ├── auth/                  # 로그인, 회원가입, 카카오 인증
+│   ├── customer-onboarding/   # 가입 후 고객 정보 등록
+│   ├── customer-profile/      # 고객 정보 조회와 수정
+│   └── filter-products/       # 상품 검색, 카테고리, 정렬과 URL 상태
+├── widgets/
+│   ├── home/                  # HomePage와 홈 섹션 조합
+│   ├── member/                # 회원 화면의 SSR 검사와 폼 조합
+│   ├── product-list/          # 상품 목록 SSR 조회와 목록 UI 조합
+│   ├── site-header/           # 인증 상태를 반영하는 공통 헤더
+│   └── site-footer/           # 공통 푸터
+└── shared/
+    ├── api/base/              # 브라우저·서버용 공통 API Fetcher
+    ├── config/routes.ts       # 앱 내부 공용 라우트
+    ├── hooks/                 # 도메인에 의존하지 않는 React 훅
+    ├── lib/                   # URL, Supabase와 범용 유틸
+    └── ui/                    # 폼, Select, Pagination 등 공용 UI
+```
+
+### 페이지와 위젯 구성 규칙
+
+`app/**/page.tsx`는 라우트 메타데이터를 선언하고 해당 화면의 메인 위젯만 렌더링합니다. 인증 확인, 초기 데이터 조회와 여러 기능의 조합은 위젯의 `*-page.tsx`가 담당합니다.
+
+```text
+app/products/page.tsx
+└── widgets/product-list/ui/product-list-page.tsx
+    ├── product-list-hero.tsx             # 정적인 서버 UI
+    └── list/
+        ├── product-list.tsx              # 클라이언트 목록 조합
+        ├── product-list-toolbar.tsx      # 결과 수와 정렬
+        └── product-list-content.tsx      # 로딩·오류·빈 목록·상품 그리드
+```
+
+- `ProductListPage`는 URL 조건 해석과 초기 상품 조회를 담당하는 메인 Server Component입니다.
+- 정적인 상품 소개 영역은 서버에 남기고, 필터와 목록처럼 상호작용이 필요한 영역만 Client Component로 분리합니다.
+- `list`처럼 하위 폴더가 하나의 명확한 UI 영역을 묶을 때만 중첩 폴더를 사용합니다.
+- `widgets/home/ui/home`처럼 슬라이스 이름을 반복하는 폴더는 만들지 않습니다.
+- 홈의 `home-page.tsx`는 `home-hero`, 추천 상품, 브랜드 소개와 가이드 섹션의 조합만 담당합니다.
+- 로그인, 회원가입, 온보딩과 고객 정보 화면은 `widgets/member` 안에서 공통 `MemberShell`을 사용합니다.
+- 위젯 외부에서는 각 슬라이스의 `index.ts` 공개 API를 통해 메인 컴포넌트를 가져옵니다.
+
+### 고객용 상품 목록
+
+상품 목록은 원두, 드립백, 캡슐, 콜드브루와 홈카페 용품을 검색할 수 있습니다.
+
+- 검색어와 카테고리는 React Hook Form으로 관리합니다.
+- 정렬 Select도 공용 `FormSelect`와 별도 `use-product-list-sort-form` 훅을 사용합니다.
+- Select에는 `label`과 `value`를 함께 전달하여 선택 후 코드값이 아닌 사용자용 라벨을 표시합니다.
+- 검색, 카테고리, 정렬과 페이지는 URL Search Params에 저장합니다.
+- 기본값은 URL에서 생략하며 필터가 바뀌면 첫 페이지로 초기화합니다.
+- 필터 UI와 정렬은 목록 상단에 배치하고 로딩, 오류, 빈 결과 상태를 각각 표시합니다.
+- 한 페이지에는 최대 24개 상품을 표시하며 전체 상품 수와 전체 페이지 수는 API 응답을 사용합니다.
+- 상품 카드 목록에는 TanStack Table을 사용하지 않습니다. TanStack Table은 관리자 앱처럼 실제 행·열 테이블의 상태 관리가 필요할 때 사용합니다.
+
+지원하는 URL 예시는 다음과 같습니다.
+
+```text
+/products
+/products?category=whole-bean
+/products?sort=price-asc
+/products?keyword=decaf&page=2
+```
+
+공용 경로는 `shared/config/routes.ts`의 `ROUTES`에서 관리합니다. 헤더, 홈 CTA와 푸터의 커피 링크는 모두 `ROUTES.products`를 사용해 `/products`로 이동합니다.
+
+### 상품 데이터 조회 흐름
+
+URL 직접 접속과 새로고침에서는 서버가 현재 URL의 검색 조건을 해석하고 공개 Supabase RPC를 호출합니다.
+
+```text
+요청 URL
+→ ProductListPage
+→ getProductListFilters
+→ getProductsServer
+→ get_storefront_products RPC
+→ initialData
+→ ProductList 렌더링과 TanStack Query 초기화
+```
+
+카테고리, 검색, 정렬과 페이지 변경은 클라이언트의 `useProductListFilter`가 관리합니다. Query Key에 모든 필터 조건을 포함하고 `keepPreviousData`를 사용해 다음 결과를 조회하는 동안 기존 목록을 유지합니다.
+
+필터링, 정렬과 페이지네이션은 브라우저가 받은 상품 배열에서 수행하지 않습니다. 클라이언트는 조건만 전달하며 전체 데이터 기준 계산과 판매 가능한 상품 선별은 Supabase RPC가 담당합니다. 공개 상품 API 계약은 [`docs/storefront-apis.md`](docs/storefront-apis.md)에 정리합니다.
+
+현재 URL 변경은 Next.js `router.push()`를 사용합니다. 따라서 검색 파라미터 변경 시 Server Component 조회와 TanStack Query의 클라이언트 조회가 겹칠 가능성이 있습니다. 현재 규모에서는 기능상 문제가 없지만 트래픽 최적화 단계에서는 다음 중 하나로 통일합니다.
+
+1. 서버 중심: `router.push()`를 유지하고 TanStack Query 상품 재조회를 제거합니다.
+2. 하이브리드: 최초 접속만 SSR로 처리하고, 이후에는 History API로 URL을 동기화하면서 TanStack Query만 호출합니다. 이 경우 초기 데이터의 즉시 재요청을 막도록 적절한 `staleTime`도 설정합니다.
+
+고객용 웹은 현재 두 번째 방식을 적용하기 쉬운 구조지만, 중복 요청 최적화는 상품 기능 구현이 안정된 뒤 진행합니다.
+
+### 고객 인증과 SEO
+
+- Supabase Auth로 이메일 로그인, 회원가입과 세션을 관리합니다.
+- 온보딩과 고객 정보 위젯은 서버에서 사용자를 확인하고 비로그인 사용자를 로그인 화면으로 이동시킵니다.
+- 페이지별 제목과 설명은 각 route의 `metadata`로 선언합니다.
+- 루트 레이아웃에서 기본 Open Graph, Twitter 카드와 앱 아이콘을 설정합니다.
+- 상품 상세 라우트가 추가되면 slug별 `generateMetadata`에서 상품명, 설명과 이미지를 생성합니다.
 
 ## FSD 의존 방향
 
@@ -297,6 +409,16 @@ DEMO_ACCOUNT_EMAIL=demo@flowops.test
 `SUPER_ADMIN_EMAILS`에는 관리자 계정을 관리할 메인 관리자 이메일을 쉼표로 구분해 입력합니다.
 `DEMO_ACCOUNT_EMAIL`에는 로그인 화면의 데모 버튼으로 연결할 전용 관리자 이메일을 입력합니다. 해당 사용자의 `app_metadata`에는 `demo: true`, `role: "admin"`, `admin_status: "active"`가 설정되어 있어야 합니다.
 
+고객용 웹의 로컬 환경 변수는 `apps/web/.env.local`에서 관리합니다.
+
+```dotenv
+NEXT_PUBLIC_SITE_URL=http://localhost:3001
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+```
+
+고객용 웹은 공개 상품 조회와 사용자 인증에 publishable key를 사용합니다. 관리자 권한이 필요한 secret key는 고객용 웹에 추가하거나 브라우저에 노출하지 않습니다.
+
 ## Bruno API 테스트
 
 Supabase Auth와 PostgREST RPC는 저장소의 Bruno 컬렉션으로 직접 테스트할 수 있습니다.
@@ -319,7 +441,12 @@ pnpm --dir apps/admin dlx shadcn@latest add dialog input
 
 ## 검증
 
+관리자 앱과 고객용 웹을 각각 검사합니다.
+
 ```bash
 pnpm lint
 pnpm build
+pnpm lint:web
+pnpm --filter @flowops/web exec tsc --noEmit
+pnpm build:web
 ```

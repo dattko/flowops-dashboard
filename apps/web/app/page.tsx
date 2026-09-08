@@ -1,7 +1,5 @@
-import { HomePage } from "@/widgets/home";
+import { HomePage } from "@/widgets/home"
 
-const Page = () => {
-  return <HomePage />;
-};
+const Page = () => <HomePage />
 
-export default Page;
+export default Page

@@ -8,12 +8,13 @@ import {
 } from "@/shared/lib/search-params"
 
 import { ProductList } from "./list/product-list"
+import { ProductListHero } from "./product-list-hero"
 
 export type ProductListPageProps = {
   searchParams: Promise<PageSearchParams>
 }
 
-export const ProductListPage = async ({
+const ProductListLoader = async ({
   searchParams,
 }: ProductListPageProps) => {
   const initialFilters = getProductListFilters(
@@ -21,7 +22,12 @@ export const ProductListPage = async ({
   )
   const initialData = await getProductsServer(initialFilters)
 
-  return (
+  return <ProductList initialData={initialData} initialFilters={initialFilters} />
+}
+
+export const ProductListPage = ({ searchParams }: ProductListPageProps) => (
+  <>
+    <ProductListHero />
     <Suspense
       fallback={
         <div
@@ -30,10 +36,7 @@ export const ProductListPage = async ({
         />
       }
     >
-      <ProductList
-        initialData={initialData}
-        initialFilters={initialFilters}
-      />
+      <ProductListLoader searchParams={searchParams} />
     </Suspense>
-  )
-}
+  </>
+)
