@@ -7,6 +7,13 @@ import { createClient } from "@/shared/lib/supabase/server";
 import type { BaseApiFetcherOptions } from "./types";
 import { parseApiResponse } from "./utils";
 
+type ServerAuthMode = "required" | "none";
+
+type BaseApiFetcherServerOptions<TBody = unknown> =
+  BaseApiFetcherOptions<TBody> & {
+    auth?: ServerAuthMode;
+  };
+
 const endpoint = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const apiKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
 
@@ -33,14 +40,15 @@ const createBaseApiFetcherServer = async <TResponse, TBody = unknown>({
   method = "GET",
   body,
   options,
-}: BaseApiFetcherOptions<TBody>): Promise<TResponse> => {
-  const accessToken = await getAccessToken();
+  auth = "required",
+}: BaseApiFetcherServerOptions<TBody>): Promise<TResponse> => {
+  const accessToken = auth === "required" ? await getAccessToken() : null;
   const response = await fetch(new URL(url, baseUrl), {
     ...options,
     method,
     headers: {
       apikey: apiKey,
-      Authorization: `Bearer ${accessToken}`,
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       Accept: "application/json",
       ...(body === undefined ? {} : { "Content-Type": "application/json" }),
       ...options?.headers,
@@ -52,17 +60,57 @@ const createBaseApiFetcherServer = async <TResponse, TBody = unknown>({
   return parseApiResponse<TResponse>(response);
 };
 
-const baseApiFetcherServer = {
+const createServerFetcherMethods = (auth: ServerAuthMode) => ({
   get: <TResponse>(url: string, options?: RequestInit) =>
-    createBaseApiFetcherServer<TResponse>({ url, options }),
-  post: <TResponse, TBody = unknown>(url: string, body?: TBody, options?: RequestInit) =>
-    createBaseApiFetcherServer<TResponse, TBody>({ url, method: "POST", body, options }),
-  put: <TResponse, TBody = unknown>(url: string, body: TBody, options?: RequestInit) =>
-    createBaseApiFetcherServer<TResponse, TBody>({ url, method: "PUT", body, options }),
-  patch: <TResponse, TBody = unknown>(url: string, body: TBody, options?: RequestInit) =>
-    createBaseApiFetcherServer<TResponse, TBody>({ url, method: "PATCH", body, options }),
+    createBaseApiFetcherServer<TResponse>({ url, options, auth }),
+  post: <TResponse, TBody = unknown>(
+    url: string,
+    body?: TBody,
+    options?: RequestInit,
+  ) =>
+    createBaseApiFetcherServer<TResponse, TBody>({
+      url,
+      method: "POST",
+      body,
+      options,
+      auth,
+    }),
+  put: <TResponse, TBody = unknown>(
+    url: string,
+    body: TBody,
+    options?: RequestInit,
+  ) =>
+    createBaseApiFetcherServer<TResponse, TBody>({
+      url,
+      method: "PUT",
+      body,
+      options,
+      auth,
+    }),
+  patch: <TResponse, TBody = unknown>(
+    url: string,
+    body: TBody,
+    options?: RequestInit,
+  ) =>
+    createBaseApiFetcherServer<TResponse, TBody>({
+      url,
+      method: "PATCH",
+      body,
+      options,
+      auth,
+    }),
   delete: <TResponse>(url: string, options?: RequestInit) =>
-    createBaseApiFetcherServer<TResponse>({ url, method: "DELETE", options }),
+    createBaseApiFetcherServer<TResponse>({
+      url,
+      method: "DELETE",
+      options,
+      auth,
+    }),
+});
+
+const baseApiFetcherServer = {
+  ...createServerFetcherMethods("required"),
+  public: createServerFetcherMethods("none"),
 } as const;
 
 export { baseApiFetcherServer, createBaseApiFetcherServer };

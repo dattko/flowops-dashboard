@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     default: "Morrow Coffee | 매일의 리듬을 위한 커피",
     template: "%s | Morrow Coffee",
   },
+  icons: {
+    icon: "/morrow-app-icon.svg",
+  },
   description:
     "좋은 원두가 필요한 순간, 취향에 맞는 스페셜티 커피를 만나보세요.",
   applicationName: "Morrow Coffee",
@@ -22,6 +25,7 @@ export const metadata: Metadata = {
       "좋은 원두가 필요한 순간, 취향에 맞는 스페셜티 커피를 만나보세요.",
     type: "website",
     locale: "ko_KR",
+    
     images: [
       {
         url: "/og.png",

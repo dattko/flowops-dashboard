@@ -1,3 +1,5 @@
+export { FilterForm } from "./filter-form";
+export type { FilterFormProps } from "./filter-form";
 export { FormCheckbox } from "./form-checkbox";
 export { FormMessage } from "./form-message";
 export { FormSelect } from "./form-select";
