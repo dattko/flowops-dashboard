@@ -1,2 +1,2 @@
-export { ProductList } from "./ui/product-list"
-export type { ProductListProps } from "./ui/product-list"
+export { ProductListPage } from "./ui/product-list-page"
+export type { ProductListPageProps } from "./ui/product-list-page"

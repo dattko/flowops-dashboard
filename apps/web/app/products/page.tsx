@@ -1,6 +1,9 @@
 import type { Metadata } from "next"
 
-import { ProductList, type ProductListProps } from "@/widgets/product-list"
+import {
+  ProductListPage,
+  type ProductListPageProps,
+} from "@/widgets/product-list"
 
 export const metadata: Metadata = {
   title: "전체 상품",
@@ -8,8 +11,8 @@ export const metadata: Metadata = {
     "모로우 커피의 원두, 드립백, 캡슐, 콜드브루와 홈카페 용품을 만나보세요.",
 }
 
-const ProductsPage = ({ searchParams }: ProductListProps) => (
-  <ProductList searchParams={searchParams} />
+const ProductsPage = ({ searchParams }: ProductListPageProps) => (
+  <ProductListPage searchParams={searchParams} />
 )
 
 export default ProductsPage
