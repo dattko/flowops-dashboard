@@ -1,16 +1,16 @@
 "use client"
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useCallback } from "react"
 
 import {
   getProducts,
   type ProductListFilters,
   type ProductListResponse,
 } from "@/entities/product"
+import { useListSearchParams } from "@/shared/hooks/use-list-search-params"
 
 import {
+  DEFAULT_PRODUCT_LIST_FILTERS,
   getProductListFilters,
   isSameProductListFilters,
 } from "../model/product-filter-params"
@@ -25,30 +25,15 @@ export const useProductListFilter = ({
   initialData,
   initialFilters,
 }: UseProductListFilterParams) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const {
+    searchParams,
+    updateSearchParams,
+    setFilterParams,
+    setPage,
+  } = useListSearchParams({
+    defaultPage: DEFAULT_PRODUCT_LIST_FILTERS.page,
+  })
   const filters = getProductListFilters(searchParams)
-
-  const updateSearchParams = useCallback(
-    (
-      updates: Record<string, string | null>,
-      history: "push" | "replace" = "push",
-    ) => {
-      const nextSearchParams = new URLSearchParams(searchParams.toString())
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value) nextSearchParams.set(key, value)
-        else nextSearchParams.delete(key)
-      })
-
-      const query = nextSearchParams.toString()
-      router[history](query ? `${pathname}?${query}` : pathname, {
-        scroll: false,
-      })
-    },
-    [pathname, router, searchParams],
-  )
 
   const productQuery = useQuery({
     queryKey: ["products", "list", filters] as const,
@@ -60,27 +45,29 @@ export const useProductListFilter = ({
   })
 
   const applyFilters = (nextFilters: ProductFilterFormValues) => {
-    updateSearchParams({
+    setFilterParams({
       keyword: nextFilters.keyword || null,
       category:
-        nextFilters.category === "all" ? null : nextFilters.category,
-      page: null,
+        nextFilters.category === DEFAULT_PRODUCT_LIST_FILTERS.category
+          ? null
+          : nextFilters.category,
     })
   }
 
   const changeSort = (nextSort: ProductSort) => {
-    updateSearchParams({
-      sort: nextSort === "featured" ? null : nextSort,
-      page: null,
+    setFilterParams({
+      sort:
+        nextSort === DEFAULT_PRODUCT_LIST_FILTERS.sort ? null : nextSort,
     })
   }
 
-  const changePage = (nextPage: number) => {
-    updateSearchParams({ page: nextPage <= 1 ? null : String(nextPage) })
-  }
-
   const resetFilters = () => {
-    router.push(pathname, { scroll: false })
+    updateSearchParams({
+      keyword: null,
+      category: null,
+      sort: null,
+      page: null,
+    })
   }
 
   return {
@@ -92,12 +79,12 @@ export const useProductListFilter = ({
     page: filters.page,
     productQuery,
     hasActiveFilters:
-      filters.category !== "all" ||
-      filters.keyword.length > 0 ||
-      filters.sort !== "featured",
+      filters.category !== DEFAULT_PRODUCT_LIST_FILTERS.category ||
+      filters.keyword !== DEFAULT_PRODUCT_LIST_FILTERS.keyword ||
+      filters.sort !== DEFAULT_PRODUCT_LIST_FILTERS.sort,
     applyFilters,
     setSort: changeSort,
-    setPage: changePage,
+    setPage,
     resetFilters,
   }
 }

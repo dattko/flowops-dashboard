@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/button"
 import { FilterForm, InputText } from "@/shared/ui/form"
 
 import { useProductListFilterForm } from "../lib/use-product-list-filter-form"
+import { DEFAULT_PRODUCT_LIST_FILTERS } from "../model/product-filter-params"
 import type { ProductFilterFormValues } from "../model/types"
 
 type ProductListFilterProps = {
@@ -61,9 +62,17 @@ export const ProductListFilter = ({
         <Button
           type="button"
           size="sm"
-          variant={selectedCategory === "all" ? "default" : "outline"}
-          onClick={() => onCategoryChange("all")}
-          aria-pressed={selectedCategory === "all"}
+          variant={
+            selectedCategory === DEFAULT_PRODUCT_LIST_FILTERS.category
+              ? "default"
+              : "outline"
+          }
+          onClick={() =>
+            onCategoryChange(DEFAULT_PRODUCT_LIST_FILTERS.category)
+          }
+          aria-pressed={
+            selectedCategory === DEFAULT_PRODUCT_LIST_FILTERS.category
+          }
         >
           전체
         </Button>

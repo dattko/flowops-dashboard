@@ -17,3 +17,12 @@ export const toURLSearchParams = (searchParams: PageSearchParams) => {
 
   return urlSearchParams
 }
+
+export const createPathWithSearchParams = (
+  pathname: string,
+  searchParams: URLSearchParams,
+) => {
+  const query = searchParams.toString()
+
+  return query ? `${pathname}?${query}` : pathname
+}

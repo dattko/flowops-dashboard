@@ -6,6 +6,7 @@ import type {
   ProductCategoryFilter,
   ProductFilterFormValues,
 } from "../model/types"
+import { DEFAULT_PRODUCT_LIST_FILTERS } from "../model/product-filter-params"
 
 type UseProductListFilterFormParams = {
   filters: ProductFilterFormValues
@@ -36,7 +37,10 @@ export const useProductListFilterForm = ({
   }
 
   const onReset = () => {
-    form.reset({ keyword: "", category: "all" })
+    form.reset({
+      keyword: DEFAULT_PRODUCT_LIST_FILTERS.keyword,
+      category: DEFAULT_PRODUCT_LIST_FILTERS.category,
+    })
     onResetFilters()
   }
 

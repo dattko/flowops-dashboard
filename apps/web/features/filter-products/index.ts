@@ -4,6 +4,7 @@ export {
   PRODUCT_SORT_OPTIONS,
 } from "./model/constants"
 export {
+  DEFAULT_PRODUCT_LIST_FILTERS,
   getProductListFilters,
   isSameProductListFilters,
 } from "./model/product-filter-params"
