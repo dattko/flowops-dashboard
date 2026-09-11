@@ -4,12 +4,10 @@ import { Minus, Plus, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 import { ProductVisual } from "@/entities/product"
+import { type CartItem as CartItemData, useCartItem } from "@/features/cart"
 import { ROUTES } from "@/shared/config/routes"
 import { formatWon } from "@/shared/lib/currency"
 import { Button } from "@/shared/ui/button"
-
-import { useCartItem } from "../lib/use-cart-item"
-import type { CartItem as CartItemData } from "../model/types"
 
 export const CartItem = ({ item }: { item: CartItemData }) => {
   const {
@@ -54,7 +52,10 @@ export const CartItem = ({ item }: { item: CartItemData }) => {
             >
               <Minus aria-hidden="true" />
             </Button>
-            <span className="min-w-8 text-center text-sm font-semibold" aria-live="polite">
+            <span
+              className="min-w-8 text-center text-sm font-semibold"
+              aria-live="polite"
+            >
               {item.quantity}
             </span>
             <Button

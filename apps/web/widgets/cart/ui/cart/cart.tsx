@@ -1,10 +1,11 @@
 "use client"
 
-import { CartItem, useCart } from "@/features/cart"
+import { useCart } from "@/features/cart"
 import { Button } from "@/shared/ui/button"
 import { Typography } from "@/shared/ui/typography"
 
 import { CartEmpty } from "./cart-empty"
+import { CartItem } from "./cart-item"
 import { CartSummary } from "./cart-summary"
 
 export const Cart = () => {

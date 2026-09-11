@@ -1,5 +1,6 @@
 export { AddToCart } from "./ui/add-to-cart"
-export { CartItem } from "./ui/cart-item"
 export { CartLink } from "./ui/cart-link"
 export { CartSession } from "./ui/cart-session"
 export { useCart } from "./lib/use-cart"
+export { useCartItem } from "./lib/use-cart-item"
+export type { CartItem } from "./model/types"
