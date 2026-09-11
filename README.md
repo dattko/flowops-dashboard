@@ -135,7 +135,7 @@ apps/web/
 ├── app/                       # 라우트, 메타데이터, 전역 Provider
 │   ├── (auth)/                # 로그인, 회원가입, 온보딩 라우트
 │   ├── (account)/             # 내 정보 등 로그인 사용자 라우트
-│   ├── products/              # 공개 상품 목록 라우트
+│   ├── products/              # 공개 상품 목록·상세 라우트
 │   └── providers.tsx          # TanStack Query Provider
 ├── entities/
 │   ├── customer/              # 고객 타입, 스키마, 주소·동의 필드
@@ -149,6 +149,7 @@ apps/web/
 │   ├── home/                  # HomePage와 홈 섹션 조합
 │   ├── member/                # 회원 화면의 SSR 검사와 폼 조합
 │   ├── product-list/          # 상품 목록 SSR 조회와 목록 UI 조합
+│   ├── product-detail/        # 상품 상세 SSR 조회와 상세 UI 조합
 │   ├── site-header/           # 인증 상태를 반영하는 공통 헤더
 │   └── site-footer/           # 공통 푸터
 └── shared/
@@ -161,23 +162,31 @@ apps/web/
 
 ### 페이지와 위젯 구성 규칙
 
-`app/**/page.tsx`는 라우트 메타데이터를 선언하고 해당 화면의 메인 위젯만 렌더링합니다. 인증 확인, 초기 데이터 조회와 여러 기능의 조합은 위젯의 `*-page.tsx`가 담당합니다.
+`app/**/page.tsx`는 라우트 메타데이터를 선언하고 해당 화면의 메인 위젯만 렌더링합니다. 인증 확인, 초기 데이터 조회와 여러 기능의 조합은 위젯의 `*.page.tsx`가 담당합니다.
 
 ```text
 app/products/page.tsx
-└── widgets/product-list/ui/product-list-page.tsx
+└── widgets/product-list/ui/product-list.page.tsx
     ├── product-list-hero.tsx             # 정적인 서버 UI
     └── list/
         ├── product-list.tsx              # 클라이언트 목록 조합
         ├── product-list-toolbar.tsx      # 결과 수와 정렬
         └── product-list-content.tsx      # 로딩·오류·빈 목록·상품 그리드
+
+app/products/[slug]/page.tsx
+└── widgets/product-detail/
+    ├── lib/use-product-detail.ts          # 카테고리·재고 표시값 계산
+    └── ui/
+        ├── product-detail.page.tsx        # SSR 조회와 화면 조합
+        └── product-detail.tsx             # 상품 정보와 재고 상태 UI
 ```
 
 - `ProductListPage`는 URL 조건 해석과 초기 상품 조회를 담당하는 메인 Server Component입니다.
+- `ProductDetailPage`는 slug로 상품을 조회하고 `ProductDetail`에 전달하는 메인 Server Component입니다.
 - 정적인 상품 소개 영역은 서버에 남기고, 필터와 목록처럼 상호작용이 필요한 영역만 Client Component로 분리합니다.
 - `list`처럼 하위 폴더가 하나의 명확한 UI 영역을 묶을 때만 중첩 폴더를 사용합니다.
 - `widgets/home/ui/home`처럼 슬라이스 이름을 반복하는 폴더는 만들지 않습니다.
-- 홈의 `home-page.tsx`는 `home-hero`, 추천 상품, 브랜드 소개와 가이드 섹션의 조합만 담당합니다.
+- 홈의 `home.page.tsx`는 `home-hero`, 추천 상품, 브랜드 소개와 가이드 섹션의 조합만 담당합니다.
 - 로그인, 회원가입, 온보딩과 고객 정보 화면은 `widgets/member` 안에서 공통 `MemberShell`을 사용합니다.
 - 위젯 외부에서는 각 슬라이스의 `index.ts` 공개 API를 통해 메인 컴포넌트를 가져옵니다.
 
@@ -203,7 +212,7 @@ app/products/page.tsx
 /products?keyword=decaf&page=2
 ```
 
-공용 경로는 `shared/config/routes.ts`의 `ROUTES`에서 관리합니다. 헤더, 홈 CTA와 푸터의 커피 링크는 모두 `ROUTES.products`를 사용해 `/products`로 이동합니다.
+공용 경로는 `shared/config/routes.ts`의 `ROUTES`에서 관리합니다. 헤더, 홈 CTA와 푸터의 커피 링크는 모두 `ROUTES.products.list`를 사용해 `/products`로 이동하고 상품 카드는 `ROUTES.products.detail(slug)`를 사용합니다.
 
 ### 상품 데이터 조회 흐름
 
@@ -236,7 +245,7 @@ URL 직접 접속과 새로고침에서는 서버가 현재 URL의 검색 조건
 - 온보딩과 고객 정보 위젯은 서버에서 사용자를 확인하고 비로그인 사용자를 로그인 화면으로 이동시킵니다.
 - 페이지별 제목과 설명은 각 route의 `metadata`로 선언합니다.
 - 루트 레이아웃에서 기본 Open Graph, Twitter 카드와 앱 아이콘을 설정합니다.
-- 상품 상세 라우트가 추가되면 slug별 `generateMetadata`에서 상품명, 설명과 이미지를 생성합니다.
+- 상품 상세 라우트는 slug별 `generateMetadata`에서 상품명과 설명을 생성합니다.
 
 ## FSD 의존 방향
 

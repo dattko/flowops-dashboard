@@ -17,13 +17,22 @@ type ProductVisualProps = {
   tone: ProductTone
   label: string
   className?: string
+  size?: "card" | "detail"
 }
 
-export const ProductVisual = ({ tone, label, className }: ProductVisualProps) => {
+export const ProductVisual = ({
+  tone,
+  label,
+  className,
+  size = "card",
+}: ProductVisualProps) => {
   return (
     <div
       className={cn(
-        "relative mx-auto aspect-[0.76] w-[54%] min-w-36 max-w-52 overflow-hidden rounded-[0.4rem_0.4rem_1.15rem_1.15rem] shadow-[0_24px_50px_rgba(38,29,22,0.16)]",
+        "relative mx-auto aspect-[0.76] overflow-hidden rounded-[0.4rem_0.4rem_1.15rem_1.15rem] shadow-[0_24px_50px_rgba(38,29,22,0.16)]",
+        size === "card"
+          ? "w-[54%] min-w-36 max-w-52"
+          : "w-[54%] min-w-52 max-w-sm",
         PRODUCT_TONE_STYLES[tone],
         className,
       )}

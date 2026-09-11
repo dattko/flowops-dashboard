@@ -30,7 +30,7 @@ export const HomeHero = () => (
         </Typography>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
-            href={ROUTES.products}
+            href={ROUTES.products.list}
             className={cn(
               buttonVariants({ size: "lg" }),
               "group hover:-translate-y-0.5",

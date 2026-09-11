@@ -14,7 +14,7 @@ export const SiteFooter = () => {
           </p>
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-paper/75">
-          <Link href={ROUTES.products} className="hover:text-white">커피</Link>
+          <Link href={ROUTES.products.list} className="hover:text-white">커피</Link>
           <Link href={ROUTES.homeStory} className="hover:text-white">브랜드 이야기</Link>
           <Link href={ROUTES.homeGuide} className="hover:text-white">커피 가이드</Link>
         </div>

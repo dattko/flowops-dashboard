@@ -1,6 +1,9 @@
 export const ROUTES = {
   home: "/",
-  products: "/products",
+  products: {
+    list: "/products",
+    detail: (slug: string) => `/products/${encodeURIComponent(slug)}`,
+  },
   homeCoffee: "/#coffee",
   homeStory: "/#story",
   homeGuide: "/#guide",

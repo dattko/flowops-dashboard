@@ -46,7 +46,7 @@ export const FeaturedCoffeeSection = () => (
           </Typography>
         </div>
         <Link
-          href={ROUTES.products}
+          href={ROUTES.products.list}
           className="group inline-flex items-center gap-2 text-sm font-semibold underline decoration-black/20 underline-offset-8"
         >
           모든 커피 보기

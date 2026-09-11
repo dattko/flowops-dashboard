@@ -10,7 +10,7 @@ import { Button, buttonVariants } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
 
 const navigation = [
-  { label: "커피", href: ROUTES.products },
+  { label: "커피", href: ROUTES.products.list },
   { label: "모로우 이야기", href: ROUTES.homeStory },
   { label: "커피 가이드", href: ROUTES.homeGuide },
 ];
