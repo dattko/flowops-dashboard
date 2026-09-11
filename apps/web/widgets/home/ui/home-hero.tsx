@@ -57,9 +57,13 @@ export const HomeHero = () => (
         <div className="absolute left-[9%] top-[14%] z-20 rotate-[-9deg] rounded-full bg-paper px-4 py-2 text-xs font-semibold shadow-lg">
           ROASTED WEEKLY
         </div>
-        <div className="relative z-10 w-full rotate-[4deg] transition-transform duration-500 hover:rotate-0">
+        <Link
+          href={ROUTES.products.detail("bean-house-200")}
+          className="relative z-10 w-full rotate-[4deg] rounded-[1.5rem] outline-none transition-transform duration-500 hover:rotate-0 focus-visible:ring-2 focus-visible:ring-coffee/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream"
+          aria-label="모로우 하우스 블렌드 상세 보기"
+        >
           <CoffeeBag tone="bg-coffee" label="HOUSE BLEND 250G" size="large" />
-        </div>
+        </Link>
         <div className="absolute bottom-[8%] left-[5%] z-20 max-w-44 rounded-2xl bg-paper p-4 shadow-[0_18px_40px_rgba(38,29,22,0.12)] sm:left-[12%]">
           <p className="text-[0.65rem] font-bold tracking-[0.14em] text-coffee">
             TASTING NOTE

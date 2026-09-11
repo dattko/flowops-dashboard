@@ -1,7 +1,8 @@
-import { LogOut, Menu, Search, ShoppingBag, UserRound } from "lucide-react";
+import { LogOut, Menu, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 
 import { logout } from "@/features/auth";
+import { CartLink, CartSession } from "@/features/cart";
 import { ROUTES } from "@/shared/config/routes";
 import { isSupabaseConfigured } from "@/shared/lib/supabase/config";
 import { createClient } from "@/shared/lib/supabase/server";
@@ -26,6 +27,7 @@ export const SiteHeader = async () => {
 
   return (
     <>
+      <CartSession userId={user?.id ?? null} />
       <div className="bg-ink px-5 py-2 text-center text-[0.7rem] font-medium tracking-[0.08em] text-paper">
         첫 구매 10% 할인 · 50,000원 이상 무료배송
       </div>
@@ -56,18 +58,7 @@ export const SiteHeader = async () => {
             >
               <Search className="size-[1.15rem]" strokeWidth={1.7} />
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="relative"
-              aria-label="장바구니, 상품 0개"
-            >
-              <ShoppingBag className="size-[1.15rem]" strokeWidth={1.7} />
-              <span className="absolute right-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-coral text-[0.56rem] font-bold text-white">
-                0
-              </span>
-            </Button>
+            <CartLink />
             {user ? (
               <>
                 <Link

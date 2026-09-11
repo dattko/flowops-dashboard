@@ -13,11 +13,17 @@ const PRODUCT_TONE_STYLES: Record<ProductTone, string> = {
   charcoal: "bg-[#3d3b38]",
 }
 
+const PRODUCT_VISUAL_SIZE_STYLES = {
+  thumbnail: "w-14 min-w-14 max-w-14",
+  card: "w-[54%] min-w-36 max-w-52",
+  detail: "w-[54%] min-w-52 max-w-sm",
+} as const
+
 type ProductVisualProps = {
   tone: ProductTone
   label: string
   className?: string
-  size?: "card" | "detail"
+  size?: keyof typeof PRODUCT_VISUAL_SIZE_STYLES
 }
 
 export const ProductVisual = ({
@@ -30,9 +36,7 @@ export const ProductVisual = ({
     <div
       className={cn(
         "relative mx-auto aspect-[0.76] overflow-hidden rounded-[0.4rem_0.4rem_1.15rem_1.15rem] shadow-[0_24px_50px_rgba(38,29,22,0.16)]",
-        size === "card"
-          ? "w-[54%] min-w-36 max-w-52"
-          : "w-[54%] min-w-52 max-w-sm",
+        PRODUCT_VISUAL_SIZE_STYLES[size],
         PRODUCT_TONE_STYLES[tone],
         className,
       )}

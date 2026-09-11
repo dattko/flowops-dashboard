@@ -11,6 +11,7 @@ import {
   ProductVisual,
   type Product,
 } from "@/entities/product"
+import { AddToCart } from "@/features/cart"
 import { ROUTES } from "@/shared/config/routes"
 import { formatWon } from "@/shared/lib/currency"
 import { buttonVariants } from "@/shared/ui/button"
@@ -118,7 +119,9 @@ export const ProductDetail = ({ product }: { product: Product }) => {
               {formatWon(product.price)}
             </p>
 
-            <dl className="mt-8 divide-y divide-ink/10 border-y border-ink/10 text-sm">
+            <AddToCart product={product} />
+
+            <dl className="mt-3 divide-y divide-ink/10 border-b border-ink/10 text-sm">
               <div className="flex items-center justify-between gap-6 py-4">
                 <dt className="text-ink/50">상품 코드</dt>
                 <dd className="font-medium">{product.label}</dd>
@@ -161,7 +164,7 @@ export const ProductDetail = ({ product }: { product: Product }) => {
             as="h2"
             variant="sectionTitle"
             tone="inverse"
-            className="mt-3 "
+            className="mt-3"
           >
             받는 순간까지 좋은 경험이 되도록
           </Typography>
@@ -169,7 +172,7 @@ export const ProductDetail = ({ product }: { product: Product }) => {
             {PRODUCT_BENEFITS.map(({ icon: Icon, title, description }) => (
               <div key={title}>
                 <Icon className="size-5 text-[#dca67d]" strokeWidth={1.7} />
-                <h3 className=" mt-5 text-base font-semibold ">{title}</h3>
+                <h3 className="mt-5 text-base font-semibold">{title}</h3>
                 <p className="mt-2 max-w-sm text-sm leading-6 text-paper/60">
                   {description}
                 </p>
