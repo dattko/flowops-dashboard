@@ -7,8 +7,8 @@ import { FormMessage } from "@/shared/ui/form";
 
 import { useKakaoAuth } from "../lib/use-kakao-auth";
 
-export const KakaoAuthButton = () => {
-  const { login, isPending, errorMessage } = useKakaoAuth();
+export const KakaoAuthButton = ({ redirectTo }: { redirectTo?: string }) => {
+  const { login, isPending, errorMessage } = useKakaoAuth(redirectTo);
 
   return (
     <div className="space-y-3">

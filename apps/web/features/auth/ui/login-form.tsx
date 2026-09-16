@@ -12,10 +12,17 @@ import { KakaoAuthButton } from "./kakao-auth-button";
 
 type LoginFormProps = {
   callbackError?: boolean;
+  redirectTo?: string;
 };
 
-export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
-  const { form, submit, isPending, errorMessage } = useLoginForm({ callbackError });
+export const LoginForm = ({
+  callbackError = false,
+  redirectTo,
+}: LoginFormProps) => {
+  const { form, submit, isPending, errorMessage } = useLoginForm({
+    callbackError,
+    redirectTo,
+  });
   const {
     register,
     formState: { errors },
@@ -60,7 +67,7 @@ export const LoginForm = ({ callbackError = false }: LoginFormProps) => {
         {isPending ? "로그인 중..." : "로그인"}
       </Button>
 
-      <KakaoAuthButton />
+      <KakaoAuthButton redirectTo={redirectTo} />
 
       <p className="text-center text-sm text-ink/60">
         아직 계정이 없으신가요?{" "}

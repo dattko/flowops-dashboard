@@ -1,4 +1,4 @@
-import { ArrowRight, Truck } from "lucide-react"
+import { ArrowRight, CreditCard, Truck } from "lucide-react"
 import Link from "next/link"
 
 import { ROUTES } from "@/shared/config/routes"
@@ -48,12 +48,21 @@ export const CartSummary = ({
       </p>
     </div>
 
-    <Link
-      href={ROUTES.products.list}
-      className={`${buttonVariants({ variant: "outline", size: "lg" })} mt-7 w-full`}
-    >
-      쇼핑 계속하기
-      <ArrowRight aria-hidden="true" />
-    </Link>
+    <div className="mt-7 grid gap-3">
+      <Link
+        href={ROUTES.checkout}
+        className={buttonVariants({ variant: "brand", size: "lg" })}
+      >
+        <CreditCard aria-hidden="true" />
+        주문하기
+      </Link>
+      <Link
+        href={ROUTES.products.list}
+        className={buttonVariants({ variant: "outline", size: "lg" })}
+      >
+        쇼핑 계속하기
+        <ArrowRight aria-hidden="true" />
+      </Link>
+    </div>
   </aside>
 )

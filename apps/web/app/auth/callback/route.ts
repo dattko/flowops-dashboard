@@ -1,17 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { ROUTES } from "@/shared/config/routes";
+import { getSafeRedirectPath } from "@/shared/lib/safe-redirect";
 import { createClient } from "@/shared/lib/supabase/server";
-
-const isSafeInternalPath = (value: string | null): value is string =>
-  Boolean(value?.startsWith("/") && !value.startsWith("//"));
 
 export const GET = async (request: NextRequest) => {
   const code = request.nextUrl.searchParams.get("code");
   const requestedPath = request.nextUrl.searchParams.get("next");
-  const nextPath = isSafeInternalPath(requestedPath)
-    ? requestedPath
-    : ROUTES.home;
+  const nextPath = getSafeRedirectPath(requestedPath, ROUTES.home);
 
   if (code) {
     try {

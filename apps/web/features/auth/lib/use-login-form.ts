@@ -9,7 +9,13 @@ import { useForm } from "react-hook-form";
 import { login } from "../api/auth-server.action";
 import { loginSchema, type LoginValues } from "../model/login-schema";
 
-const useLoginForm = ({ callbackError = false }: { callbackError?: boolean } = {}) => {
+const useLoginForm = ({
+  callbackError = false,
+  redirectTo,
+}: {
+  callbackError?: boolean;
+  redirectTo?: string;
+} = {}) => {
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const form = useForm<LoginValues>({
@@ -17,7 +23,7 @@ const useLoginForm = ({ callbackError = false }: { callbackError?: boolean } = {
     defaultValues: { loginId: "", password: "" },
   });
   const mutation = useMutation({
-    mutationFn: login,
+    mutationFn: (values: LoginValues) => login(values, redirectTo),
     onSuccess: (result) => {
       if (result?.error) {
         form.setError("root", { message: result.error });

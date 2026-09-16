@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { ROUTES } from "@/shared/config/routes";
+import { getSafeRedirectPath } from "@/shared/lib/safe-redirect";
 import { createClient } from "@/shared/lib/supabase/server";
 import { normalizeKoreanPhone } from "@/entities/customer";
 
@@ -21,7 +22,7 @@ const getLoginEmail = (loginId: string) =>
     ? loginId.trim().toLowerCase()
     : `${loginId.trim().toLowerCase()}@members.morrowcoffee.com`;
 
-const getAuthCallbackUrl = async () => {
+const getAuthCallbackUrl = async (redirectTo: string = ROUTES.home) => {
   const requestHeaders = await headers();
   const forwardedHost = requestHeaders.get("x-forwarded-host");
   const forwardedProto = requestHeaders.get("x-forwarded-proto");
@@ -35,7 +36,10 @@ const getAuthCallbackUrl = async () => {
     process.env.NEXT_PUBLIC_SITE_URL ??
     "http://localhost:3001";
   const callbackUrl = new URL(ROUTES.authCallback, origin);
-  callbackUrl.searchParams.set("next", ROUTES.home);
+  callbackUrl.searchParams.set(
+    "next",
+    getSafeRedirectPath(redirectTo, ROUTES.home),
+  );
 
   return callbackUrl.toString();
 };
@@ -49,7 +53,10 @@ const getClient = async () => {
   }
 };
 
-const login = async (values: LoginValues): Promise<AuthActionResult> => {
+const login = async (
+  values: LoginValues,
+  redirectTo: string = ROUTES.home,
+): Promise<AuthActionResult> => {
   const parsed = loginSchema.safeParse(values);
 
   if (!parsed.success) {
@@ -70,7 +77,7 @@ const login = async (values: LoginValues): Promise<AuthActionResult> => {
     return { error: "아이디 또는 비밀번호가 올바르지 않습니다." };
   }
 
-  return { redirectTo: ROUTES.home };
+  return { redirectTo: getSafeRedirectPath(redirectTo, ROUTES.home) };
 };
 
 const signup = async (values: SignupValues): Promise<AuthActionResult> => {
@@ -149,7 +156,9 @@ const signup = async (values: SignupValues): Promise<AuthActionResult> => {
   };
 };
 
-const loginWithKakao = async (): Promise<AuthActionResult> => {
+const loginWithKakao = async (
+  redirectTo: string = ROUTES.home,
+): Promise<AuthActionResult> => {
   const supabase = await getClient();
 
   if (!supabase) {
@@ -159,7 +168,7 @@ const loginWithKakao = async (): Promise<AuthActionResult> => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "kakao",
     options: {
-      redirectTo: await getAuthCallbackUrl(),
+      redirectTo: await getAuthCallbackUrl(redirectTo),
     },
   });
 
