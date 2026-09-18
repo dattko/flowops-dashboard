@@ -1,16 +1,14 @@
 import { CheckCircle2, Coffee, CreditCard, MapPin } from "lucide-react"
 import Link from "next/link"
 
-import type { StorefrontOrder } from "@/entities/order"
+import {
+  STOREFRONT_PAYMENT_METHOD_LABELS,
+  type StorefrontOrder,
+} from "@/entities/order"
 import { ROUTES } from "@/shared/config/routes"
 import { formatWon } from "@/shared/lib/currency"
 import { buttonVariants } from "@/shared/ui/button"
 import { Typography } from "@/shared/ui/typography"
-
-const PAYMENT_LABELS = {
-  card: "테스트 카드",
-  kakao_pay: "테스트 카카오페이",
-} as const
 
 const OrderComplete = ({ order }: { order: StorefrontOrder }) => (
   <section className="bg-cream/45 px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
@@ -44,7 +42,7 @@ const OrderComplete = ({ order }: { order: StorefrontOrder }) => (
               <div className="flex justify-between gap-4">
                 <dt className="text-ink/55">결제 수단</dt>
                 <dd className="font-medium">
-                  {PAYMENT_LABELS[order.paymentMethod]}
+                  {STOREFRONT_PAYMENT_METHOD_LABELS[order.paymentMethod]}
                 </dd>
               </div>
               <div className="flex justify-between gap-4">

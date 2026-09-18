@@ -9,12 +9,14 @@ type PaginationProps = {
   page: number
   totalPages: number
   onPageChange: (page: number) => void
+  ariaLabel?: string
 }
 
 export const Pagination = ({
   page,
   totalPages,
   onPageChange,
+  ariaLabel = "목록 페이지",
 }: PaginationProps) => {
   const pages = usePagination(page, totalPages)
 
@@ -23,7 +25,7 @@ export const Pagination = ({
   return (
     <nav
       className="mt-16 flex items-center justify-center gap-1"
-      aria-label="상품 목록 페이지"
+      aria-label={ariaLabel}
     >
       <Button
         type="button"

@@ -1,4 +1,4 @@
-import { LogOut, Menu, Search, UserRound } from "lucide-react";
+import { LogOut, Menu, Package, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 
 import { logout } from "@/features/auth";
@@ -62,15 +62,15 @@ export const SiteHeader = async () => {
             {user ? (
               <>
                 <Link
-                  href={ROUTES.profile}
+                  href={ROUTES.orders.list}
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "sm" }),
                     "ml-1 px-3",
                   )}
-                  aria-label="내 정보 수정"
+                  aria-label="주문 내역"
                 >
-                  <UserRound className="size-[1.05rem]" strokeWidth={1.7} />
-                  <span className="hidden sm:inline">내 정보</span>
+                  <Package className="size-[1.05rem]" strokeWidth={1.7} />
+                  <span className="hidden sm:inline">주문 내역</span>
                 </Link>
                 <form action={logout}>
                   <Button

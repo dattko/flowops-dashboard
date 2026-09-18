@@ -7,6 +7,9 @@ export const ROUTES = {
   cart: "/cart",
   checkout: "/checkout",
   orders: {
+    list: "/mypage/orders",
+    detail: (orderNumber: string) =>
+      `/mypage/orders/${encodeURIComponent(orderNumber)}`,
     complete: (orderNumber: string) =>
       `/orders/${encodeURIComponent(orderNumber)}/complete`,
   },
