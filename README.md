@@ -151,6 +151,7 @@ apps/web/
 │   ├── customer-profile/      # 고객 정보 조회와 수정
 │   ├── checkout/              # 주문서 검증과 테스트 결제 요청
 │   ├── filter-products/       # 상품 검색, 카테고리, 정렬과 URL 상태
+│   ├── search-products/       # 헤더 상품 검색 다이얼로그와 URL 이동
 │   └── cart/                  # 장바구니 상태, 수량 변경과 담기
 ├── widgets/
 │   ├── home/                  # HomePage와 홈 섹션 조합
@@ -226,6 +227,10 @@ app/products/[slug]/page.tsx
 ```
 
 공용 경로는 `shared/config/routes.ts`의 `ROUTES`에서 관리합니다. 헤더, 홈 CTA와 푸터의 커피 링크는 모두 `ROUTES.products.list`를 사용해 `/products`로 이동하고 상품 카드는 `ROUTES.products.detail(slug)`를 사용합니다.
+
+헤더 검색은 상품명을 입력하면 `/products?keyword=검색어`로 이동합니다. 상품
+목록의 기존 URL 필터와 서버 조회를 그대로 사용하므로 별도의 검색 API를
+중복해서 호출하지 않습니다.
 
 ### 상품 데이터 조회 흐름
 

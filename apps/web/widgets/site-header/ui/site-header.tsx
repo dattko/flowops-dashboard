@@ -1,8 +1,9 @@
-import { LogOut, Menu, Package, Search, UserRound } from "lucide-react";
+import { LogOut, Menu, Package, UserRound } from "lucide-react";
 import Link from "next/link";
 
 import { logout } from "@/features/auth";
 import { CartLink, CartSession } from "@/features/cart";
+import { ProductSearchDialog } from "@/features/search-products";
 import { ROUTES } from "@/shared/config/routes";
 import { isSupabaseConfigured } from "@/shared/lib/supabase/config";
 import { createClient } from "@/shared/lib/supabase/server";
@@ -50,14 +51,7 @@ export const SiteHeader = async () => {
           </nav>
 
           <div className="flex items-center gap-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label="검색"
-            >
-              <Search className="size-[1.15rem]" strokeWidth={1.7} />
-            </Button>
+            <ProductSearchDialog />
             <CartLink />
             {user ? (
               <>
