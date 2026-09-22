@@ -5,6 +5,7 @@ export const ROUTES = {
     detail: (slug: string) => `/products/${encodeURIComponent(slug)}`,
   },
   cart: "/cart",
+  coffeeGuide: "/coffee-guide",
   checkout: "/checkout",
   orders: {
     list: "/mypage/orders",

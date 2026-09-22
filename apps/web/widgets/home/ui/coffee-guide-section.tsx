@@ -1,4 +1,7 @@
-import { Button } from "@/shared/ui/button"
+import Link from "next/link"
+
+import { ROUTES } from "@/shared/config/routes"
+import { buttonVariants } from "@/shared/ui/button"
 import { Typography } from "@/shared/ui/typography"
 
 export const CoffeeGuideSection = () => (
@@ -15,8 +18,11 @@ export const CoffeeGuideSection = () => (
     <Typography tone="muted" className="mx-auto mt-5 max-w-xl text-base leading-7">
       몇 가지 질문에 답하면 취향과 추출 방식에 맞는 커피를 추천해드려요.
     </Typography>
-    <Button type="button" size="lg" className="mt-8 hover:-translate-y-0.5">
+    <Link
+      href={ROUTES.coffeeGuide}
+      className={buttonVariants({ size: "lg", className: "mt-8 hover:-translate-y-0.5" })}
+    >
       1분 취향 테스트 시작
-    </Button>
+    </Link>
   </section>
 )
