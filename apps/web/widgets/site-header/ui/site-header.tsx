@@ -1,4 +1,4 @@
-import { LogOut, Menu, Package, UserRound } from "lucide-react";
+import { LogOut, Package, UserRound } from "lucide-react";
 import Link from "next/link";
 
 import { logout } from "@/features/auth";
@@ -11,11 +11,8 @@ import { BrandMark } from "@/shared/ui/brand-mark";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
 
-const navigation = [
-  { label: "커피", href: ROUTES.products.list },
-  { label: "모로우 이야기", href: ROUTES.homeStory },
-  { label: "커피 가이드", href: ROUTES.homeGuide },
-];
+import { SITE_NAVIGATION } from "../model/navigation";
+import { MobileNavigation } from "./mobile-navigation";
 
 export const SiteHeader = async () => {
   let user = null;
@@ -39,7 +36,7 @@ export const SiteHeader = async () => {
           </Link>
 
           <nav className="hidden items-center gap-9 md:flex" aria-label="주요 메뉴">
-            {navigation.map((item) => (
+            {SITE_NAVIGATION.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
@@ -59,14 +56,14 @@ export const SiteHeader = async () => {
                   href={ROUTES.orders.list}
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "sm" }),
-                    "ml-1 px-3",
+                    "ml-1 hidden px-3 md:inline-flex",
                   )}
                   aria-label="주문 내역"
                 >
                   <Package className="size-[1.05rem]" strokeWidth={1.7} />
                   <span className="hidden sm:inline">주문 내역</span>
                 </Link>
-                <form action={logout}>
+                <form action={logout} className="hidden md:block">
                   <Button
                     type="submit"
                     variant="ghost"
@@ -84,7 +81,7 @@ export const SiteHeader = async () => {
                 href={ROUTES.login}
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "ml-1 px-3",
+                  "ml-1 hidden px-3 md:inline-flex",
                 )}
                 aria-label="로그인"
               >
@@ -92,15 +89,7 @@ export const SiteHeader = async () => {
                 <span className="hidden sm:inline">로그인</span>
               </Link>
             )}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="ml-1 md:hidden"
-              aria-label="메뉴 열기"
-            >
-              <Menu className="size-5" strokeWidth={1.7} />
-            </Button>
+            <MobileNavigation isAuthenticated={Boolean(user)} />
           </div>
         </div>
       </header>
