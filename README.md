@@ -537,6 +537,37 @@ pnpm --dir apps/admin dlx shadcn@latest add dialog input
 
 ## 검증
 
+### GitHub Actions CI와 Vercel 배포
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml)은 `main` 대상 PR과
+`main` push에서 관리자·고객용 앱을 각각 검사합니다. GitHub Actions 탭에서
+수동 실행도 가능합니다.
+
+- pnpm lockfile을 고정해 의존성을 설치하고 pnpm 저장소 캐시를 사용합니다.
+- 각 앱의 ESLint, Next.js 라우트 타입 생성, TypeScript 검사와 프로덕션 빌드를 실행합니다.
+- 관리자 앱은 기존 단위 테스트도 실행합니다. 단위 테스트 설정은 Storybook과
+  분리되어 브라우저 설치나 Storybook addon 로딩 없이 실행됩니다.
+- 빌드용 Supabase URL과 키는 검증용 값입니다. 실제 API·인증 통합 테스트는
+  포함하지 않으며 GitHub에 운영 키나 추가 Secrets를 등록할 필요가 없습니다.
+
+배포는 기존 Vercel Git 연동을 사용합니다. CI와 Vercel Preview 배포는 독립적으로
+실행되므로 CI 실패만으로 Vercel 배포가 중단되지는 않습니다. 운영 환경 변수는
+각 Vercel 프로젝트에서 관리하며 이 CI 빌드 결과물을 배포에 사용하지 않습니다.
+
+운영 반영을 보호하려면 workflow를 GitHub에 올리고 첫 PR 검사가 실행된 뒤
+GitHub 저장소의 **Settings → Rules → Rulesets**에서 `main`에 다음 규칙을
+설정합니다. 저장소 플랜에 따라 규칙 사용 가능 여부가 다를 수 있습니다.
+
+1. Pull request를 통한 변경을 필수로 설정합니다.
+2. 필수 상태 검사에 `Check admin`, `Check web`을 등록합니다.
+3. 직접 push를 허용하는 우회 권한을 필요한 범위로 제한합니다.
+
+Vercel의 Production Branch도 `main`으로 설정되어 있어야 검사를 통과한 PR의
+병합 후 운영 배포가 이어집니다. GitHub ruleset과 Vercel 설정은 이 파일을
+추가하는 것만으로 변경되지 않습니다.
+
+### 로컬 검증
+
 관리자 앱과 고객용 웹을 각각 검사합니다.
 
 ```bash

@@ -10,12 +10,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   test: {
     projects: [
-      {
-        test: {
-          name: "unit",
-          include: ["**/*.test.ts"],
-        },
-      },
+      "./vitest.unit.config.mts",
       {
         extends: true,
         plugins: [
